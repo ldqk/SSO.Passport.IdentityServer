@@ -1,0 +1,11 @@
+﻿@using SSO.Core.Client
+<h1>A网站</h1>
+@if(AuthernUtil.CurrentUser == null) {
+    @Html.Raw("未登录")
+} else {
+    @Html.Raw("用户Id：" + AuthernUtil.CurrentUser.Id + "<p/>")
+    @Html.Raw("用户名称：" + AuthernUtil.CurrentUser.Username)<p />
+    @Html.Raw("手机号码：" + AuthernUtil.CurrentUser.PhoneNumber)<p />
+    @Html.Raw("邮箱：" + AuthernUtil.CurrentUser.Email)<p />
+    @Html.Raw("最后登录时间：" + AuthernUtil.CurrentUser.LastLoginTime)<p />
+}

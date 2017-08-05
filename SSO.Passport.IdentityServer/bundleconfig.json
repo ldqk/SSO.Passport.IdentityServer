@@ -1,0 +1,14 @@
+[
+  {
+    "outputFileName": "Content/login/style.min.css",
+    "inputFiles": [
+      "Content/login/style.css"
+    ]
+  },
+  {
+    "outputFileName": "Content/iconfont.min.css",
+    "inputFiles": [
+      "Content/iconfont.css"
+    ]
+  }
+]
