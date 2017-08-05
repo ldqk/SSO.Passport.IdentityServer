@@ -18,15 +18,7 @@
           <Property Name="IsAvailable" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ParentId" Type="nvarchar(max)" />
           <Property Name="PermissionId" Type="int" Nullable="false" />
-          <Property Name="FunctionTypeId" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="FunctionType">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TypeName" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="FunctionType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Permission">
           <Key>
@@ -106,19 +98,7 @@
           <Property Name="UserInfoId" Type="uniqueidentifier" />
           <Property Name="PermissionId" Type="int" />
         </EntityType>
-        <Association Name="FK_dbo_Function_dbo_FunctionType_PermissionId">
-          <End Role="FunctionType" Type="Self.FunctionType" Multiplicity="1" />
-          <End Role="Function" Type="Self.Function" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="FunctionType">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Function">
-              <PropertyRef Name="PermissionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_Function_dbo_Permission_FunctionTypeId">
+        <Association Name="FK_dbo_Function_dbo_Permission_PermissionId">
           <End Role="Permission" Type="Self.Permission" Multiplicity="1" />
           <End Role="Function" Type="Self.Function" Multiplicity="*" />
           <ReferentialConstraint>
@@ -126,7 +106,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Function">
-              <PropertyRef Name="FunctionTypeId" />
+              <PropertyRef Name="PermissionId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -264,7 +244,6 @@
         </Association>
         <EntityContainer Name="PermissionModelStoreContainer">
           <EntitySet Name="Function" EntityType="Self.Function" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FunctionType" EntityType="Self.FunctionType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permission" EntityType="Self.Permission" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RolePermission" EntityType="Self.RolePermission" Schema="dbo" store:Type="Tables" />
@@ -274,11 +253,7 @@
           <EntitySet Name="UserInfoRole" EntityType="Self.UserInfoRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserInfoUserGroup" EntityType="Self.UserInfoUserGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserPermission" EntityType="Self.UserPermission" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_dbo_Function_dbo_FunctionType_PermissionId" Association="Self.FK_dbo_Function_dbo_FunctionType_PermissionId">
-            <End Role="FunctionType" EntitySet="FunctionType" />
-            <End Role="Function" EntitySet="Function" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_Function_dbo_Permission_FunctionTypeId" Association="Self.FK_dbo_Function_dbo_Permission_FunctionTypeId">
+          <AssociationSet Name="FK_dbo_Function_dbo_Permission_PermissionId" Association="Self.FK_dbo_Function_dbo_Permission_PermissionId">
             <End Role="Permission" EntitySet="Permission" />
             <End Role="Function" EntitySet="Function" />
           </AssociationSet>
@@ -328,22 +303,12 @@
     <edmx:ConceptualModels>
       <Schema Namespace="PermissionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="PermissionContext" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Function" EntityType="PermissionModel.Function" />
-          <EntitySet Name="FunctionType" EntityType="PermissionModel.FunctionType" />
           <EntitySet Name="Permission" EntityType="PermissionModel.Permission" />
           <EntitySet Name="Role" EntityType="PermissionModel.Role" />
           <EntitySet Name="UserGroup" EntityType="PermissionModel.UserGroup" />
           <EntitySet Name="UserGroupPermission" EntityType="PermissionModel.UserGroupPermission" />
           <EntitySet Name="UserInfo" EntityType="PermissionModel.UserInfo" />
           <EntitySet Name="UserPermission" EntityType="PermissionModel.UserPermission" />
-          <AssociationSet Name="FK_dbo_Function_dbo_FunctionType_PermissionId" Association="PermissionModel.FK_dbo_Function_dbo_FunctionType_PermissionId">
-            <End Role="FunctionType" EntitySet="FunctionType" />
-            <End Role="Function" EntitySet="Function" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_Function_dbo_Permission_FunctionTypeId" Association="PermissionModel.FK_dbo_Function_dbo_Permission_FunctionTypeId">
-            <End Role="Permission" EntitySet="Permission" />
-            <End Role="Function" EntitySet="Function" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_UserPermission_dbo_Permission_PermissionId" Association="PermissionModel.FK_dbo_UserPermission_dbo_Permission_PermissionId">
             <End Role="Permission" EntitySet="Permission" />
             <End Role="UserPermission" EntitySet="UserPermission" />
@@ -372,33 +337,12 @@
             <End Role="UserGroup" EntitySet="UserGroup" />
             <End Role="UserInfo" EntitySet="UserInfo" />
           </AssociationSet>
+          <EntitySet Name="Function" EntityType="PermissionModel.Function" />
+          <AssociationSet Name="FK_dbo_Function_dbo_Permission_PermissionId" Association="PermissionModel.FK_dbo_Function_dbo_Permission_PermissionId">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="Function" EntitySet="Function" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Function">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Controller" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Action" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IconUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CssStyle" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="HttpMethod" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsAvailable" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ParentId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PermissionId" Type="Int32" Nullable="false" />
-          <Property Name="FunctionTypeId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="FunctionType" Relationship="PermissionModel.FK_dbo_Function_dbo_FunctionType_PermissionId" FromRole="Function" ToRole="FunctionType" />
-          <NavigationProperty Name="Permission" Relationship="PermissionModel.FK_dbo_Function_dbo_Permission_FunctionTypeId" FromRole="Function" ToRole="Permission" />
-        </EntityType>
-        <EntityType Name="FunctionType">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TypeName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Function" Relationship="PermissionModel.FK_dbo_Function_dbo_FunctionType_PermissionId" FromRole="FunctionType" ToRole="Function" />
-        </EntityType>
         <EntityType Name="Permission">
           <Key>
             <PropertyRef Name="Id" />
@@ -406,9 +350,9 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PermissionName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Function" Relationship="PermissionModel.FK_dbo_Function_dbo_Permission_FunctionTypeId" FromRole="Permission" ToRole="Function" />
           <NavigationProperty Name="UserPermission" Relationship="PermissionModel.FK_dbo_UserPermission_dbo_Permission_PermissionId" FromRole="Permission" ToRole="UserPermission" />
           <NavigationProperty Name="Role" Relationship="PermissionModel.RolePermission" FromRole="Permission" ToRole="Role" />
+          <NavigationProperty Name="Function" Relationship="PermissionModel.FK_dbo_Function_dbo_Permission_PermissionId" FromRole="Permission" ToRole="Function" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -468,30 +412,6 @@
           <NavigationProperty Name="Permission" Relationship="PermissionModel.FK_dbo_UserPermission_dbo_Permission_PermissionId" FromRole="UserPermission" ToRole="Permission" />
           <NavigationProperty Name="UserInfo" Relationship="PermissionModel.FK_dbo_UserPermission_dbo_UserInfo_UserInfoId" FromRole="UserPermission" ToRole="UserInfo" />
         </EntityType>
-        <Association Name="FK_dbo_Function_dbo_FunctionType_PermissionId">
-          <End Type="PermissionModel.FunctionType" Role="FunctionType" Multiplicity="1" />
-          <End Type="PermissionModel.Function" Role="Function" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="FunctionType">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Function">
-              <PropertyRef Name="PermissionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_Function_dbo_Permission_FunctionTypeId">
-          <End Type="PermissionModel.Permission" Role="Permission" Multiplicity="1" />
-          <End Type="PermissionModel.Function" Role="Function" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Permission">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Function">
-              <PropertyRef Name="FunctionTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dbo_UserPermission_dbo_Permission_PermissionId">
           <End Type="PermissionModel.Permission" Role="Permission" Multiplicity="0..1" />
           <End Type="PermissionModel.UserPermission" Role="UserPermission" Multiplicity="*" />
@@ -552,37 +472,40 @@
           <End Type="PermissionModel.UserGroup" Role="UserGroup" Multiplicity="*" />
           <End Type="PermissionModel.UserInfo" Role="UserInfo" Multiplicity="*" />
         </Association>
+        <EntityType Name="Function">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Controller" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Action" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IconUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CssStyle" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="HttpMethod" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsAvailable" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ParentId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PermissionId" Type="Int32" Nullable="false" />
+          <Property Name="FunctionType" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Permission" Relationship="PermissionModel.FK_dbo_Function_dbo_Permission_PermissionId" FromRole="Function" ToRole="Permission" />
+        </EntityType>
+        <Association Name="FK_dbo_Function_dbo_Permission_PermissionId">
+          <End Type="PermissionModel.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="PermissionModel.Function" Role="Function" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Function">
+              <PropertyRef Name="PermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="PermissionModelStoreContainer" CdmEntityContainer="PermissionContext">
-          <EntitySetMapping Name="Function">
-            <EntityTypeMapping TypeName="PermissionModel.Function">
-              <MappingFragment StoreEntitySet="Function">
-                <ScalarProperty Name="FunctionTypeId" ColumnName="FunctionTypeId" />
-                <ScalarProperty Name="PermissionId" ColumnName="PermissionId" />
-                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
-                <ScalarProperty Name="IsAvailable" ColumnName="IsAvailable" />
-                <ScalarProperty Name="HttpMethod" ColumnName="HttpMethod" />
-                <ScalarProperty Name="CssStyle" ColumnName="CssStyle" />
-                <ScalarProperty Name="IconUrl" ColumnName="IconUrl" />
-                <ScalarProperty Name="Action" ColumnName="Action" />
-                <ScalarProperty Name="Controller" ColumnName="Controller" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="FunctionType">
-            <EntityTypeMapping TypeName="PermissionModel.FunctionType">
-              <MappingFragment StoreEntitySet="FunctionType">
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Permission">
             <EntityTypeMapping TypeName="PermissionModel.Permission">
               <MappingFragment StoreEntitySet="Permission">
@@ -667,6 +590,22 @@
               <ScalarProperty Name="Id" ColumnName="UserGroup_Id" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="Function">
+            <EntityTypeMapping TypeName="PermissionModel.Function">
+              <MappingFragment StoreEntitySet="Function">
+                <ScalarProperty Name="FunctionType" ColumnName="FunctionType" />
+                <ScalarProperty Name="PermissionId" ColumnName="PermissionId" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="IsAvailable" ColumnName="IsAvailable" />
+                <ScalarProperty Name="HttpMethod" ColumnName="HttpMethod" />
+                <ScalarProperty Name="CssStyle" ColumnName="CssStyle" />
+                <ScalarProperty Name="IconUrl" ColumnName="IconUrl" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

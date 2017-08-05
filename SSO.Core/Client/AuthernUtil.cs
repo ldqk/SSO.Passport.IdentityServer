@@ -19,7 +19,7 @@ namespace SSO.Core.Client
         /// <summary>
         /// 获取当前登录用户
         /// </summary>
-        public static UserInfoViewModel CurrentUser => HttpContext.Current.Session?.GetSession<UserInfoViewModel>(Constants.USER_SESSION_KEY);
+        public static UserInfoLoginModel CurrentUser => HttpContext.Current.Session?.GetSession<UserInfoLoginModel>(Constants.USER_SESSION_KEY);
 
         /// <summary>
         /// 获取SSO登陆地址
@@ -27,7 +27,7 @@ namespace SSO.Core.Client
         /// <param name="token"></param>
         /// <param name="timestamp"></param>
         /// <returns></returns>
-        public static string GetAuthorityUrl(string token, DateTime timestamp) => $"{ConfigurationManager.AppSettings["PassportUrl"].TrimEnd('/')}/Passport/PassportCenter?token={token}&timestamp={timestamp}";
+        public static string GetAuthorityUrl(string token, DateTime timestamp) => $"{ConfigurationManager.AppSettings["PassportUrl"]?.TrimEnd('/')}/Passport/PassportCenter?token={token}&timestamp={timestamp}";
     }
 
     /// <summary>

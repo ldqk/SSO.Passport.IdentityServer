@@ -246,15 +246,19 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StartupConfig.cs" />
+    <Compile Include="Controllers\ApiController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\FunctionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PassportController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />
+    <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\UserGroupController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\MyActionFilterAttribute.cs" />
     <Compile Include="Models\MyExceptionFilterAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -263,8 +267,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Api\" />
+    <Folder Include="Views\Base\" />
+    <Folder Include="Views\Function\" />
     <Folder Include="Views\Home\" />
     <Folder Include="Views\Permission\" />
+    <Folder Include="Views\Role\" />
+    <Folder Include="Views\UserGroup\" />
     <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>

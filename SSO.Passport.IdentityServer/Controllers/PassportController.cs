@@ -14,7 +14,7 @@ using SSO.Core.Client;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
-    [MyActionFilter, MyExceptionFilter]
+    [MyExceptionFilter]
     public class PassportController : Controller
     {
         private PassportService Passportservice => new PassportService();

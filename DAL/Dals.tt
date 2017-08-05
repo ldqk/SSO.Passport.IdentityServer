@@ -12,7 +12,7 @@ string namespaceName = code.VsNamespaceSuggestion();
 EntityFrameworkTemplateFileManager fileManager = EntityFrameworkTemplateFileManager.Create(this);
 #>
 using IDAL;
-using Models;
+using Models.Entity;
 using System;
 namespace DAL
 {

@@ -65,7 +65,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Blls.tt</DependentUpon>
     </Compile>
+    <Compile Include="PermissionBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoleBll.cs" />
+    <Compile Include="UserGroupBll.cs" />
     <Compile Include="UserInfoBll.cs" />
   </ItemGroup>
   <ItemGroup>

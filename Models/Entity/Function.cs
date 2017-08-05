@@ -1,11 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Models.Enum;
 
 namespace Models.Entity
 {
     [Table("Function")]
     public class Function
     {
+        public Function()
+        {
+            IsAvailable = true;
+        }
         [Key]
         public int Id { get; set; }
 
@@ -23,17 +28,14 @@ namespace Models.Entity
         public string HttpMethod { get; set; }
 
         [Required]
-        public string IsAvailable { get; set; }
+        public bool IsAvailable { get; set; }
 
-        public string ParentId { get; set; }
-
-        [ForeignKey("FunctionType")]
-        public int PermissionId { get; set; }
+        public int ParentId { get; set; }
 
         [ForeignKey("Permission")]
-        public int FunctionTypeId { get; set; }
+        public int PermissionId { get; set; }
 
-        public virtual FunctionType FunctionType { get; set; }
+        public FunctionType FunctionType { get; set; }
 
         public virtual Permission Permission { get; set; }
     }

@@ -10,6 +10,6 @@ namespace Models.Dto
 
         public int RoleId { get; set; }
 
-        public virtual RoleDto RoleDto { get; set; }
+        public virtual RoleOutputDto RoleOutputDto { get; set; }
     }
 }

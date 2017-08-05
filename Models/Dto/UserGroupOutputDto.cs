@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace Models.Dto
 {
-    public class UserGroupDto
+    public class UserGroupOutputDto
     {
-        public UserGroupDto()
+        public UserGroupOutputDto()
         {
             UserGroupPermission = new HashSet<UserGroupPermissionDto>();
         }

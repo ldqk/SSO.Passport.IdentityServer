@@ -1,7 +1,10 @@
+using Models.Enum;
+
 namespace Models.Dto
 {
-    public class FunctionDto
+    public class FunctionOutputDto
     {
+        public int Id { get; set; }
 
         public string Controller { get; set; }
 
@@ -13,10 +16,9 @@ namespace Models.Dto
 
         public string HttpMethod { get; set; }
 
-        public string IsAvailable { get; set; }
+        public bool IsAvailable { get; set; }
 
-        public string ParentId { get; set; }
-
-        public virtual FunctionTypeDto FunctionTypeDto { get; set; }
+        public int ParentId { get; set; }
+        public FunctionType FunctionType { get; set; }
     }
 }

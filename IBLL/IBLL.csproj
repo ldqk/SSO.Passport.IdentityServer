@@ -39,6 +39,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>IBaseBll.tt</DependentUpon>
     </Compile>
+    <Compile Include="IPermissionBll.cs" />
+    <Compile Include="IRoleBll.cs" />
+    <Compile Include="IUserGroupBll.cs" />
     <Compile Include="IUserInfoBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -22,10 +22,31 @@ namespace BLL
         /// 基本查询方法
         /// </summary>
         /// <param name="where"></param>
+        /// <param name="timespan"></param>
+        /// <returns></returns>
+        public IEnumerable<T> LoadEntitiesFromCache(Expression<Func<T, bool>> @where, int timespan = 30)
+        {
+            return BaseDal.LoadEntitiesFromCache(where, timespan);
+        }
+
+        /// <summary>
+        /// 基本查询方法
+        /// </summary>
+        /// <param name="where"></param>
         /// <returns></returns>
         public Task<IQueryable<T>> LoadEntitiesAsync(Expression<Func<T, bool>> @where)
         {
             return BaseDal.LoadEntitiesAsync(where);
+        }
+
+        /// <summary>
+        /// 基本查询方法
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public Task<IEnumerable<T>> LoadEntitiesFromCacheAsync(Expression<Func<T, bool>> @where, int timespan = 30)
+        {
+            return BaseDal.LoadEntitiesFromCacheAsync(where, timespan);
         }
 
         /// <summary>
@@ -43,9 +64,39 @@ namespace BLL
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
+        public IEnumerable<T> LoadEntitiesFromCacheNoTracking(Expression<Func<T, bool>> @where, int timespan = 30)
+        {
+            return BaseDal.LoadEntitiesFromCacheNoTracking(where, timespan);
+        }
+
+        /// <summary>
+        /// 基本查询方法（不跟踪实体）
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
         public Task<IQueryable<T>> LoadEntitiesNoTrackingAsync(Expression<Func<T, bool>> @where)
         {
             return BaseDal.LoadEntitiesNoTrackingAsync(where);
+        }
+
+        /// <summary>
+        /// 基本查询方法（不跟踪实体）
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public Task<IEnumerable<T>> LoadEntitiesFromCacheNoTrackingAsync(Expression<Func<T, bool>> @where, int timespan = 30)
+        {
+            return BaseDal.LoadEntitiesFromCacheNoTrackingAsync(where, timespan);
+        }
+
+        /// <summary>
+        /// 获取第一条数据
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public Task<T> GetFirstEntityFromCacheAsync(Expression<Func<T, bool>> @where, int timespan = 30)
+        {
+            return BaseDal.GetFirstEntityFromCacheAsync(where, timespan);
         }
 
         /// <summary>
@@ -83,6 +134,16 @@ namespace BLL
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
+        public T GetFirstEntityFromCache(Expression<Func<T, bool>> @where, int timespan = 30)
+        {
+            return BaseDal.GetFirstEntityFromCache(where, timespan);
+        }
+
+        /// <summary>
+        /// 获取第一条数据
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
         public Task<T> GetFirstEntityAsync(Expression<Func<T, bool>> @where)
         {
             return BaseDal.GetFirstEntityAsync(where);
@@ -103,9 +164,29 @@ namespace BLL
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
+        public T GetFirstEntityFromCacheNoTracking(Expression<Func<T, bool>> @where, int timespan = 30)
+        {
+            return BaseDal.GetFirstEntityFromCacheNoTracking(where, timespan);
+        }
+
+        /// <summary>
+        /// 获取第一条数据（不跟踪实体）
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
         public Task<T> GetFirstEntityNoTrackingAsync(Expression<Func<T, bool>> @where)
         {
             return BaseDal.GetFirstEntityNoTrackingAsync(where);
+        }
+
+        /// <summary>
+        /// 获取第一条数据（不跟踪实体）
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public Task<T> GetFirstEntityFromCacheNoTrackingAsync(Expression<Func<T, bool>> @where, int timespan = 30)
+        {
+            return BaseDal.GetFirstEntityFromCacheNoTrackingAsync(where, timespan);
         }
 
         /// <summary>
@@ -126,6 +207,22 @@ namespace BLL
         }
 
         /// <summary>
+        /// 高效分页查询方法
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <param name="pageIndex">第几页</param>
+        /// <param name="pageSize">每页大小</param>
+        /// <param name="totalCount">数据总数</param>
+        /// <param name="where">where Lambda条件表达式</param>
+        /// <param name="orderby">orderby Lambda条件表达式</param>
+        /// <param name="isAsc">升序降序</param>
+        /// <returns></returns>
+        public IEnumerable<T> LoadPageEntitiesFromCache<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc, int timespan = 30)
+        {
+            return BaseDal.LoadPageEntitiesFromCache(pageIndex, pageSize, out totalCount, where, orderby, isAsc, timespan);
+        }
+
+        /// <summary>
         /// 高效分页查询方法（不跟踪实体）
         /// </summary>
         /// <typeparam name="TS"></typeparam>
@@ -139,6 +236,22 @@ namespace BLL
         public IQueryable<T> LoadPageEntitiesNoTracking<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
             return BaseDal.LoadPageEntitiesNoTracking(pageIndex, pageSize, out totalCount, where, orderby, isAsc);
+        }
+
+        /// <summary>
+        /// 高效分页查询方法（不跟踪实体）
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="totalCount"></param>
+        /// <param name="where"></param>
+        /// <param name="orderby"></param>
+        /// <param name="isAsc"></param>
+        /// <returns></returns>
+        public IEnumerable<T> LoadPageEntitiesFromCacheNoTracking<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
+        {
+            return BaseDal.LoadPageEntitiesFromCacheNoTracking(pageIndex, pageSize, out totalCount, where, orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -187,6 +300,26 @@ namespace BLL
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
+        public int DeleteEntity(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.DeleteEntity(where);
+        }
+
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public Task<int> DeleteEntityAsync(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.DeleteEntityAsync(where);
+        }
+
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public bool DeleteEntitySaved(T t)
         {
             BaseDal.DeleteEntity(t);
@@ -213,6 +346,7 @@ namespace BLL
         {
             return BaseDal.UpdateEntity(t);
         }
+
         /// <summary>
         /// 更新实体
         /// </summary>
@@ -232,6 +366,26 @@ namespace BLL
         {
             BaseDal.UpdateEntity(t);
             return SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public int UpdateEntity(Expression<Func<T, bool>> @where, T t)
+        {
+            return BaseDal.UpdateEntity(where, t);
+        }
+
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public Task<int> UpdateEntityAsync(Expression<Func<T, bool>> @where, T t)
+        {
+            return BaseDal.UpdateEntityAsync(where, t);
         }
 
         /// <summary>
@@ -283,6 +437,24 @@ namespace BLL
         public Task<int> SaveChangesAsync()
         {
             return BaseDal.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 统一保存数据
+        /// </summary>
+        /// <returns></returns>
+        public void BulkSaveChanges()
+        {
+            BaseDal.BulkSaveChanges();
+        }
+
+        /// <summary>
+        /// 统一保存数据
+        /// </summary>
+        /// <returns></returns>
+        public void BulkSaveChangesAsync()
+        {
+            BaseDal.BulkSaveChangesAsync();
         }
 
         /// <summary>

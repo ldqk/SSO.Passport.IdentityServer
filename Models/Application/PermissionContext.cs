@@ -8,11 +8,13 @@ namespace Models.Application
     {
         public PermissionContext() : base("name=PermissionContext")
         {
+
+            Configuration.AutoDetectChangesEnabled = false;
+            Database.CreateIfNotExists();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<PermissionContext, Configuration>());
         }
 
         public virtual DbSet<Function> Function { get; set; }
-        public virtual DbSet<FunctionType> FunctionType { get; set; }
         public virtual DbSet<Permission> Permission { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }
@@ -22,7 +24,6 @@ namespace Models.Application
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<FunctionType>().HasMany(e => e.Function).WithRequired(e => e.FunctionType).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Permission>().HasMany(e => e.Function).WithRequired(e => e.Permission).WillCascadeOnDelete(false);
 

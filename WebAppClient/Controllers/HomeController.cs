@@ -6,7 +6,7 @@ namespace WebAppClient.Controllers
 {
     public class HomeController : Controller
     {
-        [Auth(Code = AuthCodeEnum.Login)]
+        [Authority(Code = AuthCodeEnum.Login)]
         public ActionResult Index()
         {
             return View();

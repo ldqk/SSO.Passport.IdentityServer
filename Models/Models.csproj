@@ -31,35 +31,62 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AngleSharp, Version=0.9.9.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
+      <HintPath>..\packages\AngleSharp.0.9.9\lib\net45\AngleSharp.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlSanitizer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=61c49a1a9e79cc28, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlSanitizer.3.4.156\lib\net45\HtmlSanitizer.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Masuit.Tools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Masuit.Tools.1.3.0.3\lib\net45\Masuit.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StackExchange.Redis, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.1.2.6\lib\net45\StackExchange.Redis.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\PermissionContext.cs" />
-    <Compile Include="Dto\FunctionDto.cs" />
-    <Compile Include="Dto\FunctionTypeDto.cs" />
-    <Compile Include="Dto\PermissionDto.cs" />
-    <Compile Include="Dto\RoleDto.cs" />
-    <Compile Include="Dto\UserGroupDto.cs" />
+    <Compile Include="Dto\FunctionInputDto.cs" />
+    <Compile Include="Dto\FunctionOutputDto.cs" />
+    <Compile Include="Dto\PageDataViewModel.cs" />
+    <Compile Include="Dto\PermissionInputDto.cs" />
+    <Compile Include="Dto\PermissionOutputDto.cs" />
+    <Compile Include="Dto\RoleInputDto.cs" />
+    <Compile Include="Dto\RoleOutputDto.cs" />
+    <Compile Include="Dto\UserGroupInputDto.cs" />
+    <Compile Include="Dto\UserGroupOutputDto.cs" />
     <Compile Include="Dto\UserGroupPermissionDto.cs" />
-    <Compile Include="Dto\UserInfoDto.cs" />
+    <Compile Include="Dto\UserInfoInputDto.cs" />
+    <Compile Include="Dto\UserInfoOutputDto.cs" />
     <Compile Include="Dto\UserInfoViewModel.cs" />
-    <Compile Include="Dto\UserPermissionDto.cs" />
+    <Compile Include="Dto\UserPermissionInputDto.cs" />
+    <Compile Include="Dto\UserPermissionOutputDto.cs" />
     <Compile Include="Entity\Function.cs" />
-    <Compile Include="Entity\FunctionType.cs" />
     <Compile Include="Entity\Permission.cs" />
     <Compile Include="Entity\Role.cs" />
     <Compile Include="Entity\UserGroup.cs" />
     <Compile Include="Entity\UserGroupPermission.cs" />
     <Compile Include="Entity\UserInfo.cs" />
     <Compile Include="Entity\UserPermission.cs" />
+    <Compile Include="Enum\FunctionType.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

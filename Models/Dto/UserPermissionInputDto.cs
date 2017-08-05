@@ -2,12 +2,13 @@ using System;
 
 namespace Models.Dto
 {
-    public class UserPermissionDto
+    public class UserPermissionInputDto
     {
         public int Id { get; set; }
-
         public bool HasPermission { get; set; }
 
-        public virtual PermissionDto PermissionDto { get; set; }
+        public Guid? UserInfoId { get; set; }
+
+        public int? PermissionId { get; set; }
     }
 }

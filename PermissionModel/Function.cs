@@ -23,9 +23,8 @@ namespace PermissionModel
         public string IsAvailable { get; set; }
         public string ParentId { get; set; }
         public int PermissionId { get; set; }
-        public int FunctionTypeId { get; set; }
+        public int FunctionType { get; set; }
     
-        public virtual FunctionType FunctionType { get; set; }
         public virtual Permission Permission { get; set; }
     }
 }
