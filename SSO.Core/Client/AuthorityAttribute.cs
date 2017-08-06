@@ -65,7 +65,7 @@ namespace SSO.Core.Client
                         DateTime timestamp = DateTime.Now;
                         string returnUrl = request.Url.AbsoluteUri;
                         tokenModel = new TokenModel { TimeStamp = timestamp, Token = AuthernUtil.CreateToken(timestamp) };
-                        //Token加入缓存中，设计过期时间为20分钟
+                        //Token加入缓存中，设计过期时间为20分钟，这里为了方便设置Token的过期时间，所以使用Cache来存取Token,设定Token的失效时间为20分钟，当验证成功则从cache中移除Token。
                         cache.Add(Constants.TOKEN_KEY, tokenModel, null, DateTime.Now.AddMinutes(20), Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
                         filterContext.Result = new ContentResult { Content = GetAuthernScript(AuthernUtil.GetAuthorityUrl(tokenModel.Token, timestamp), returnUrl) };
                         return;

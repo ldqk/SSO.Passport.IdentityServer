@@ -19,7 +19,9 @@ namespace Models.Application
             Configuration.UseDatabaseNullSemantics = true; //关闭数据库null比较行为
             Database.CreateIfNotExists();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<PermissionContext, Configuration>());
+#if DEBUG
             Database.Log = Console.WriteLine;
+#endif
         }
 
         public virtual DbSet<Function> Function { get; set; }

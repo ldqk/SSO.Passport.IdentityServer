@@ -8,9 +8,9 @@ using Masuit.Tools;
 using Masuit.Tools.Net;
 using Masuit.Tools.Strings;
 using Models.Entity;
-using SSO.Passport.IdentityServer.Models;
-using SSO.Core;
 using SSO.Core.Client;
+using SSO.Core.Server;
+using SSO.Passport.IdentityServer.Models;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {

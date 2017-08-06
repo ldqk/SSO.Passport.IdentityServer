@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using SSO.Core.Client;
 
-namespace SSO.Core
+namespace SSO.Core.Server
 {
     public class PassportService
     {
