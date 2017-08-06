@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
-using BLL;
 using IBLL;
 using Masuit.Tools;
 using Models.Dto;
@@ -24,6 +23,14 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserGroupBll = userGroupBll;
             UserGroupPermissionBll = userGroupPermissionBll;
         }
+
+        public ActionResult Get(int id)
+        {
+            Role role = RoleBll.GetById(id);
+            RoleOutputDto model = Mapper.Map<RoleOutputDto>(role);
+            return ResultData(model);
+        }
+
         public ActionResult GetAllList()
         {
             IQueryable<Role> roles = RoleBll.LoadEntitiesNoTracking(r => true);

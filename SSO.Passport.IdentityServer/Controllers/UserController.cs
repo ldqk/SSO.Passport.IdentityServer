@@ -22,7 +22,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserGroupBll = userGroupBll;
         }
 
-        public ActionResult GetUser(Guid id)
+        public ActionResult Get(Guid id)
         {
             UserInfo userInfo = UserInfoBll.GetById(id);
             UserInfoOutputDto model = Mapper.Map<UserInfoOutputDto>(userInfo);

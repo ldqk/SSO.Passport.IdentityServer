@@ -39,6 +39,7 @@ namespace Models.Migrations
             if (!context.Role.Find(1).UserInfo.Any())
             {
                 context.Role.Find(1).UserInfo.Add(userInfo);
+                context.Role.Find(2).UserInfo.Add(userInfo);
             }
             context.Permission.AddOrUpdate(p => p.PermissionName, permission, new Permission() { PermissionName = "Ìí¼ÓÕË»§" });
             context.SaveChanges();
@@ -51,6 +52,7 @@ namespace Models.Migrations
             if (!context.UserGroup.Find(1).UserInfo.Any())
             {
                 context.UserGroup.Find(1).UserInfo.Add(userInfo);
+                context.UserGroup.Find(2).UserInfo.Add(userInfo);
             }
             context.UserGroupPermission.AddOrUpdate(p => new { p.UserGroupId, p.RoleId }, new UserGroupPermission() { UserGroupId = group.Id, RoleId = role.Id });
             context.SaveChanges();

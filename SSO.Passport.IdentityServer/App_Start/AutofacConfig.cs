@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Configuration;
+using System.IO;
+using System.Reflection;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
@@ -22,7 +25,8 @@ namespace SSO.Passport.IdentityServer
             builder.RegisterControllers(Assembly.GetExecutingAssembly());
 
             //3.0 告诉autofac注册所有的Bll，创建类的实例，以该类的接口实现实例存储
-            builder.RegisterTypes(Assembly.Load("BLL").GetTypes()).AsImplementedInterfaces();
+            Assembly bll = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", ConfigurationManager.AppSettings["BllPath"] ?? "BLL.dll"));
+            builder.RegisterTypes(bll.GetTypes()).AsImplementedInterfaces();
 
             //4.0 创建一个autofac的容器
             IContainer container = builder.Build();

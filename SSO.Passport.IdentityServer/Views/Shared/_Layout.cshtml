@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-CN">
+@using StackExchange.Profiling;
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,4 +27,5 @@
 <body>
 @RenderBody()
 </body>
+@MiniProfiler.RenderIncludes()
 </html>

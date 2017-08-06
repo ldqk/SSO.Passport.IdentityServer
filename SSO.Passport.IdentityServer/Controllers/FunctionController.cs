@@ -23,7 +23,6 @@ namespace SSO.Passport.IdentityServer.Controllers
         }
 
 
-        #region 功能列表
         public ActionResult Get(int id)
         {
             FunctionOutputDto dto = Mapper.Map<FunctionOutputDto>(FunctionBll.GetById(id));
@@ -134,7 +133,5 @@ namespace SSO.Passport.IdentityServer.Controllers
             bool b = FunctionBll.DeleteEntitiesSaved(functions);
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
-        #endregion
-
     }
 }

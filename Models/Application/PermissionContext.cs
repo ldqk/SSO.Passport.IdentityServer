@@ -1,6 +1,10 @@
+using System;
 using System.Data.Entity;
+using System.Linq;
+using EFSecondLevelCache;
 using Models.Entity;
 using Models.Migrations;
+using static System.Data.Entity.Core.Objects.ObjectContext;
 
 namespace Models.Application
 {
@@ -8,10 +12,14 @@ namespace Models.Application
     {
         public PermissionContext() : base("name=PermissionContext")
         {
-
-            Configuration.AutoDetectChangesEnabled = false;
+            Configuration.AutoDetectChangesEnabled = false; //关闭自动跟踪对象的属性变化
+            Configuration.LazyLoadingEnabled = false; //关闭延迟加载
+            Configuration.ProxyCreationEnabled = false; //关闭代理类
+            Configuration.ValidateOnSaveEnabled = false; //关闭保存时的实体验证
+            Configuration.UseDatabaseNullSemantics = true; //关闭数据库null比较行为
             Database.CreateIfNotExists();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<PermissionContext, Configuration>());
+            Database.Log = Console.WriteLine;
         }
 
         public virtual DbSet<Function> Function { get; set; }
@@ -36,6 +44,29 @@ namespace Models.Application
             modelBuilder.Entity<UserGroup>().HasMany(e => e.UserGroupPermission).WithRequired(e => e.UserGroup).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<UserGroup>().HasMany(e => e.UserInfo).WithMany(e => e.UserGroup).Map(m => m.ToTable("UserInfoUserGroup"));
+        }
+
+        //重写 SaveChanges
+        public override int SaveChanges()
+        {
+            return SaveAllChanges();
+        }
+
+        public int SaveAllChanges(bool invalidateCacheDependencies = true)
+        {
+            var changedEntityNames = GetChangedEntityNames();
+            var result = base.SaveChanges();
+            if (invalidateCacheDependencies)
+            {
+                new EFCacheServiceProvider().InvalidateCacheDependencies(changedEntityNames);
+            }
+            return result;
+        }
+
+        //修改、删除、添加数据时缓存失效
+        private string[] GetChangedEntityNames()
+        {
+            return ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted).Select(x => GetObjectType(x.Entity.GetType()).FullName).Distinct().ToArray();
         }
     }
 }

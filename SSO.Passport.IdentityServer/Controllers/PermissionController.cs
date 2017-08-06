@@ -26,6 +26,13 @@ namespace SSO.Passport.IdentityServer.Controllers
             RoleBll = roleBll;
         }
 
+
+        public ActionResult Get(int id)
+        {
+            PermissionOutputDto model = Mapper.Map<PermissionOutputDto>(PermissionBll.GetById(id));
+            return ResultData(model);
+        }
+
         public ActionResult GetAllList()
         {
             IQueryable<Permission> permissions = PermissionBll.LoadEntitiesNoTracking(r => true);

@@ -30,7 +30,7 @@ namespace DALFactory
                 try
                 {
                     string DalPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", ConfigurationManager.AppSettings["DalPath"] ?? "DAL.dll");//根据程序集路径创建实例对象
-                    Assembly ass = Assembly.Load(DalPath);
+                    Assembly ass = Assembly.LoadFile(DalPath);
                     return (T)ass.CreateInstance(fullNamespace);
                 }
                 catch (Exception)
