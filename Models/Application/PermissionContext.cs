@@ -13,8 +13,6 @@ namespace Models.Application
         public PermissionContext() : base("name=PermissionContext")
         {
             Configuration.AutoDetectChangesEnabled = false; //关闭自动跟踪对象的属性变化
-            Configuration.LazyLoadingEnabled = false; //关闭延迟加载
-            Configuration.ProxyCreationEnabled = false; //关闭代理类
             Configuration.ValidateOnSaveEnabled = false; //关闭保存时的实体验证
             Configuration.UseDatabaseNullSemantics = true; //关闭数据库null比较行为
             Database.CreateIfNotExists();
@@ -49,9 +47,9 @@ namespace Models.Application
         }
 
         //重写 SaveChanges
-        public override int SaveChanges()
+        public int SaveChanges(bool invalidateCacheDependencies = true)
         {
-            return SaveAllChanges();
+            return SaveAllChanges(invalidateCacheDependencies);
         }
 
         public int SaveAllChanges(bool invalidateCacheDependencies = true)

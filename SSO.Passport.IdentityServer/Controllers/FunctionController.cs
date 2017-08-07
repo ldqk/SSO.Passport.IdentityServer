@@ -16,10 +16,11 @@ namespace SSO.Passport.IdentityServer.Controllers
         public IFunctionBll FunctionBll { get; set; }
         public IPermissionBll PermissionBll { get; set; }
 
-        public FunctionController(IFunctionBll functionBll, IPermissionBll permissionBll)
+        public FunctionController(IFunctionBll functionBll, IPermissionBll permissionBll, IUserInfoBll userInfoBll)
         {
             FunctionBll = functionBll;
             PermissionBll = permissionBll;
+            UserInfoBll = userInfoBll;
         }
 
 

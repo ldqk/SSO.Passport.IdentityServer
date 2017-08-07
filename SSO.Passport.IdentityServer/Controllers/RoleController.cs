@@ -17,11 +17,12 @@ namespace SSO.Passport.IdentityServer.Controllers
         public IUserGroupBll UserGroupBll { get; set; }
         public IUserGroupPermissionBll UserGroupPermissionBll { get; set; }
 
-        public RoleController(IRoleBll roleBll, IUserGroupBll userGroupBll, IUserGroupPermissionBll userGroupPermissionBll)
+        public RoleController(IRoleBll roleBll, IUserGroupBll userGroupBll, IUserGroupPermissionBll userGroupPermissionBll, IUserInfoBll userInfoBll)
         {
             RoleBll = roleBll;
             UserGroupBll = userGroupBll;
             UserGroupPermissionBll = userGroupPermissionBll;
+            UserInfoBll = userInfoBll;
         }
 
         public ActionResult Get(int id)

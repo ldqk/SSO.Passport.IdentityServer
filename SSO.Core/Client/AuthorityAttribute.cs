@@ -6,6 +6,7 @@ using System.Web.Caching;
 using System.Web.Mvc;
 using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
+using Masuit.Tools.Net;
 using Masuit.Tools.Security;
 
 namespace SSO.Core.Client
@@ -70,7 +71,7 @@ namespace SSO.Core.Client
                         filterContext.Result = new ContentResult { Content = GetAuthernScript(AuthernUtil.GetAuthorityUrl(tokenModel.Token, timestamp), returnUrl) };
                         return;
                     }
-                    session[Constants.USER_SESSION_KEY] = LoginService.GetUserInfo(ticket);
+                    session.SetByRedis(LoginService.GetUserInfo(ticket), Constants.USER_SESSION_KEY);
                     //验证通过,cache中去掉Token,保证每个token只能使用一次
                     cache.Remove(Constants.TOKEN_KEY);
                 }

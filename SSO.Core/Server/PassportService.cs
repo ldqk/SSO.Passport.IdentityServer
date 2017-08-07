@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using Masuit.Tools;
 using SSO.Core.Client;
 
 namespace SSO.Core.Server
@@ -20,6 +21,9 @@ namespace SSO.Core.Server
             return userId;
         }
 
-        public string GetReturnUrl(string userId, string token, string returnUrl) => $"{Regex.Replace(returnUrl, "ticket=(.{0,36})&token=(.{0,32})", String.Empty)}{(returnUrl.Contains("?") ? "&" : "?")}ticket={CreateTicket(userId)}&token={token}";
+        public string GetReturnUrl(string userId, string token, string returnUrl)
+        {
+            return $"{returnUrl.Replace(new Regex("ticket=(.{0,36})&token=(.{0,32})"), String.Empty)}{(returnUrl.Contains("?") ? "&" : "?")}ticket={CreateTicket(userId)}&token={token}".Replace(new Regex(@"(\?&+)"), "?").Replace(new Regex(@"&+"), "&");
+        }
     }
 }

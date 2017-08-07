@@ -12,7 +12,7 @@ namespace Models.Dto
             UserGroup = new HashSet<UserGroupOutputDto>();
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Username { get; set; }
 

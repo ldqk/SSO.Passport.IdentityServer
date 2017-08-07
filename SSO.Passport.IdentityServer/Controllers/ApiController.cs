@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
 using IBLL;
+using Masuit.Tools;
 using Models.Dto;
 using Models.Entity;
 using Models.Enum;
@@ -27,7 +28,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult GetUser(Guid id)
         {
             UserInfo userInfo = UserInfoBll.GetById(id);
-            UserInfoLoginModel model = Mapper.Map<UserInfoLoginModel>(userInfo);
+            UserInfoLoginModel model = userInfo.MapTo<UserInfoLoginModel>();
             return Content(JsonConvert.SerializeObject(model));
         }
 
@@ -35,7 +36,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult GetPermission(Guid id)
         {
             UserInfo userInfo = UserInfoBll.GetById(id);
-            IEnumerable<Function> list = UserInfoBll.GetPermissionList(userInfo, FunctionType.Operating);
+            IEnumerable<Function> list = UserInfoBll.GetPermissionList(userInfo);
             return Content(JsonConvert.SerializeObject(Mapper.Map<IList<FunctionOutputDto>>(list.ToList())));
         }
         public ActionResult GetMenu(Guid id)

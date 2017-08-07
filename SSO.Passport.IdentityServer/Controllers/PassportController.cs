@@ -3,10 +3,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
 using IBLL;
 using Masuit.Tools;
 using Masuit.Tools.Net;
+using Masuit.Tools.NoSQL;
+using Masuit.Tools.Security;
 using Masuit.Tools.Strings;
+using Models.Dto;
 using Models.Entity;
 using SSO.Core.Client;
 using SSO.Core.Server;
@@ -19,9 +23,11 @@ namespace SSO.Passport.IdentityServer.Controllers
     {
         private PassportService Passportservice => new PassportService();
         public IUserInfoBll UserInfoBll { get; set; }
+        public RedisHelper RedisHelper { get; set; }
         public PassportController(IUserInfoBll userInfoBll)
         {
             UserInfoBll = userInfoBll;
+            RedisHelper = new RedisHelper();
         }
 
         public ActionResult PassportCenter()
@@ -31,9 +37,9 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 return Content("没有授权Token，非法访问");
             }
-            if (Session["user"] != null)
+            if (Session.GetByCookieRedis<UserInfo>() != null)
             {
-                UserInfo userInfo = Session["user"] as UserInfo;
+                UserInfo userInfo = Session.GetByCookieRedis<UserInfo>();
                 return Redirect(Passportservice.GetReturnUrl(userInfo.Id.ToString(), Request["token"], Request["returnUrl"]));
             }
             return View();
@@ -66,7 +72,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult Login()
         {
-            if (Session.GetSession<UserInfo>(Request.Cookies["sessionId"]?.Value) != null)
+            if (Session.GetByCookieRedis<UserInfo>() != null)
             {
                 //已经登录系统了就直接跳到来源页
                 return Redirect(Regex.Replace(Request["ReturnUrl"], @"ticket=(.{0,36})&token=(.{0,32})", String.Empty) ?? "/");
@@ -74,11 +80,11 @@ namespace SSO.Passport.IdentityServer.Controllers
             if (Request.Cookies.Count > 0)
             {
                 string name = CookieHelper.GetCookieValue("username");
-                string pwd = CookieHelper.GetCookieValue("password");
+                string pwd = CookieHelper.GetCookieValue("password").AES_Decrypt();
                 UserInfo userInfo = UserInfoBll.Login(name, pwd);
                 if (userInfo != null)
                 {
-                    Session["user"] = userInfo;
+                    Session.SetByRedis(Mapper.Map<UserInfoOutputDto>(userInfo));
                     return RedirectToAction("PassportCenter", "Passport", new { Token = Request["Token"], ReturnUrl = Regex.Replace(Request["ReturnUrl"], @"ticket=(.{36})&token=(.{32})", String.Empty) });
                 }
             }
@@ -90,12 +96,12 @@ namespace SSO.Passport.IdentityServer.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Login(string username, string password, string valid, string remem)
         {
-            string validSession = Session.GetSession<string>("valid") ?? String.Empty; //将验证码从Session中取出来，用于登录验证比较
+            string validSession = Session.GetByCookieRedis<string>("valid") ?? String.Empty; //将验证码从Session中取出来，用于登录验证比较
             if (String.IsNullOrEmpty(validSession))
             {
                 return Content("no:验证码错误");
             }
-            Session.SetSession("valid", null); //验证成功就销毁验证码Session，非常重要
+            Session.RemoveByCookieRedis("valid"); //验证成功就销毁验证码Session，非常重要
             if (!valid.Trim().Equals(validSession, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Content("no:验证码错误");
@@ -107,19 +113,17 @@ namespace SSO.Passport.IdentityServer.Controllers
             var userInfo = UserInfoBll.Login(username, password);
             if (userInfo != null)
             {
-                Session["user"] = userInfo;
+                Session.SetByRedis(Mapper.Map<UserInfoOutputDto>(userInfo));
                 Response.Cookies.Add(new HttpCookie(Constants.USER_COOKIE_KEY) { HttpOnly = true, Value = userInfo.Id.ToString(), Expires = DateTime.Now.AddHours(2) });
                 if (remem.Trim().Contains(new[] { "on", "true" })) //是否记住登录
                 {
                     HttpCookie userCookie = new HttpCookie("username", Server.UrlEncode(username.Trim()));
                     Response.Cookies.Add(userCookie);
                     userCookie.Expires = DateTime.Now.AddDays(7);
-                    HttpCookie passCookie = new HttpCookie("password", Server.UrlEncode(password.Trim())) { Expires = DateTime.Now.AddDays(7) };
+                    HttpCookie passCookie = new HttpCookie("password", Server.UrlEncode(password.Trim().AES_Encrypt())) { Expires = DateTime.Now.AddDays(7) };
                     Response.Cookies.Add(passCookie);
                 }
-                string sessionId = Guid.NewGuid().ToString();
-                Session.SetSession(sessionId, userInfo);
-                Response.Cookies.Add(new HttpCookie("sessionId", sessionId));
+                Session.SetByRedis(Mapper.Map<UserInfoOutputDto>(userInfo));
                 if (Request["Token"].IsNullOrEmpty() || Request["ReturnUrl"].IsNullOrEmpty())
                 {
                     return Content("ok::/");
@@ -136,7 +140,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult LogOut()
         {
-            Session["user"] = null;
+            Session.RemoveByCookieRedis();
             Response.Cookies[Constants.USER_COOKIE_KEY].Expires = DateTime.Now.AddDays(-1);
             return Content("退出成功");
         }
@@ -148,7 +152,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult ValidateCode()
         {
             string code = Masuit.Tools.Strings.ValidateCode.CreateValidateCode(6);
-            Session.SetSession("valid", code); //将验证码生成到Session中
+            Session.SetByRedis(code, "valid"); //将验证码生成到Session中
             System.Web.HttpContext.Current.CreateValidateGraphic(code);
             Response.ContentType = "image/jpeg";
             return File(Encoding.UTF8.GetBytes(code), "image/jpeg");
@@ -162,7 +166,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         [HttpPost]
         public ActionResult CheckValidateCode(string code)
         {
-            string validSession = Session["valid"] as string ?? String.Empty;
+            string validSession = Session.GetByRedis<string>("valid");
             if (String.IsNullOrEmpty(validSession))
             {
                 return Content("no:验证码错误");
@@ -185,12 +189,12 @@ namespace SSO.Passport.IdentityServer.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult UserRegister(string email, string username, string password, string valid)
         {
-            string validSession = Session.GetSession<string>("valid") ?? String.Empty;
+            string validSession = Session.GetByCookieRedis<string>("valid") ?? String.Empty;
             if (String.IsNullOrEmpty(validSession))
             {
                 return Content("no:验证码错误");
             }
-            Session.SetSession("valid", null);
+            Session.RemoveByCookieRedis("valid");
             if (!valid.Trim().Equals(validSession, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Content("no:验证码错误");
@@ -223,7 +227,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 var passCookie = new HttpCookie("password", Server.UrlEncode(password.Trim())) { Expires = DateTime.Now.AddDays(7) };
                 Response.Cookies.Add(passCookie);
                 string sessionId = Guid.NewGuid().ToString();
-                Session.SetSession(sessionId, userInfo);
+                Session.SetByRedis(userInfo);
                 Response.Cookies.Add(new HttpCookie("sessionId", sessionId));
 
                 #endregion

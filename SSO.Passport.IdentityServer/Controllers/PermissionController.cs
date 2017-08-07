@@ -15,7 +15,6 @@ namespace SSO.Passport.IdentityServer.Controllers
     {
         public IPermissionBll PermissionBll { get; set; }
         public IUserPermissionBll UserPermissionBll { get; set; }
-        public IUserInfoBll UserInfoBll { get; set; }
         public IRoleBll RoleBll { get; set; }
 
         public PermissionController(IPermissionBll permissionBll, IUserPermissionBll userPermissionBll, IUserInfoBll userInfoBll, IRoleBll roleBll)

@@ -13,7 +13,6 @@ namespace SSO.Passport.IdentityServer.Controllers
 {
     public class UserController : BaseController
     {
-        public IUserInfoBll UserInfoBll { get; set; }
         public IUserGroupBll UserGroupBll { get; set; }
 
         public UserController(IUserInfoBll userInfoBll, IUserGroupBll userGroupBll)

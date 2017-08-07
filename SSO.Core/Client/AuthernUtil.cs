@@ -19,7 +19,7 @@ namespace SSO.Core.Client
         /// <summary>
         /// 获取当前登录用户
         /// </summary>
-        public static UserInfoLoginModel CurrentUser => HttpContext.Current.Session?.GetSession<UserInfoLoginModel>(Constants.USER_SESSION_KEY);
+        public static UserInfoLoginModel CurrentUser => HttpContext.Current.Session?.GetByCookieRedis<UserInfoLoginModel>(Constants.USER_SESSION_KEY);
 
         /// <summary>
         /// 获取SSO登陆地址

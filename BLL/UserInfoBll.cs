@@ -19,7 +19,7 @@ namespace BLL
         /// <returns></returns>
         public UserInfo GetByUsername(string name)
         {
-            return GetFirstEntity(u => u.Username.Equals(name) || u.Email.Equals(name) || u.PhoneNumber.Equals(name));
+            return GetFirstEntityFromL2Cache(u => u.Username.Equals(name) || u.Email.Equals(name) || u.PhoneNumber.Equals(name));
         }
 
         /// <summary>
@@ -101,18 +101,19 @@ namespace BLL
         /// <returns></returns>
         public IList<Function> GetPermissionList(UserInfo user)
         {
+            user = GetByUsername(user.Username);
             List<Function> list = new List<Function>(); //所有允许的权限
             if (user != null)
             {
                 //1.0 用户-角色-权限-功能 主线，权限的优先级最低
-                user.Role.ForEach(r => r.Permission.ForEach(p => list.AddRange(p.Function)));
+                user.Role.ForEach(r => r.Permission.ForEach(p => list.AddRange(p.Function.Where(c => c.IsAvailable))));
 
                 //2.0 用户-用户组-角色-权限，权限的优先级其次
                 user.UserGroup?.ForEach(g => g.UserGroupPermission.ForEach(ugp =>
                 {
                     if (ugp.HasPermission)
                     {
-                        ugp.Role.Permission.ForEach(p => list.AddRange(p.Function));
+                        ugp.Role.Permission.ForEach(p => list.AddRange(p.Function.Where(c => c.IsAvailable)));
                     }
                     else
                     {
@@ -125,7 +126,7 @@ namespace BLL
                 {
                     if (p.HasPermission)
                     {
-                        list.AddRange(p.Permission.Function);
+                        list.AddRange(p.Permission.Function.Where(c => c.IsAvailable));
                     }
                     else
                     {
@@ -133,7 +134,7 @@ namespace BLL
                     }
                 });
             }
-            return list;
+            return list.Where(c => c.IsAvailable).Distinct(new FunctionComparision()).ToList();
         }
 
         /// <summary>
@@ -214,6 +215,27 @@ namespace BLL
                 return SaveChanges() > 0;
             }
             return false;
+        }
+    }
+
+    public class FunctionComparision : IEqualityComparer<Function>
+    {
+        /// <summary>Determines whether the specified objects are equal.</summary>
+        /// <returns>true if the specified objects are equal; otherwise, false.</returns>
+        /// <param name="x">The first object of type <paramref name="T" /> to compare.</param>
+        /// <param name="y">The second object of type <paramref name="T" /> to compare.</param>
+        public bool Equals(Function x, Function y)
+        {
+            return x.Controller.Equals(y.Controller) && x.Action.Equals(y.Action);
+        }
+
+        /// <summary>Returns a hash code for the specified object.</summary>
+        /// <returns>A hash code for the specified object.</returns>
+        /// <param name="obj">The <see cref="T:System.Object" /> for which a hash code is to be returned.</param>
+        /// <exception cref="T:System.ArgumentNullException">The type of <paramref name="obj" /> is a reference type and <paramref name="obj" /> is null.</exception>
+        public int GetHashCode(Function obj)
+        {
+            return 0;
         }
     }
 }
