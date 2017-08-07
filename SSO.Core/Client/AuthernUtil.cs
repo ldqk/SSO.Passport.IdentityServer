@@ -17,9 +17,14 @@ namespace SSO.Core.Client
         public static string CreateToken(DateTime timestamp) => timestamp.GetTotalMilliseconds().ToString().MDString2();
 
         /// <summary>
-        /// 获取当前登录用户
+        /// 获取当前客户端登录用户
         /// </summary>
         public static UserInfoLoginModel CurrentUser => HttpContext.Current.Session?.GetByCookieRedis<UserInfoLoginModel>(Constants.USER_SESSION_KEY);
+
+        /// <summary>
+        /// 注销客户端当前用户
+        /// </summary>
+        public static bool Logout() => HttpContext.Current.Session.RemoveByCookieRedis(Constants.USER_SESSION_KEY);
 
         /// <summary>
         /// 获取SSO登陆地址

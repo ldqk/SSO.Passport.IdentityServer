@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Masuit.Tools;
@@ -34,6 +35,15 @@ namespace SSO.Core.Client
             {
                 return null;
             }
+        }
+
+        public static string Logout(string returnUrl)
+        {
+            StringBuilder sbScript = new StringBuilder();
+            sbScript.Append("<script type='text/javascript'>");
+            sbScript.AppendFormat($"window.location.href='{ConfigurationManager.AppSettings["PassportUrl"] ?? $"{HttpContext.Current.Request.Url.Scheme}://{HttpContext.Current.Request.Url.Authority}"}/Passport/Logout?returnUrl={returnUrl}';");
+            sbScript.Append("</script>");
+            return sbScript.ToString();
         }
     }
 }

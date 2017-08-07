@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using IBLL;
+using Masuit.Tools;
 using Models.Entity;
 using Newtonsoft.Json;
+using SSO.Core.Client;
 using SSO.Passport.IdentityServer.Models;
+#if !DEBUG
+using Masuit.Tools.Net; 
+#endif
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
-#if DEBUG
-    using Core.Client;
-
-    [Authority(Code = AuthCodeEnum.Login), MyExceptionFilter]
-#else
+    [Authority(Code = AuthCodeEnum.Login)]
     [MyExceptionFilter]
-#endif
     public class BaseController : Controller
     {
         public IUserInfoBll UserInfoBll { get; set; }
@@ -42,9 +42,9 @@ namespace SSO.Passport.IdentityServer.Controllers
             if (userInfo != null)
             {
                 IList<Function> FunctionList = UserInfoBll.GetPermissionList(userInfo);
-                if (!FunctionList.Any(c => c.Controller.Equals(controller, StringComparison.InvariantCultureIgnoreCase) && c.Action.Equals(action, StringComparison.InvariantCultureIgnoreCase) && c.HttpMethod.Equals(method, StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    filterContext.Result = new JsonResult() { Data = new { Success = false, Message = "无权限访问！" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet, ContentEncoding = Encoding.UTF8, ContentType = "application/json" };
+                if (!userInfo.Username.ToLower().Contains(new[] { "admin", "sa", "system", "root", "everyone" }) && !FunctionList.Any(c => c.Controller.Equals(controller, StringComparison.InvariantCultureIgnoreCase) && c.Action.Equals(action, StringComparison.InvariantCultureIgnoreCase) && c.HttpMethod.Equals(method, StringComparison.InvariantCultureIgnoreCase)))
+                {//如果不是系统账户，并且不包含以上权限，则阻断
+                    filterContext.Result = new JsonResult { Data = new { Success = false, Message = "无权限访问！" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet, ContentEncoding = Encoding.UTF8, ContentType = "application/json" };
                 }
             }
         }

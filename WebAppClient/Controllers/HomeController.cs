@@ -11,5 +11,11 @@ namespace WebAppClient.Controllers
         {
             return View();
         }
+
+        public ActionResult LogOut()
+        {
+            AuthernUtil.Logout();
+            return Content(LoginService.Logout("http://www.baidu.com"));
+        }
     }
 }
