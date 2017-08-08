@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using AutoMapper;
 using IBLL;
@@ -31,7 +32,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult GetAllList()
         {
             IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntitiesNoTracking(u => true);
-            IList<UserInfo> list = Mapper.Map<IList<UserInfo>>(userInfos.ToList());
+            IList<UserInfoOutputDto> list = Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList());
             return ResultData(list, userInfos.Any());
         }
 
@@ -40,7 +41,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             IQueryable<UserInfo> userInfos = UserInfoBll.LoadPageEntitiesNoTracking(page, size, out int totalCount, u => true, u => u.Id, false);
             PageDataViewModel model = new PageDataViewModel()
             {
-                Data = Mapper.Map<IList<UserInfo>>(userInfos.ToList()),
+                Data = Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList()),
                 PageIndex = page,
                 PageSize = size,
                 TotalPage = Math.Ceiling(totalCount.To<double>() / size.To<double>()).ToInt32(),
@@ -55,7 +56,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             if (all.Any())
             {
                 IEnumerable<UserInfo> userInfos = all.OrderByDescending(u => u.Id).Skip(size * (page - 1)).Take(size);
-                PageDataViewModel model = new PageDataViewModel() { Data = Mapper.Map<IList<UserInfo>>(userInfos.ToList()), PageIndex = page, PageSize = size, TotalPage = Math.Ceiling(all.Count.To<double>() / size.To<double>()).ToInt32(), TotalCount = all.Count };
+                PageDataViewModel model = new PageDataViewModel() { Data = Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList()), PageIndex = page, PageSize = size, TotalPage = Math.Ceiling(all.Count.To<double>() / size.To<double>()).ToInt32(), TotalCount = all.Count };
                 return ResultData(model);
             }
             return ResultData(null, false, "没有数据");
@@ -63,47 +64,70 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Add(UserInfoInputDto model, int? gid)
         {
+            if (model.Email.Trim().IsNullOrEmpty())
+            {
+                return ResultData(model, false, $"邮箱不能为空！");
+            }
+            if (model.Username.Trim().IsNullOrEmpty())
+            {
+                return ResultData(model, false, $"用户名不能为空！");
+            }
+            if (model.Password.Trim().IsNullOrEmpty())
+            {
+                return ResultData(model, false, $"密码不能为空！");
+            }
             if (UserInfoBll.UsernameExist(model.Username))
             {
                 return ResultData(model, false, $"用户名{model.Username}已经存在！");
             }
-            else if (UserInfoBll.EmailExist(model.Email))
+            if (UserInfoBll.EmailExist(model.Email))
             {
                 return ResultData(model, false, $"邮箱{model.Email}已经存在！");
             }
-            else if (UserInfoBll.PhoneExist(model.PhoneNumber))
+            if (UserInfoBll.PhoneExist(model.PhoneNumber))
             {
                 return ResultData(model, false, $"电话号码{model.PhoneNumber}已经存在！");
+            }
+            Match match = model.Email.MatchEmail(out bool flag);
+            if (!match.Success)
+            {
+                return ResultData(model, false, $"邮箱格式不正确！");
+            }
+            match = model.PhoneNumber.MatchPhoneNumber(out flag);
+            if (!match.Success)
+            {
+                return ResultData(model, false, $"手机号码格式不正确！");
             }
             UserInfo userInfo = UserInfoBll.Register(Mapper.Map<UserInfo>(model));
             if (gid != null)
             {
                 UserGroup @group = UserGroupBll.GetById(gid);
-                group.UserInfo.Add(userInfo);
-                UserGroupBll.SaveChanges();
+                userInfo.UserGroup.Add(group);
+                UserInfoBll.UpdateEntitySaved(userInfo);
             }
             return ResultData(Mapper.Map<UserInfoOutputDto>(userInfo));
         }
 
-        public ActionResult Update(UserInfoInputDto model)
+        public ActionResult Update(UserInfoInputDto model, int? gid)
         {
-            if (UserInfoBll.UsernameExist(model.Username))
+            UserInfo user = UserInfoBll.GetById(model.Id);
+            IQueryable<UserInfo> all = UserInfoBll.LoadEntities(u => !u.Username.Equals(user.Username) && !u.Email.Equals(user.Email) && !u.PhoneNumber.Equals(user.PhoneNumber));
+            if (all.Any(u => u.Username.Equals(model.Username)))
             {
                 return ResultData(model, false, $"用户名{model.Username}已经存在！");
             }
-            else if (UserInfoBll.EmailExist(model.Email))
+            if (all.Any(u => u.Email.Equals(model.Email)))
             {
                 return ResultData(model, false, $"邮箱{model.Email}已经存在！");
             }
-            else if (UserInfoBll.PhoneExist(model.PhoneNumber))
+            if (all.Any(u => u.PhoneNumber.Equals(model.PhoneNumber)))
             {
                 return ResultData(model, false, $"电话号码{model.PhoneNumber}已经存在！");
             }
-            UserInfo userInfo = UserInfoBll.GetByUsername(model.Username);
-            userInfo.Username = model.Username;
-            userInfo.Email = model.Email;
-            userInfo.PhoneNumber = model.PhoneNumber;
-            bool b = UserInfoBll.SaveChanges() > 0;
+            user.Username = model.Username;
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+            bool b = UserInfoBll.UpdateEntitySaved(user);
             return ResultData(Mapper.Map<UserInfoOutputDto>(model), b, b ? "修改成功！" : "修改失败！");
         }
 
@@ -116,13 +140,13 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult Delete(Guid id)
         {
             bool b = UserInfoBll.DeleteById(id);
+            UserInfoBll.SaveChanges();
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
-            IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntities(u => ids.Contains(u.Id.ToString()));
-            bool b = UserInfoBll.DeleteEntitiesSaved(userInfos);
+            bool b = UserInfoBll.DeleteEntity(u => ids.Contains(u.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 

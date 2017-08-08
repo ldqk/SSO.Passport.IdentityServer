@@ -512,7 +512,6 @@ namespace DAL
         /// <returns>更新成功</returns>
         public bool UpdateEntity(T t)
         {
-            db.Entry(t).State = EntityState.Unchanged;
             db.Entry(t).State = EntityState.Modified;
             return true;
         }

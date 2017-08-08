@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Models.Dto;
 using Models.Entity;
 using Models.Enum;
 
@@ -87,5 +88,6 @@ namespace IBLL
         /// </summary>
         /// <returns></returns>
         bool ResetPassword(string name, string newPwd = "123456");
+
     }
 }

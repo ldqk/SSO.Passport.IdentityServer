@@ -5,6 +5,7 @@ using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
 using Masuit.Tools.Security;
 using Masuit.Tools.Win32;
+using Models.Dto;
 using Models.Entity;
 using Models.Enum;
 
@@ -19,7 +20,7 @@ namespace BLL
         /// <returns></returns>
         public UserInfo GetByUsername(string name)
         {
-            return GetFirstEntityFromL2Cache(u => u.Username.Equals(name) || u.Email.Equals(name) || u.PhoneNumber.Equals(name));
+            return GetFirstEntity(u => u.Username.Equals(name));
         }
 
         /// <summary>
@@ -52,12 +53,14 @@ namespace BLL
         /// 注册
         /// </summary>
         /// <param name="userInfo"></param>
+        /// <param name="gid">用户组id</param>
         /// <returns></returns>
         public UserInfo Register(UserInfo userInfo)
         {
             UserInfo exist = GetFirstEntity(u => u.Username.Equals(userInfo.Username) || u.Email.Equals(userInfo.Email) || u.PhoneNumber.Equals(userInfo.PhoneNumber));
             if (exist is null)
             {
+                userInfo.Id = Guid.NewGuid();
                 var salt = $"{new Random().StrictNext()}{DateTime.Now.GetTotalMilliseconds()}".MDString2(Guid.NewGuid().ToString()).Base64Encrypt();
                 userInfo.Password = userInfo.Password.MDString2(salt);
                 userInfo.SaltKey = salt;
@@ -77,7 +80,7 @@ namespace BLL
         public bool UsernameExist(string name)
         {
             UserInfo userInfo = GetByUsername(name);
-            return userInfo is null;
+            return userInfo != null;
         }
 
         /// <summary>
@@ -85,14 +88,14 @@ namespace BLL
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public bool EmailExist(string email) => GetFirstEntityNoTracking(u => u.Email.Equals(email)) is null;
+        public bool EmailExist(string email) => GetFirstEntityNoTracking(u => u.Email.Equals(email)) != null;
 
         /// <summary>
         /// 检查电话号码是否存在
         /// </summary>
         /// <param name="num"></param>
         /// <returns></returns>
-        public bool PhoneExist(string num) => GetFirstEntityNoTracking(u => u.PhoneNumber.Equals(num)) is null;
+        public bool PhoneExist(string num) => GetFirstEntityNoTracking(u => u.PhoneNumber.Equals(num)) != null;
 
         /// <summary>
         /// 获取权限列表

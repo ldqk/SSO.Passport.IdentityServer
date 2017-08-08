@@ -12,9 +12,6 @@ namespace Models.Application
     {
         public PermissionContext() : base("name=PermissionContext")
         {
-            Configuration.AutoDetectChangesEnabled = false; //关闭自动跟踪对象的属性变化
-            Configuration.ValidateOnSaveEnabled = false; //关闭保存时的实体验证
-            Configuration.UseDatabaseNullSemantics = true; //关闭数据库null比较行为
             Database.CreateIfNotExists();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<PermissionContext, Configuration>());
 #if DEBUG

@@ -92,7 +92,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 function.PermissionId = dto.PermissionId;
             }
-            bool res = FunctionBll.UpdateEntity(function);
+            bool res = FunctionBll.UpdateEntitySaved(function);
             return res ? ResultData(dto, message: "修改成功！") : ResultData(null, false, "修改失败！");
         }
 
@@ -104,7 +104,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             if (permission != null && function != null)
             {
                 function.PermissionId = permission.Id;
-                bool res = FunctionBll.UpdateEntity(function);
+                bool res = FunctionBll.UpdateEntitySaved(function);
                 return res ? ResultData(Mapper.Map<FunctionOutputDto>(function), message: $"权限成功修改为：{permission.PermissionName}！") : ResultData(null, false, "权限修改失败！");
             }
             return ResultData(null, false, "数据不存在！");
@@ -115,7 +115,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             if (function != null)
             {
                 function.FunctionType = tid == 1 ? FunctionType.Menu : FunctionType.Operating;
-                bool res = FunctionBll.UpdateEntity(function);
+                bool res = FunctionBll.UpdateEntitySaved(function);
                 return res ? ResultData(Mapper.Map<FunctionOutputDto>(function), message: $"类型修改成功！") : ResultData(null, false, "类型修改失败！");
             }
             return ResultData(null, false, "数据不存在！");
@@ -123,15 +123,14 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Delete(int id)
         {
-            bool res = FunctionBll.DeleteById(id);
+            bool res = FunctionBll.DeleteEntity(c => c.Id == id) > 0;
             return ResultData(null, res, res ? "删除成功！" : "删除失败！");
         }
 
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
-            IQueryable<Function> functions = FunctionBll.LoadEntities(r => ids.Contains(r.Id.ToString()));
-            bool b = FunctionBll.DeleteEntitiesSaved(functions);
+            bool b = FunctionBll.DeleteEntity(r => ids.Contains(r.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
     }

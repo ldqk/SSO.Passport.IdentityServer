@@ -72,35 +72,33 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Delete(int id)
         {
-            bool b = RoleBll.DeleteById(id);
+            bool b = RoleBll.DeleteEntity(r => r.Id == id) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
-            IQueryable<Role> roles = RoleBll.LoadEntities(r => ids.Contains(r.Id.ToString()));
-            bool b = RoleBll.DeleteEntitiesSaved(roles);
+            bool b = RoleBll.DeleteEntity(r => ids.Contains(r.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
         public ActionResult AddUserGroup(int id, int rid)
         {
-            Task<int> task = UserGroupPermissionBll.AddEntitySavedAsync(new UserGroupPermission() { UserGroupId = id, RoleId = rid, HasPermission = true });
+            UserGroupPermission permission = UserGroupPermissionBll.AddEntitySaved(new UserGroupPermission() { UserGroupId = id, RoleId = rid, HasPermission = true });
             UserGroup @group = UserGroupBll.GetById(id);
             Role role = RoleBll.GetById(rid);
-            bool saved = task.Result > 0;
+            bool saved = permission != null;
             return ResultData(null, saved, saved ? $"成功为用户组{group.GroupName}分配角色{role.RoleName}！" : "分配角色失败！");
         }
 
         public ActionResult RemoveUserGroup(int id, int rid)
         {
             List<UserGroupPermission> list = UserGroupPermissionBll.LoadEntities(p => p.UserGroupId.Equals(id) && p.RoleId.Equals(rid)).ToList();
-            Task<int> task = UserGroupPermissionBll.DeleteEntitiesSavedAsync(list);
+            bool res = UserGroupPermissionBll.DeleteEntitiesSaved(list);
             UserGroup @group = UserGroupBll.GetById(id);
             Role role = RoleBll.GetById(rid);
-            bool saved = task.Result > 0;
-            return ResultData(null, saved, saved ? $"成功将{group.GroupName}的{role.RoleName}角色移除！" : "移除失败！");
+            return ResultData(null, res, res ? $"成功将{group.GroupName}的{role.RoleName}角色移除！" : "移除失败！");
         }
 
         public ActionResult Toggle(int id, int rid, bool allow)
