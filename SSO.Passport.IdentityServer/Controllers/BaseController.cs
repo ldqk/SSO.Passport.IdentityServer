@@ -15,7 +15,7 @@ using Masuit.Tools.Net;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
-    [Authority(Code = AuthCodeEnum.Login)]
+    //[Authority(Code = AuthCodeEnum.Login)]
     [MyExceptionFilter]
     public class BaseController : Controller
     {
@@ -23,7 +23,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult ResultData(object data, bool isTrue = true, string message = "")
         {
-            return Content(JsonConvert.SerializeObject(new { Success = isTrue, IsLogin = true, Message = message, Data = data }, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Ignore }));
+            return Content(JsonConvert.SerializeObject(new { Success = isTrue, Message = message, Data = data }, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Ignore }));
         }
 
         /// <summary>在调用操作方法前调用。</summary>

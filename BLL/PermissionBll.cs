@@ -22,7 +22,7 @@ namespace BLL
         /// <returns></returns>
         public bool PermissionNameExist(string name)
         {
-            return GetPermissionByName(name) is null;
+            return GetPermissionByName(name) != null;
         }
 
         /// <summary>

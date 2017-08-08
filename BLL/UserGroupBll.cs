@@ -22,7 +22,7 @@ namespace BLL
         /// <returns></returns>
         public bool GroupNameExist(string name)
         {
-            return GetGroupByName(name) is null;
+            return GetGroupByName(name) != null;
         }
 
         /// <summary>

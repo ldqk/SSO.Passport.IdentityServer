@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Net.Http;
 using System.Text;
@@ -21,15 +22,10 @@ namespace SSO.Core.Client
         public static UserInfoLoginModel GetUserInfo(string ticket)
         {
             //todo 解密ticket 获取用户Id
-            HttpClient client = new HttpClient() { BaseAddress = new Uri(ConfigurationManager.AppSettings["PassportUrl"] ?? $"{HttpContext.Current.Request.Url.Scheme}://{HttpContext.Current.Request.Url.Authority}") };
-            int time = DateTime.Now.GetTotalSeconds().ToInt32();
-            string salt = ConfigurationManager.AppSettings["encryptSalt"] ?? "masuit".DesEncrypt();
-            string hash = (time + salt).MDString();
-            Task<string> task = client.GetStringAsync($"/Api/GetUser/{ticket}?time={time}&hash={hash}");
+            string data = AuthernUtil.CallServerApi("/Api/GetUser", new Dictionary<string, string> { { "id", ticket } });
             try
             {
-                string result = task.Result;
-                return JsonConvert.DeserializeObject<UserInfoLoginModel>(result);
+                return JsonConvert.DeserializeObject<UserInfoLoginModel>(data);
             }
             catch (Exception e)
             {

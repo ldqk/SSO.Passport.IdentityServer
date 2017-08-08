@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
+using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
 using Masuit.Tools.Net;
 using Masuit.Tools.Security;
+using Newtonsoft.Json;
 
 namespace SSO.Core.Client
 {
@@ -25,6 +31,24 @@ namespace SSO.Core.Client
         /// 注销客户端当前用户
         /// </summary>
         public static bool Logout() => HttpContext.Current.Session.RemoveByCookieRedis(Constants.USER_SESSION_KEY);
+
+        /// <summary>
+        /// 调用服务器端接口数据<br/> 
+        /// </summary>
+        /// <param name="path">API路径，格式：/Controller/Action</param>
+        /// <param name="param">参数，键值对</param>
+        /// <returns></returns>
+        public static string CallServerApi(string path, IDictionary<string, string> param)
+        {
+            HttpClient client = new HttpClient() { BaseAddress = new Uri(ConfigurationManager.AppSettings["PassportUrl"] ?? $"{HttpContext.Current.Request.Url.Scheme}://{HttpContext.Current.Request.Url.Authority}") };
+            int time = DateTime.Now.GetTotalSeconds().ToInt32();
+            string salt = ConfigurationManager.AppSettings["encryptSalt"] ?? "masuit".DesEncrypt();
+            string hash = (time + salt).MDString();
+            StringBuilder sb = new StringBuilder();
+            param?.ForEach(kv => sb.Append(kv.Key + "=" + kv.Value + "&"));
+            Task<string> task = client.GetStringAsync($"{path}?{sb}time={time}&hash={hash}");
+            return task.Result;
+        }
 
         /// <summary>
         /// 获取SSO登陆地址

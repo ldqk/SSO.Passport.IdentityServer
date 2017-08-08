@@ -72,15 +72,14 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Delete(int id)
         {
-            bool b = PermissionBll.DeleteById(id);
+            bool b = PermissionBll.DeleteEntity(p => p.Id == id) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
-            IQueryable<Permission> permissions = PermissionBll.LoadEntities(r => ids.Contains(r.Id.ToString()));
-            bool b = PermissionBll.DeleteEntitiesSaved(permissions);
+            bool b = PermissionBll.DeleteEntity(r => ids.Contains(r.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 

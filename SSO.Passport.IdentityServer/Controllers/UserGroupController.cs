@@ -60,15 +60,14 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Delete(int id)
         {
-            bool b = UserGroupBll.DeleteById(id);
+            bool b = UserGroupBll.DeleteEntity(g => g.Id == id) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
-            IQueryable<UserGroup> groups = UserGroupBll.LoadEntities(g => ids.Contains(g.Id.ToString()));
-            bool b = UserGroupBll.DeleteEntitiesSaved(groups);
+            bool b = UserGroupBll.DeleteEntity(g => ids.Contains(g.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
@@ -94,7 +93,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         {
             UserInfo userInfo = UserInfoBll.GetById(id);
             UserGroup f = UserGroupBll.GetGroupByName(from);
-            UserGroup t = UserGroupBll.GetGroupByName(from);
+            UserGroup t = UserGroupBll.GetGroupByName(to);
             f.UserInfo.Remove(userInfo);
             t.UserInfo.Add(userInfo);
             UserGroupBll.UpdateEntity(f);

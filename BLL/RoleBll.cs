@@ -22,7 +22,7 @@ namespace BLL
         /// <returns></returns>
         public bool RoleNameExist(string name)
         {
-            return GetRoleByName(name) is null;
+            return GetRoleByName(name) != null;
         }
 
         /// <summary>

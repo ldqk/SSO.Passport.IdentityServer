@@ -3,13 +3,16 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
 using IBLL;
 using Masuit.Tools;
 using Masuit.Tools.Net;
 using Masuit.Tools.NoSQL;
 using Masuit.Tools.Security;
 using Masuit.Tools.Strings;
+using Models.Dto;
 using Models.Entity;
+using Newtonsoft.Json;
 using SSO.Core.Client;
 using SSO.Core.Server;
 using SSO.Passport.IdentityServer.Models;
@@ -28,6 +31,10 @@ namespace SSO.Passport.IdentityServer.Controllers
             RedisHelper = new RedisHelper();
         }
 
+        public ActionResult ResultData(object data, bool isTrue = true, string message = "")
+        {
+            return Content(JsonConvert.SerializeObject(new { Success = isTrue, Message = message, Data = data }, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Ignore }));
+        }
         public ActionResult PassportCenter()
         {
             //没有授权Token非法访问
@@ -184,7 +191,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <param name="valid"></param>
         /// <returns></returns>
         [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult UserRegister(string email, string username, string password, string valid)
+        public ActionResult Register(UserInfoInputDto model, string valid)
         {
             string validSession = Session.GetByCookieRedis<string>("valid", 1) ?? String.Empty;
             if (String.IsNullOrEmpty(validSession))
@@ -196,44 +203,49 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 return Content("no:验证码错误");
             }
-            if (String.IsNullOrEmpty(email.Trim()))
+            if (String.IsNullOrEmpty(model.Email.Trim()))
             {
-                return Content("no:邮箱不能为空");
+                return ResultData(model, false, $"邮箱不能为空！");
             }
-            if (String.IsNullOrEmpty(username.Trim()))
+            if (String.IsNullOrEmpty(model.Username.Trim()))
             {
-                return Content("no:用户名不能为空");
+                return ResultData(model, false, $"用户名不能为空！");
             }
-            if (String.IsNullOrEmpty(password.Trim()))
+            if (String.IsNullOrEmpty(model.Password.Trim()))
             {
-                return Content("no:密码不能为空");
+                return ResultData(model, false, $"密码不能为空！");
             }
-            if (CheckExists(username.Trim()) || CheckExists(email.Trim()))
+            if (UserInfoBll.UsernameExist(model.Username))
             {
-                return Content("no:用户名或邮箱已存在");
+                return ResultData(model, false, $"用户名{model.Username}已经存在！");
             }
-            UserInfo userInfo = new UserInfo() { Username = username.Trim(), Password = password.Trim() };
-            userInfo = UserInfoBll.Register(userInfo);
+            if (UserInfoBll.EmailExist(model.Email))
+            {
+                return ResultData(model, false, $"邮箱{model.Email}已经存在！");
+            }
+            if (UserInfoBll.PhoneExist(model.PhoneNumber))
+            {
+                return ResultData(model, false, $"电话号码{model.PhoneNumber}已经存在！");
+            }
+            UserInfo userInfo = UserInfoBll.Register(Mapper.Map<UserInfo>(model));
             try
             {
                 #region 新用户注册成功写入Cookie
 
-                var userCookie = new HttpCookie("username", Server.UrlEncode(username.Trim()));
+                var userCookie = new HttpCookie("username", Server.UrlEncode(model.Username.Trim()));
                 Response.Cookies.Add(userCookie);
                 userCookie.Expires = DateTime.Now.AddDays(7);
-                var passCookie = new HttpCookie("password", Server.UrlEncode(password.Trim())) { Expires = DateTime.Now.AddDays(7) };
+                var passCookie = new HttpCookie("password", Server.UrlEncode(model.Password.Trim()).AESEncrypt()) { Expires = DateTime.Now.AddDays(7) };
                 Response.Cookies.Add(passCookie);
-                string sessionId = Guid.NewGuid().ToString();
-                Session.SetByRedis(userInfo);
-                Response.Cookies.Add(new HttpCookie("sessionId", sessionId));
+                Session.SetByRedis(userInfo.MapTo<UserInfoLoginModel>());
 
                 #endregion
 
-                return Content($"ok:新用户{username.Trim()}注册成功！");
+                return ResultData($"新用户{model.Username.Trim()}注册成功！", message: $"新用户{model.Username.Trim()}注册成功！");
             }
             catch (Exception)
             {
-                return Content($"no:{username.Trim()}注册失败！");
+                return ResultData($"{model.Username.Trim()}注册失败！", message: $"{model.Username.Trim()}注册失败！");
             }
         }
 
@@ -243,21 +255,23 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <param name="username"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult UserExists(string username) => CheckExists(username) ? Content($"no:用户名{username}已存在！") : Content($"ok:用户名{username}可以注册！");
-
-        /// <summary>
-        /// 检验用户名或邮箱是否存在
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        private bool CheckExists(string str) => UserInfoBll.Any(u => u.Username.Equals(str.Trim(), StringComparison.InvariantCultureIgnoreCase) || u.Email.Equals(str.Trim(), StringComparison.InvariantCultureIgnoreCase));
+        public ActionResult UserExists(string username) => UserInfoBll.UsernameExist(username) ? ResultData($"用户名{username}已存在！", message: $"用户名{username}已存在！") : ResultData($"用户名{username}可以注册！", message: $"用户名{username}可以注册！");
 
         /// <summary>
         /// 检查邮箱存在
         /// </summary>
         /// <param name="mail"></param>
         /// <returns></returns>
-        public ActionResult EmailExists(string mail) => CheckExists(mail) ? Content("no:该邮箱已存在！") : Content("ok:该邮箱可以注册！");
+        [HttpPost]
+        public ActionResult EmailExists(string mail) => UserInfoBll.EmailExist(mail) ? ResultData($"邮箱{mail}已存在！", message: $"邮箱{mail}已存在！") : ResultData($"该邮箱可以注册！", message: "$该邮箱可以注册！");
+
+        /// <summary>
+        /// 检查手机号码
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult PhoneExists(string num) => UserInfoBll.PhoneExist(num) ? ResultData($"手机号码{num}已存在！", message: $"手机号码{num}已存在！") : ResultData($"该手机号码可以注册！", message: "$该手机号码可以注册！");
 
     }
 }
