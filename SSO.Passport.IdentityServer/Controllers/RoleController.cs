@@ -102,12 +102,73 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, res, res ? $"成功将{group.GroupName}的{role.RoleName}角色移除！" : "移除失败！");
         }
 
-        public ActionResult Toggle(int id, int rid, bool allow)
+        public ActionResult Toggle(string gid, string rid, string has)
         {
-            List<UserGroupPermission> list = UserGroupPermissionBll.LoadEntities(p => p.UserGroupId.Equals(id) && p.RoleId.Equals(rid)).ToList();
-            list.ForEach(p => p.HasPermission = allow);
-            bool b = UserGroupPermissionBll.UpdateEntities(list);
+            string[] gids = gid.Trim(',').Split(',');
+            string[] rids = rid.Trim(',').Split(',');
+            string[] allows = has.Trim(',').Split(',');
+            IList<UserGroupPermission> list = new List<UserGroupPermission>();
+            for (var i = 0; i < gids.Length; i++)
+            {
+                var groupid = gids[i].ToInt32();
+                var rsid = rids[i].ToInt32();
+                var hasps = allows[i].To<bool>();
+                UserGroupPermissionBll.DeleteEntity(p => p.UserGroupId.Equals(groupid) && p.RoleId.Equals(rsid));
+                list.Add(new UserGroupPermission() { HasPermission = hasps, UserGroupId = groupid, RoleId = rsid });
+            }
+            IEnumerable<UserGroupPermission> ups = UserGroupPermissionBll.AddEntities(list);
+            bool b = ups.Any();
             return ResultData(null, b, b ? $"状态更新成功！" : "切换失败！");
+        }
+
+
+        public ActionResult UserNoHasRole(Guid id)
+        {
+            IEnumerable<Role> roles = RoleBll.LoadEntities(r => true).ToList().Except(UserInfoBll.GetById(id).Role.ToList());
+            return ResultData(Mapper.Map<IList<RoleOutputDto>>(roles.ToList()));
+        }
+        public ActionResult UserRoleList(Guid id)
+        {
+            return ResultData(Mapper.Map<IList<RoleOutputDto>>(UserInfoBll.GetById(id).Role.ToList()));
+        }
+
+        public ActionResult UpdateUserRole(Guid id, string rids)
+        {
+            string[] strs = rids.Split(',');
+            IQueryable<Role> roles = RoleBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            userInfo.Role.Clear();
+            roles.ToList().ForEach(r => userInfo.Role.Add(r));
+            bool b = UserInfoBll.SaveChanges() > 0;
+            return ResultData(null, b, b ? "角色分配成功！" : "角色分配失败！");
+        }
+
+
+        public ActionResult NoHasGroup(int id)
+        {
+            IList<Role> list = new List<Role>();
+            UserGroupBll.GetById(id).UserGroupPermission.ToList().ForEach(p => list.Add(p.Role));
+            IEnumerable<Role> roles = RoleBll.LoadEntities(r => true).ToList().Except(list);
+            return ResultData(Mapper.Map<IList<RoleOutputDto>>(roles.ToList()));
+        }
+
+        public ActionResult GroupList(int id)
+        {
+            IList<Role> list = new List<Role>();
+            UserGroupBll.GetById(id).UserGroupPermission.ToList().ForEach(p => list.Add(p.Role));
+            return ResultData(Mapper.Map<IList<RoleOutputDto>>(list));
+        }
+
+        public ActionResult UpdateGroup(int id, string rids)
+        {
+            string[] strs = rids.Split(',');
+            IQueryable<Role> roles = RoleBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            UserGroup @group = UserGroupBll.GetById(id);
+            bool b = UserGroupPermissionBll.DeleteEntity(u => u.UserGroupId.Equals(@group.Id)) > 0;
+            IList<UserGroupPermission> list = new List<UserGroupPermission>();
+            roles.ToList().ForEach(p => list.Add(new UserGroupPermission() { UserGroupId = @group.Id, RoleId = p.Id, HasPermission = true }));
+            UserGroupPermissionBll.AddEntities(list);
+            return ResultData(null, b, b ? "角色分配成功！" : "角色分配失败！");
         }
     }
 }

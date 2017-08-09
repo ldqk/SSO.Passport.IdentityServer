@@ -566,6 +566,12 @@
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\User\ChangePassword.cshtml" />
     <Content Include="Views\UserGroup\Index.cshtml" />
+    <Content Include="Views\UserGroup\Get.cshtml" />
+    <Content Include="Views\User\Group.cshtml" />
+    <Content Include="Views\User\Role.cshtml" />
+    <Content Include="Views\User\Permission.cshtml" />
+    <Content Include="Views\UserGroup\User.cshtml" />
+    <Content Include="Views\UserGroup\Role.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

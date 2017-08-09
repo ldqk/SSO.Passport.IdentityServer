@@ -43,6 +43,7 @@
                         <th>手机号码</th>
                         <th>Email</th>
                         <th>最后登录时间</th>
+                        <th>配置</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -157,10 +158,18 @@
 				},
 				{
 					"data": "LastLoginTime"
+				},
+				{
+					"data": "LastLoginTime"
 				}
 			],
 			"createdRow": function(row, data, index) {
 				$('td', row).eq(4).html(
+					"<a type='button' class='btn btn-default' href='/User/Group/" + data.Id +"'>用户组</a> "+
+					"<a type='button' class='btn btn-default' href='/User/Permission/" + data.Id +"'>临时权限</a> "+
+					"<a type='button' class='btn btn-default' href='/User/Role/" + data.Id +"'>角色</a> "
+				);
+				$('td', row).eq(5).html(
 					"<button type='button' class='btn btn-default' onclick='goToPage(\"/User/Edit/" + data.Id +"\");'>修改</button> " +
 					"<button type='button' class='btn btn-default' onclick='openDeleteWindow(\"" + data.Id + "\");'>删除</button>" +
 					"<a type='button' class='btn btn-default' href='/User/ChangePassword/"+ data.Id +"'>修改密码</a>"

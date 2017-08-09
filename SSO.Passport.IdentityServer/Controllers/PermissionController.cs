@@ -103,11 +103,22 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, saved, saved ? $"成功将{userInfo.Username}的{permission.PermissionName}权限移除！" : "移除失败！");
         }
 
-        public ActionResult Toggle(Guid id, int pid, bool allow)
+        public ActionResult Toggle(string uid, string pid, string has)
         {
-            List<UserPermission> list = UserPermissionBll.LoadEntities(p => p.UserInfoId.Equals(id) && p.PermissionId.Equals(pid)).ToList();
-            list.ForEach(p => p.HasPermission = allow);
-            bool b = UserPermissionBll.UpdateEntities(list);
+            string[] uids = uid.Trim(',').Split(',');
+            string[] pids = pid.Trim(',').Split(',');
+            string[] allows = has.Trim(',').Split(',');
+            IList<UserPermission> list = new List<UserPermission>();
+            for (var i = 0; i < uids.Length; i++)
+            {
+                var userId = Guid.Parse(uids[i]);
+                var psid = pids[i].ToInt32();
+                var hasps = allows[i].To<bool>();
+                UserPermissionBll.DeleteEntity(p => p.UserInfoId.Equals(userId) && p.PermissionId.Equals(psid));
+                list.Add(new UserPermission() { HasPermission = hasps, UserInfoId = userId, PermissionId = psid });
+            }
+            IEnumerable<UserPermission> ups = UserPermissionBll.AddEntities(list);
+            bool b = ups.Any();
             return ResultData(null, b, b ? $"状态更新成功！" : "切换失败！");
         }
 
@@ -118,6 +129,35 @@ namespace SSO.Passport.IdentityServer.Controllers
             permission.Role.Add(role);
             bool saved = PermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, saved, saved ? $"成功为{role.RoleName}分配{permission.PermissionName}权限！" : "权限分配失败！");
+        }
+
+
+        public ActionResult NoHasPermission(Guid id)
+        {
+            IList<Permission> list = new List<Permission>();
+            UserInfoBll.GetById(id).UserPermission.ToList().ForEach(p => list.Add(p.Permission));
+            IEnumerable<Permission> permissions = PermissionBll.LoadEntities(r => true).ToList().Except(list);
+            return ResultData(Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList()));
+        }
+
+        public ActionResult UserPermissionList(Guid id)
+        {
+            IList<Permission> list = new List<Permission>();
+            UserInfoBll.GetById(id).UserPermission.ToList().ForEach(p => list.Add(p.Permission));
+            return ResultData(Mapper.Map<IList<PermissionOutputDto>>(list));
+
+        }
+
+        public ActionResult UpdateUserPermission(Guid id, string pids)
+        {
+            string[] strs = pids.Split(',');
+            IQueryable<Permission> permissions = PermissionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            bool b = UserPermissionBll.DeleteEntity(u => u.UserInfoId.Equals(userInfo.Id)) > 0;
+            IList<UserPermission> list = new List<UserPermission>();
+            permissions.ToList().ForEach(p => list.Add(new UserPermission() { UserInfoId = userInfo.Id, PermissionId = p.Id, HasPermission = true }));
+            UserPermissionBll.AddEntities(list);
+            return ResultData(null, b, b ? "临时权限分配成功！" : "临时权限分配失败！");
         }
 
         public ActionResult RemoveRole(int id, int pid)

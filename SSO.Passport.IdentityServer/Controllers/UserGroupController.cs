@@ -25,6 +25,13 @@ namespace SSO.Passport.IdentityServer.Controllers
         {
             return View();
         }
+
+        public ActionResult Get(int id)
+        {
+            UserGroup g = UserGroupBll.GetById(id);
+            return View(g);
+        }
+
         public ActionResult GetAllList()
         {
             IQueryable<UserGroup> groups = UserGroupBll.LoadEntitiesNoTracking(r => true);
@@ -109,6 +116,41 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserGroupBll.UpdateEntity(t);
             bool saved = UserGroupBll.SaveChanges() > 0;
             return ResultData(null, saved, saved ? $"成功将{userInfo.Username}从用户组{f.GroupName}移动到{t.GroupName}！" : "移动失败！");
+        }
+
+
+        public ActionResult NoHasUserGroup(Guid id)
+        {
+            IEnumerable<UserGroup> roles = UserGroupBll.LoadEntities(r => true).ToList().Except(UserInfoBll.GetById(id).UserGroup.ToList());
+            return ResultData(Mapper.Map<IList<UserGroupOutputDto>>(roles.ToList()));
+        }
+
+        public ActionResult UserGroupList(Guid id)
+        {
+            return ResultData(Mapper.Map<IList<UserGroupOutputDto>>(UserInfoBll.GetById(id).UserGroup.ToList()));
+        }
+
+        public ActionResult UpdateUserGroup(Guid id, string gids)
+        {
+            string[] strs = gids.Split(',');
+            IQueryable<UserGroup> roles = UserGroupBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            userInfo.UserGroup.Clear();
+            roles.ToList().ForEach(r => userInfo.UserGroup.Add(r));
+            bool b = UserInfoBll.SaveChanges() > 0;
+            return ResultData(null, b, b ? "用户组分配成功！" : "用户组分配失败！");
+        }
+
+        public ActionResult User(int id)
+        {
+            UserGroup @group = UserGroupBll.GetById(id);
+            return View(group);
+        }
+
+        public ActionResult Role(int id)
+        {
+            UserGroup @group = UserGroupBll.GetById(id);
+            return View(group);
         }
     }
 }

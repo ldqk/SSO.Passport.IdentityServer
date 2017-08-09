@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using AutoMapper;
 using IBLL;
@@ -197,5 +196,42 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
+        public ActionResult Group(Guid id)
+        {
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            return View(userInfo);
+        }
+        public ActionResult Permission(Guid id)
+        {
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            return View(userInfo);
+        }
+        public ActionResult Role(Guid id)
+        {
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            return View(userInfo);
+        }
+
+        public ActionResult NoHasUser(int id)
+        {
+            IEnumerable<UserInfo> userInfos = UserInfoBll.LoadEntities(r => true).ToList().Except(UserGroupBll.GetById(id).UserInfo.ToList());
+            return ResultData(Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList()));
+        }
+
+        public ActionResult UserList(int id)
+        {
+            return ResultData(Mapper.Map<IList<UserInfoOutputDto>>(UserGroupBll.GetById(id).UserInfo.ToList()));
+        }
+
+        public ActionResult UpdateGroup(int id, string uids)
+        {
+            string[] strs = uids.Split(',');
+            IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            UserGroup @group = UserGroupBll.GetById(id);
+            @group.UserInfo.Clear();
+            userInfos.ToList().ForEach(r => @group.UserInfo.Add(r));
+            bool b = UserGroupBll.SaveChanges() > 0;
+            return ResultData(null, b, b ? "用户群分配成功！" : "用户群分配失败！");
+        }
     }
 }

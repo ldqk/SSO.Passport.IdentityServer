@@ -39,6 +39,7 @@
                     <thead>
                     <tr>
                         <th>用户组名</th>
+                        <th>配置</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -203,11 +204,19 @@
 			    },
 			    {
 				    "data": "GroupName"
+			    },
+			    {
+				    "data": "GroupName"
 			    }
 		    ],
 		    "createdRow": function(row, data, index) {
 			    $('td', row).eq(1).html(
+				    "<a type='button' class='btn btn-default' href='/UserGroup/User/" + data.Id + "'>添加用户</a>"+
+				    "<a type='button' class='btn btn-default' href='/UserGroup/Role/" + data.Id + "'>角色</a>"
+			    );
+			    $('td', row).eq(2).html(
 				    "<button type='button' class='btn btn-default' onclick='edit("+ data.Id +",\""+data.GroupName+"\")'>修改</button> " +
+				    "<a type='button' class='btn btn-default' href='/UserGroup/Get/" + data.Id + "'>详细</a>"+
 				    "<button type='button' class='btn btn-default' onclick='openDeleteWindow(" + data.Id + ");'>删除</button>"
 			    );
 		    }
@@ -234,7 +243,7 @@
 		    title: '修改【' + name + '】用户组为：',
 		    type: 'info',
 		    html:
-			    '<input id="id" type="hidden">' +
+			    '<input id="id" type="hidden" value="'+id+'">' +
 				    '<input id="name" placeholder="用户组名" value=\"' + name + '\" class="form-control">',
 		    showCloseButton: true,
 		    showCancelButton: true,
@@ -254,7 +263,7 @@
 			    }, function(data) {
 				    data = JSON.parse(data);
 				    if (data.Success) {
-					    swal("修改成功!", "修改后的用户组：" + inputValue, "success");
+					    swal("修改成功!", "修改后的用户组：" + s, "success");
 					    table.ajax.reload();
 				    } else {
 					    swal("修改失败!", data.Message, "error");
