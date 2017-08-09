@@ -70,7 +70,8 @@
     <Compile Include="Application\PermissionContext.cs" />
     <Compile Include="Dto\FunctionInputDto.cs" />
     <Compile Include="Dto\FunctionOutputDto.cs" />
-    <Compile Include="Dto\PageDataViewModel.cs" />
+    <Compile Include="ViewModel\DataTableViewModel.cs" />
+    <Compile Include="ViewModel\PageDataViewModel.cs" />
     <Compile Include="Dto\PermissionInputDto.cs" />
     <Compile Include="Dto\PermissionOutputDto.cs" />
     <Compile Include="Dto\RoleInputDto.cs" />
@@ -80,7 +81,7 @@
     <Compile Include="Dto\UserGroupPermissionDto.cs" />
     <Compile Include="Dto\UserInfoInputDto.cs" />
     <Compile Include="Dto\UserInfoOutputDto.cs" />
-    <Compile Include="Dto\UserInfoViewModel.cs" />
+    <Compile Include="ViewModel\UserInfoViewModel.cs" />
     <Compile Include="Dto\UserPermissionInputDto.cs" />
     <Compile Include="Dto\UserPermissionOutputDto.cs" />
     <Compile Include="Entity\Function.cs" />

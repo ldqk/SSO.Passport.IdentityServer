@@ -10,5 +10,23 @@
     "inputFiles": [
       "Content/iconfont.css"
     ]
+  },
+  {
+    "outputFileName": "Content/global/css/AdminLTE.min.css",
+    "inputFiles": [
+      "Content/global/css/AdminLTE.css"
+    ]
+  },
+  {
+    "outputFileName": "Content/global/css/skins/_all-skins.min.css",
+    "inputFiles": [
+      "Content/global/css/skins/_all-skins.css"
+    ]
+  },
+  {
+    "outputFileName": "Content/global/js/app.min.js",
+    "inputFiles": [
+      "Content/global/js/app.js"
+    ]
   }
 ]

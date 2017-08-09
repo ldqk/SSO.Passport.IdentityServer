@@ -8,6 +8,7 @@ using Masuit.Tools;
 using Models.Dto;
 using Models.Entity;
 using Models.Enum;
+using Models.ViewModel;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {

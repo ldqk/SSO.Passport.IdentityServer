@@ -14,6 +14,8 @@ namespace Models.Entity
         [Key]
         public int Id { get; set; }
 
+        public string Name { get; set; }
+
         [Required]
         public string Controller { get; set; }
 

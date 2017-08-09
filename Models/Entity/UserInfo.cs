@@ -20,30 +20,27 @@ namespace Models.Entity
         [Key]
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "用户名不能为空！")]
+        [Display(Name = "用户名"), Required(ErrorMessage = "用户名不能为空！")]
         public string Username { get; set; }
 
-        [Required(ErrorMessage = "登录密码不能为空！")]
+        [Display(Name = "密码"), Required(ErrorMessage = "登录密码不能为空！")]
         public string Password { get; set; }
 
         [Required]
         public string SaltKey { get; set; }
 
-        [Required(ErrorMessage = "手机号码不能为空！")]
+        [Display(Name = "手机号码"), Required(ErrorMessage = "手机号码不能为空！")]
         [StringLength(11)]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "邮箱地址不能为空！")]
+        [Display(Name = "电子邮箱"), Required(ErrorMessage = "邮箱地址不能为空！")]
         public string Email { get; set; }
 
         public DateTime? LastLoginTime { get; set; }
 
-
         public virtual ICollection<UserPermission> UserPermission { get; set; }
 
-
         public virtual ICollection<Role> Role { get; set; }
-
 
         public virtual ICollection<UserGroup> UserGroup { get; set; }
     }

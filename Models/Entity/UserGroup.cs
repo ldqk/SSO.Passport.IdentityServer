@@ -16,9 +16,9 @@ namespace Models.Entity
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required, Display(Name = "用户组")]
         public string GroupName { get; set; }
-
+        [Display(Name = "父级id")]
         public int? ParentId { get; set; }
 
 

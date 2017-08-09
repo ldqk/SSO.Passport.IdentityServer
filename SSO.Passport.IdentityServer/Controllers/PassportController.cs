@@ -146,6 +146,10 @@ namespace SSO.Passport.IdentityServer.Controllers
         {
             Session.RemoveByCookieRedis();
             Response.Cookies[Constants.USER_COOKIE_KEY].Expires = DateTime.Now.AddDays(-1);
+            if (returnUrl.IsNullOrEmpty())
+            {
+                return Content("退出登录成功！");
+            }
             return Redirect(returnUrl);
         }
 

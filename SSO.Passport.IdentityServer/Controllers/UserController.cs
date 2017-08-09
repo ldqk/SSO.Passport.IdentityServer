@@ -8,7 +8,7 @@ using IBLL;
 using Masuit.Tools;
 using Models.Dto;
 using Models.Entity;
-using Newtonsoft.Json;
+using Models.ViewModel;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
@@ -22,32 +22,37 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserGroupBll = userGroupBll;
         }
 
+        public ActionResult Index()
+        {
+            return View();
+        }
         public ActionResult Get(Guid id)
         {
             UserInfo userInfo = UserInfoBll.GetById(id);
             UserInfoOutputDto model = Mapper.Map<UserInfoOutputDto>(userInfo);
-            return Content(JsonConvert.SerializeObject(model));
+            return ResultData(model);
         }
 
         public ActionResult GetAllList()
         {
             IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntitiesNoTracking(u => true);
             IList<UserInfoOutputDto> list = Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList());
-            return ResultData(list, userInfos.Any());
+            return ResultData(list);
         }
 
-        public ActionResult GetPageData(int page = 1, int size = 10)
+        public ActionResult GetPageData(int start = 1, int length = 10)
         {
-            IQueryable<UserInfo> userInfos = UserInfoBll.LoadPageEntitiesNoTracking(page, size, out int totalCount, u => true, u => u.Id, false);
-            PageDataViewModel model = new PageDataViewModel()
+            var search = Request["search[value]"];
+            bool b = search.IsNullOrEmpty();
+            var page = start / length + 1;
+            IQueryable<UserInfo> userInfos = UserInfoBll.LoadPageEntitiesNoTracking(page, length, out int totalCount, u => b || u.Username.Contains(search), u => u.Id, false);
+            DataTableViewModel model = new DataTableViewModel()
             {
-                Data = Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList()),
-                PageIndex = page,
-                PageSize = size,
-                TotalPage = Math.Ceiling(totalCount.To<double>() / size.To<double>()).ToInt32(),
-                TotalCount = totalCount
+                data = Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList()),
+                recordsFiltered = totalCount,
+                recordsTotal = totalCount
             };
-            return ResultData(model, userInfos.Any());
+            return Content(model.ToJsonString());
         }
 
         public ActionResult GetPageDataByGroup(int id, int page = 1, int size = 10)
@@ -62,6 +67,11 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, false, "没有数据");
         }
 
+        public ActionResult Add()
+        {
+            return View();
+        }
+        [HttpPost]
         public ActionResult Add(UserInfoInputDto model, int? gid)
         {
             if (model.Email.Trim().IsNullOrEmpty())
@@ -88,13 +98,13 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 return ResultData(model, false, $"电话号码{model.PhoneNumber}已经存在！");
             }
-            Match match = model.Email.MatchEmail(out bool flag);
-            if (!match.Success)
+            model.Email.MatchEmail(out bool flag);
+            if (flag)
             {
                 return ResultData(model, false, $"邮箱格式不正确！");
             }
-            match = model.PhoneNumber.MatchPhoneNumber(out flag);
-            if (!match.Success)
+            model.PhoneNumber.MatchPhoneNumber(out flag);
+            if (flag)
             {
                 return ResultData(model, false, $"手机号码格式不正确！");
             }
@@ -105,9 +115,16 @@ namespace SSO.Passport.IdentityServer.Controllers
                 userInfo.UserGroup.Add(group);
                 UserInfoBll.UpdateEntitySaved(userInfo);
             }
-            return ResultData(Mapper.Map<UserInfoOutputDto>(userInfo));
+            //return ResultData(Mapper.Map<UserInfoOutputDto>(userInfo));
+            return RedirectToAction("Index");
         }
 
+        public ActionResult Edit(Guid id)
+        {
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            return View(userInfo);
+        }
+        [HttpPost]
         public ActionResult Update(UserInfoInputDto model, int? gid)
         {
             UserInfo user = UserInfoBll.GetById(model.Id);
@@ -131,6 +148,23 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(Mapper.Map<UserInfoOutputDto>(model), b, b ? "修改成功！" : "修改失败！");
         }
 
+        public ActionResult ChangePassword(Guid id)
+        {
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            return View(userInfo);
+        }
+
+        [HttpPost]
+        public ActionResult ChangePassword(Guid id, string old, string pwd, string pwd2)
+        {
+            if (pwd.Equals(pwd2))
+            {
+                bool b = UserInfoBll.ChangePassword(id, old, pwd);
+                return ResultData(null, b, b ? "密码修改成功！" : "密码修改失败！");
+            }
+            return ResultData(null, false, "两次输入的密码不一致！");
+        }
+
         public ActionResult ResetPassword(string name, string newPwd)
         {
             bool b = UserInfoBll.ResetPassword(name, newPwd);
@@ -139,6 +173,11 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Delete(Guid id)
         {
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            userInfo.UserGroup.Clear();
+            userInfo.Role.Clear();
+            userInfo.UserPermission.Clear();
+            UserInfoBll.UpdateEntity(userInfo);
             bool b = UserInfoBll.DeleteById(id);
             UserInfoBll.SaveChanges();
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
@@ -146,6 +185,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
+            IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntities(u => ids.Contains(u.Id.ToString()));
+            userInfos.ForEach(u =>
+            {
+                u.UserGroup.Clear();
+                u.Role.Clear();
+                u.UserPermission.Clear();
+            });
+            UserInfoBll.UpdateEntities(userInfos);
             bool b = UserInfoBll.DeleteEntity(u => ids.Contains(u.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }

@@ -5,6 +5,8 @@ namespace Models.Dto
     public class FunctionInputDto
     {
         public int Id { get; set; }
+        public string Name { get; set; }
+
         public string Controller { get; set; }
 
         public string Action { get; set; }

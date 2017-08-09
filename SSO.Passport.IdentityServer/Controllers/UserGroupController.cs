@@ -7,6 +7,7 @@ using IBLL;
 using Masuit.Tools;
 using Models.Dto;
 using Models.Entity;
+using Models.ViewModel;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
@@ -20,6 +21,10 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserInfoBll = userInfoBll;
         }
 
+        public ActionResult Index()
+        {
+            return View();
+        }
         public ActionResult GetAllList()
         {
             IQueryable<UserGroup> groups = UserGroupBll.LoadEntitiesNoTracking(r => true);
@@ -27,13 +32,17 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(list, groups.Any());
         }
 
-        public ActionResult GetPageData(int page = 1, int size = 10)
+        public ActionResult GetPageData(int start = 1, int length = 10)
         {
-            IQueryable<UserGroup> groups = UserGroupBll.LoadPageEntitiesNoTracking(page, size, out int totalCount, r => true, r => r.Id);
-            PageDataViewModel model = new PageDataViewModel() { Data = Mapper.Map<IList<UserGroupOutputDto>>(groups.ToList()), PageIndex = page, PageSize = size, TotalPage = Math.Ceiling(totalCount.To<double>() / size.To<double>()).ToInt32(), TotalCount = totalCount };
-            return ResultData(model, groups.Any());
+            var search = Request["search[value]"];
+            bool b = search.IsNullOrEmpty();
+            var page = start / length + 1;
+            IQueryable<UserGroup> groups = UserGroupBll.LoadPageEntitiesNoTracking(page, length, out int totalCount, r => b || r.GroupName.Contains(search), r => r.Id);
+            DataTableViewModel model = new DataTableViewModel() { data = Mapper.Map<IList<UserGroupOutputDto>>(groups.ToList()), recordsFiltered = totalCount, recordsTotal = totalCount };
+            return Content(model.ToJsonString());
         }
 
+        [HttpPost]
         public ActionResult Add(UserGroupInputDto model)
         {
             bool exist = UserGroupBll.GroupNameExist(model.GroupName);
@@ -42,7 +51,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 UserGroupBll.AddEntitySaved(Mapper.Map<UserGroup>(model));
                 return ResultData(model);
             }
-            return ResultData(null, exist, $"{model.GroupName}已经存在！");
+            return ResultData(null, !exist, $"{model.GroupName}已经存在！");
         }
 
         public ActionResult Update(UserGroupInputDto model)

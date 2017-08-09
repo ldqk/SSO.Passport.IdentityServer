@@ -5,6 +5,7 @@ namespace Models.Dto
     public class FunctionOutputDto
     {
         public int Id { get; set; }
+        public string Name { get; set; }
 
         public string Controller { get; set; }
 

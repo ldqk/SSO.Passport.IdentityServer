@@ -1,31 +1,79 @@
-﻿<!DOCTYPE html>
-<html lang="zh-CN">
-@using StackExchange.Profiling;
+﻿@using Models.Entity
+@using Models.Enum
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewBag.Title</title>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico"/>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
+    <link href="~/Content/global/css/AdminLTE.min.css" rel="stylesheet"/>
+    <link href="~/Content/global/css/skins/_all-skins.css" rel="stylesheet"/>
+    <link href="http://cdn.bootcss.com/limonte-sweetalert2/6.6.2/sweetalert2.css" rel="stylesheet">
 
-    <!-- 导入css -->
-    <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//cdn.bootcss.com/normalize/5.0.0/normalize.min.css" rel="stylesheet">
-    @Styles.Render("~/styles")
-    <!-- 导入Scripts -->
-    <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <script src="//cdn.bootcss.com/jquery-validate/1.16.0/jquery.validate.min.js"></script>
-    <script src="//cdn.bootcss.com/jquery-validation-unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
-    <script src="//cdn.bootcss.com/jquery-ajax-unobtrusive/3.2.4/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    @Scripts.Render("~/scripts")
-    <!--[if lt IE 9]>
-        <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://cdn.bootcss.com/limonte-sweetalert2/6.6.2/sweetalert2.js"></script>
+    <script src="http://cdn.bootcss.com/es6-promise/4.1.0/es6-promise.min.js"></script>
+    <script src="~/Content/global/js/app.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    @RenderSection("scripts", required: false)
 </head>
-<body>
-@RenderBody()
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header class="main-header">
+        <a href="#" class="logo">
+            <span class="logo-mini"><b>I</b>S4</span>
+            <span class="logo-lg"><b>I</b>dentity<b>S</b>erver</span>
+        </a>
+        <nav class="navbar navbar-static-top">
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <div>
+            </div>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li>
+                        @Html.ActionLink("退出登录", "LogOut", "Passport")
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="header">菜单</li>
+                @{
+                    IList<Function> list = (ViewBag.FunctionList as IList<Function>)?.Where(c => c.FunctionType == FunctionType.Menu).ToList();
+                    if(list.Any()) {
+                        foreach(var menu in list) {
+                            <li>
+                                <a href="/@menu.Controller/@menu.Action/">
+                                    <i class="fa fa-circle-o @menu.CssStyle text-aqua"></i> <span>@menu.Name</span>
+                                </a>
+                            </li>
+                        }
+                    }
+                }
+            </ul>
+        </section>
+    </aside>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                @ViewBag.PageTitle
+            </h1>
+        </section>
+        <section class="content">
+            @RenderBody()
+        </section>
+    </div>
+</div>
 </body>
-@MiniProfiler.RenderIncludes()
 </html>

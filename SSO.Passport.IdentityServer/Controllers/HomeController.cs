@@ -15,7 +15,6 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserInfoBll = userInfoBll;
         }
 
-        // GET: Home
         public ActionResult Index()
         {
             IList<Tuple<string, string>> list = new List<Tuple<string, string>>();

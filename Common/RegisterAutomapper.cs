@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Models.Dto;
 using Models.Entity;
+using Models.ViewModel;
 
 namespace Common
 {

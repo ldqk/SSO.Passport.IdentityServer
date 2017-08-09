@@ -46,6 +46,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 {//如果不是系统账户，并且不包含以上权限，则阻断
                     filterContext.Result = new JsonResult { Data = new { Success = false, Message = "无权限访问！" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet, ContentEncoding = Encoding.UTF8, ContentType = "application/json" };
                 }
+                ViewBag.FunctionList = FunctionList;
             }
         }
     }
