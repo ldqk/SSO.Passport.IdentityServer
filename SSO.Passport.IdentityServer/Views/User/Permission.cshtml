@@ -90,17 +90,21 @@
 		        confirmButtonColor: "#DD6B55",
 		        confirmButtonText: "保存",
 		        cancelButtonText: "取消",
-		        showLoaderOnConfirm: true
-	        }).then(function(isConfirm) {
-		        if (isConfirm) {
-                    $.post("/Permission/Toggle",ps, function(data) {
-				        data = JSON.parse(data);
-				        if (data.Success) {
-					        swal("操作成功！", data.Message, "success");
-				        } else {
-					        swal("操作失败！", data.Message, "error");
-				        }
+		        showLoaderOnConfirm: true,
+		        preConfirm: function() {
+                    return new Promise(function (resolve) {
+	                    $.post("/Permission/Toggle", ps, function(data) {
+		                    data = JSON.parse(data);
+                            resolve(data);
+	                    });
 			        });
+		        },
+		        allowOutsideClick: false
+	        }).then(function(data) {
+		        if (data.Success) {
+			        swal("操作成功！", data.Message, "success");
+		        } else {
+			        swal("操作失败！", data.Message, "error");
 		        }
 	        }, function() {
 		        swal("操作被取消！", "数据不会被保存！", "error");

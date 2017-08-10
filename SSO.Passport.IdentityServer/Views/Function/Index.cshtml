@@ -144,9 +144,12 @@
 				}
 			],
 			"createdRow": function(row, data, index) {
+				$('td', row).eq(4).html(
+                    "<a href='/Permission/Get/" + data.Permission.Id + "'>" + data.Permission.PermissionName +"</a> "
+				);
 				$('td', row).eq(5).html(
-					"<a type='button' class='btn btn-default' href='/Function/Edit/" + data.Id + "'>修改</a> " +
-					"<a type='button' class='btn btn-default' onclick='del(" + data.Id + ");''>删除</a> "
+					"<a class='btn btn-default' href='/Function/Edit/" + data.Id + "'>修改</a> " +
+					"<a class='btn btn-default' onclick='del(" + data.Id + ");''>删除</a> "
 				);
 			}
 		});
@@ -213,6 +216,9 @@
 				}
 			],
 			"createdRow": function(row, data, index) {
+				$('td', row).eq(6).html(
+					"<a href='/Permission/Get/" + data.Permission.Id + "'>" + data.Permission.PermissionName + "</a> "
+				);
                 $('td', row).eq(7).html(
                     "<a type='button' class='btn btn-default' href='/Function/Edit/" + data.Id + "'>修改</a> " +
 					"<a type='button' class='btn btn-default' onclick='del(" + data.Id + ");''>删除</a> "

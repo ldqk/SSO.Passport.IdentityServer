@@ -585,6 +585,7 @@
     <Content Include="Views\Function\Index.cshtml" />
     <Content Include="Views\Function\Edit.cshtml" />
     <Content Include="Views\Function\Add.cshtml" />
+    <Content Include="Views\Function\Get.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

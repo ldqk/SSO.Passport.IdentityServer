@@ -142,13 +142,14 @@
 		                    return false;
 	                    }
 	                    if (inputValue === "") {
-		                    swal.showInputError("角色名不能为空!");
+		                    swal("角色名不能为空!","","error");
 		                    return false;
 	                    }
 	                    $.post("/Role/Add", {
 		                    RoleName: inputValue
 	                    }, function(data) {
-		                    data = JSON.parse(data);
+                            data = JSON.parse(data);
+		                    data.inputValue = inputValue;
 		                    resolve(data);
 	                    });
 					});
@@ -156,7 +157,7 @@
 				allowOutsideClick: false
 			}).then(function(data) {
                 if (data.Success) {
-					swal("添加成功!", "已新增角色：" + data.Data.RoleName, "success");
+                    swal("添加成功!", "已新增角色：" + data.inputValue, "success");
 					table.ajax.reload();
 				} else {
 					swal("添加失败!", data.Message, "error");
@@ -268,7 +269,8 @@
 		                Id: $("#id").val(),
 		                RoleName: s
 	                }, function(data) {
-		                data = JSON.parse(data);
+                        data = JSON.parse(data);
+		                data.s = s;
                         resolve(data);
 	                });
 				});
@@ -276,7 +278,7 @@
 			allowOutsideClick: false
 		}).then(function(data) {
 			if (data.Success) {
-				swal("修改成功!", "修改后的角色：" + s, "success");
+				swal("修改成功!", "修改后的角色：" + data.s, "success");
 				table.ajax.reload();
 			} else {
 				swal("修改失败!", data.Message, "error");

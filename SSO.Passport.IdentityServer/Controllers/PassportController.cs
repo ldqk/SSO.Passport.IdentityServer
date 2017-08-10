@@ -145,6 +145,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult LogOut(string returnUrl)
         {
             Session.RemoveByCookieRedis();
+            Session.RemoveByCookieRedis(Constants.USER_SESSION_KEY);
             Response.Cookies[Constants.USER_COOKIE_KEY].Expires = DateTime.Now.AddDays(-1);
             if (returnUrl.IsNullOrEmpty())
             {

@@ -72,15 +72,15 @@ namespace SSO.Passport.IdentityServer.Controllers
         [HttpPost]
         public ActionResult Add(UserInfoInputDto model, int? gid)
         {
-            if (model.Email.Trim().IsNullOrEmpty())
+            if (model.Email.IsNullOrEmpty())
             {
                 return ResultData(model, false, $"邮箱不能为空！");
             }
-            if (model.Username.Trim().IsNullOrEmpty())
+            if (model.Username.IsNullOrEmpty())
             {
                 return ResultData(model, false, $"用户名不能为空！");
             }
-            if (model.Password.Trim().IsNullOrEmpty())
+            if (model.Password.IsNullOrEmpty())
             {
                 return ResultData(model, false, $"密码不能为空！");
             }
@@ -157,7 +157,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             if (pwd.Equals(pwd2))
             {
                 bool b = UserInfoBll.ChangePassword(id, old, pwd);
-                return ResultData(null, b, b ? "密码修改成功！" : "密码修改失败！");
+                return ResultData(null, b, b ? "密码修改成功！" : "密码修改失败，原密码不正确！");
             }
             return ResultData(null, false, "两次输入的密码不一致！");
         }

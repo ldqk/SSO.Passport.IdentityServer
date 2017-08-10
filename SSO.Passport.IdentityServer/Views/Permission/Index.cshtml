@@ -135,26 +135,33 @@
 				animation: "slide-from-top",
 				confirmButtonText: "确认",
 				cancelButtonText: "取消",
-				inputPlaceholder: "请输入权限名"
-			}).then(function(inputValue) {
-				if (inputValue === false) {
-					return false;
+				inputPlaceholder: "请输入权限名",
+                preConfirm: function (inputValue) {
+					return new Promise(function(resolve) {
+						if (inputValue === false) {
+							return false;
+						}
+						if (inputValue === "") {
+							swal("权限名不能为空!", "", "error");
+							return false;
+						}
+						$.post("/Permission/Add", {
+							PermissionName: inputValue
+						}, function(data) {
+                            data = JSON.parse(data);
+							data.inputValue = inputValue;
+                            resolve(data);
+						});
+					});
+				},
+				allowOutsideClick: false
+			}).then(function(data) {
+				if (data.Success) {
+					swal("添加成功!", "已新增权限：" + data.inputValue, "success");
+					table.ajax.reload();
+				} else {
+					swal("添加失败!", data.Message, "error");
 				}
-				if (inputValue === "") {
-					swal.showInputError("权限名不能为空!");
-					return false;
-				}
-				$.post("/Permission/Add", {
-					PermissionName: inputValue
-				}, function(data) {
-					data = JSON.parse(data);
-					if (data.Success) {
-						swal("添加成功!", "已新增权限：" + inputValue, "success");
-						table.ajax.reload();
-					} else {
-						swal("添加失败!", data.Message, "error");
-					}
-				});
 			}, function(error) {
 				swal("操作被取消!", "未做任何更改!", "info");
 			});
@@ -264,6 +271,7 @@
 		                PermissionName: s
 	                }, function(data) {
                         data = JSON.parse(data);
+		                data.s = s;
 		                resolve(data);
 	                });
 				});
@@ -271,7 +279,7 @@
 			allowOutsideClick: false
 		}).then(function(data) {
 			if (data.Success) {
-				swal("修改成功!", "修改后的权限：" + s, "success");
+				swal("修改成功!", "修改后的权限：" + data.s, "success");
 				table.ajax.reload();
 			} else {
 				swal("修改失败!", data.Message, "error");

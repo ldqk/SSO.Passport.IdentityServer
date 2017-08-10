@@ -31,13 +31,14 @@
         width: 220px;
     }
 </style>
+<div class="box-header">
+    <h2>权限【@Model.PermissionName】包含的功能</h2>
+    <a class="btn btn-default pull-right" href="/Function/Add">添加功能列表</a>
+</div>
 
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <div class="box-header">
-                <a type="button" class="btn btn-default pull-right" href="/Function/Add">添加用户</a>
-            </div>
             <div class="box-body">
                 <div class="page-header">
                     <h3>操作权限</h3>
@@ -138,9 +139,9 @@
 					"data": "Id"
 				}
 			],
-			"createdRow": function(row, data, index) {
+            "createdRow": function (row, data, index) {
 				$('td', row).eq(4).html(
-					"<a type='button' class='btn btn-default' href='/Function/Edit" + data.Id + "'>修改</a> " +
+					"<a type='button' class='btn btn-default' href='/Function/Edit/" + data.Id + "'>修改</a> " +
 					"<a type='button' class='btn btn-default' onclick='del(" + data.Id + ");''>删除</a> "
 				);
 			}
@@ -204,9 +205,9 @@
 					"data": "Id"
 				}
 			],
-			"createdRow": function(row, data, index) {
+            "createdRow": function (row, data, index) {
 				$('td', row).eq(6).html(
-					"<a type='button' class='btn btn-default' onclick='edit(" + data.Id + ");''>修改</a> " +
+					"<a type='button' class='btn btn-default' href='/Function/Edit/" + data.Id + "'>修改</a> " +
 					"<a type='button' class='btn btn-default' onclick='del(" + data.Id + ");''>删除</a> "
 				);
 			}

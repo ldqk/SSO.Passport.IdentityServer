@@ -30,8 +30,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         }
         public ActionResult Get(int id)
         {
-            FunctionOutputDto dto = Mapper.Map<FunctionOutputDto>(FunctionBll.GetById(id));
-            return ResultData(dto);
+            return View(FunctionBll.GetById(id));
         }
 
         public ActionResult GetAllList()
