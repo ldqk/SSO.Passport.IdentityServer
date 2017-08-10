@@ -26,11 +26,14 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserInfoBll = userInfoBll;
         }
 
+        public ActionResult Index()
+        {
+            return View();
+        }
         public ActionResult Get(int id)
         {
             Role role = RoleBll.GetById(id);
-            RoleOutputDto model = Mapper.Map<RoleOutputDto>(role);
-            return ResultData(model);
+            return View(role);
         }
 
         public ActionResult GetAllList()
@@ -40,11 +43,14 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(list, roles.Any());
         }
 
-        public ActionResult GetPageData(int page = 1, int size = 10)
+        public ActionResult GetPageData(int start = 1, int length = 10)
         {
-            IQueryable<Role> roles = RoleBll.LoadPageEntitiesNoTracking(page, size, out int totalCount, r => true, r => r.Id);
-            PageDataViewModel model = new PageDataViewModel() { Data = Mapper.Map<IList<RoleOutputDto>>(roles.ToList()), PageIndex = page, PageSize = size, TotalPage = Math.Ceiling(totalCount.To<double>() / size.To<double>()).ToInt32(), TotalCount = totalCount };
-            return ResultData(model, roles.Any());
+            var search = Request["search[value]"];
+            bool b = search.IsNullOrEmpty();
+            var page = start / length + 1;
+            IQueryable<Role> roles = RoleBll.LoadPageEntitiesNoTracking(page, length, out int totalCount, r => b || r.RoleName.Contains(search), r => r.Id);
+            DataTableViewModel model = new DataTableViewModel() { data = Mapper.Map<IList<RoleOutputDto>>(roles.ToList()), recordsFiltered = totalCount, recordsTotal = totalCount };
+            return Content(model.ToJsonString());
         }
 
         public ActionResult Add(RoleInputDto model)
@@ -167,6 +173,45 @@ namespace SSO.Passport.IdentityServer.Controllers
             bool b = UserGroupPermissionBll.DeleteEntity(u => u.UserGroupId.Equals(@group.Id)) > 0;
             IList<UserGroupPermission> list = new List<UserGroupPermission>();
             roles.ToList().ForEach(p => list.Add(new UserGroupPermission() { UserGroupId = @group.Id, RoleId = p.Id, HasPermission = true }));
+            UserGroupPermissionBll.AddEntities(list);
+            return ResultData(null, b, b ? "角色分配成功！" : "角色分配失败！");
+        }
+
+        public ActionResult UserGroup(int id)
+        {
+            Role role = RoleBll.GetById(id);
+            return View(role);
+        }
+
+        public ActionResult Permission(int id)
+        {
+            Role role = RoleBll.GetById(id);
+            return View(role);
+        }
+
+        public ActionResult NoHasUserGroup(int id)
+        {
+            IList<UserGroup> list = new List<UserGroup>();
+            RoleBll.GetById(id).UserGroupPermission.ToList().ForEach(p => list.Add(p.UserGroup));
+            IEnumerable<UserGroup> groups = UserGroupBll.LoadEntities(r => true).ToList().Except(list);
+            return ResultData(Mapper.Map<IList<UserGroupOutputDto>>(groups.ToList()));
+        }
+
+        public ActionResult UserGroupList(int id)
+        {
+            IList<UserGroup> list = new List<UserGroup>();
+            RoleBll.GetById(id).UserGroupPermission.ToList().ForEach(p => list.Add(p.UserGroup));
+            return ResultData(Mapper.Map<IList<UserGroupOutputDto>>(list));
+        }
+
+        public ActionResult UpdateRole(int id, string gids)
+        {
+            string[] strs = gids.Split(',');
+            IQueryable<UserGroup> groups = UserGroupBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            Role role = RoleBll.GetById(id);
+            bool b = UserGroupPermissionBll.DeleteEntity(u => u.RoleId.Equals(role.Id)) > 0;
+            IList<UserGroupPermission> list = new List<UserGroupPermission>();
+            groups.ToList().ForEach(p => list.Add(new UserGroupPermission() { RoleId = role.Id, UserGroupId = p.Id, HasPermission = true }));
             UserGroupPermissionBll.AddEntities(list);
             return ResultData(null, b, b ? "角色分配成功！" : "角色分配失败！");
         }

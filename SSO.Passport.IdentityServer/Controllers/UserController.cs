@@ -28,8 +28,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult Get(Guid id)
         {
             UserInfo userInfo = UserInfoBll.GetById(id);
-            UserInfoOutputDto model = Mapper.Map<UserInfoOutputDto>(userInfo);
-            return ResultData(model);
+            return View(userInfo);
         }
 
         public ActionResult GetAllList()
@@ -98,12 +97,12 @@ namespace SSO.Passport.IdentityServer.Controllers
                 return ResultData(model, false, $"电话号码{model.PhoneNumber}已经存在！");
             }
             model.Email.MatchEmail(out bool flag);
-            if (flag)
+            if (!flag)
             {
                 return ResultData(model, false, $"邮箱格式不正确！");
             }
             model.PhoneNumber.MatchPhoneNumber(out flag);
-            if (flag)
+            if (!flag)
             {
                 return ResultData(model, false, $"手机号码格式不正确！");
             }
@@ -114,8 +113,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 userInfo.UserGroup.Add(group);
                 UserInfoBll.UpdateEntitySaved(userInfo);
             }
-            //return ResultData(Mapper.Map<UserInfoOutputDto>(userInfo));
-            return RedirectToAction("Index");
+            return ResultData(Mapper.Map<UserInfoOutputDto>(userInfo));
         }
 
         public ActionResult Edit(Guid id)
@@ -233,5 +231,6 @@ namespace SSO.Passport.IdentityServer.Controllers
             bool b = UserGroupBll.SaveChanges() > 0;
             return ResultData(null, b, b ? "用户群分配成功！" : "用户群分配失败！");
         }
+
     }
 }

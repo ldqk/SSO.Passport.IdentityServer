@@ -4,50 +4,86 @@
     ViewBag.Title = "添加用户";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-    <div class="row">
-        <div class="col-md-6">
-            <h2 class="page-header text-center">添加用户</h2>
-            @using(Html.BeginForm()) {
-                @Html.AntiForgeryToken()
-                <div class="form-horizontal">
-                    @Html.ValidationSummary(true, "", new {@class = "text-danger"})
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Username, htmlAttributes: new {@class = "control-label col-md-2"})
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Username, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.Username, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Password, htmlAttributes: new {@class = "control-label col-md-2"})
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Password, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.Password, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new {@class = "control-label col-md-2"})
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.PhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Email, htmlAttributes: new {@class = "control-label col-md-2"})
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Email, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.Email, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="提交" class="btn btn-default"/>
-                        </div>
+<div class="row">
+    <div class="col-md-6">
+        <h2 class="page-header text-center">添加用户</h2>
+        @using(Html.BeginForm("","",FormMethod.Post,new{id="form",onsubmit="return false"})) {
+            @Html.AntiForgeryToken()
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Username, htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Username, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Username, "", new {@class = "text-danger"})
                     </div>
                 </div>
-            }
-        </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Password, htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Password, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Password, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.PhoneNumber, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.PhoneNumber, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Email, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="提交" id="save" class="btn btn-default"/>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
+</div>
+
+<script>
+	$(function() {
+		$("#save").click(function(e) {
+			swal({
+				title: "确认添加?",
+				text: "确认添加用户!",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "确认",
+				cancelButtonText: "取消",
+                showLoaderOnConfirm: true,
+				preConfirm: function() {
+                    return new Promise(function (resolve) {
+	                    $.post("/User/Add", $("#form").serialize(), function(data) {
+                            data = JSON.parse(data);
+		                    resolve(data);
+	                    });
+					});
+				},
+				allowOutsideClick: false
+			}).then(function(data) {
+				if (data.Success) {
+					swal("添加成功！", data.Message, "success").then(function() {
+						history.back();
+					});
+				} else {
+					swal("添加失败！", data.Message, "error");
+				}
+			}, function() {
+				swal("操作被取消！", "密码不会被更改！", "error");
+			});
+		});
+	});
+</script>

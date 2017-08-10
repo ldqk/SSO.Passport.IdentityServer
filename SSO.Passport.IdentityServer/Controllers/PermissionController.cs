@@ -8,6 +8,7 @@ using IBLL;
 using Masuit.Tools;
 using Models.Dto;
 using Models.Entity;
+using Models.Enum;
 using Models.ViewModel;
 
 namespace SSO.Passport.IdentityServer.Controllers
@@ -26,11 +27,14 @@ namespace SSO.Passport.IdentityServer.Controllers
             RoleBll = roleBll;
         }
 
+        public ActionResult Index()
+        {
+            return View();
+        }
 
         public ActionResult Get(int id)
         {
-            PermissionOutputDto model = Mapper.Map<PermissionOutputDto>(PermissionBll.GetById(id));
-            return ResultData(model);
+            return View(PermissionBll.GetById(id));
         }
 
         public ActionResult GetAllList()
@@ -40,11 +44,14 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(list, permissions.Any());
         }
 
-        public ActionResult GetPageData(int page = 1, int size = 10)
+        public ActionResult GetPageData(int start = 1, int length = 10)
         {
-            IQueryable<Permission> permissions = PermissionBll.LoadPageEntitiesNoTracking(page, size, out int totalCount, r => true, r => r.Id);
-            PageDataViewModel model = new PageDataViewModel() { Data = Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList()), PageIndex = page, PageSize = size, TotalPage = Math.Ceiling(totalCount.To<double>() / size.To<double>()).ToInt32(), TotalCount = totalCount };
-            return ResultData(model, permissions.Any());
+            var search = Request["search[value]"];
+            bool b = search.IsNullOrEmpty();
+            var page = start / length + 1;
+            IQueryable<Permission> permissions = PermissionBll.LoadPageEntitiesNoTracking(page, length, out int totalCount, r => b || r.PermissionName.Contains(search), r => r.Id);
+            DataTableViewModel model = new DataTableViewModel() { data = Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList()), recordsFiltered = totalCount, recordsTotal = totalCount };
+            return Content(model.ToJsonString());
         }
 
         public ActionResult Add(PermissionInputDto model)
@@ -182,5 +189,102 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, saved, saved ? $"成功将{role.RoleName}从权限{f.PermissionName}移动到{t.PermissionName}！" : "移动失败！");
         }
 
+
+        public ActionResult RoleNoHasPermission(int id)
+        {
+            IEnumerable<Permission> permissions = PermissionBll.LoadEntities(r => true).ToList().Except(RoleBll.GetById(id).Permission.ToList());
+            return ResultData(Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList()));
+        }
+
+        public ActionResult RolePermissionList(int id)
+        {
+            return ResultData(Mapper.Map<IList<PermissionOutputDto>>(RoleBll.GetById(id).Permission.ToList()));
+        }
+
+        public ActionResult UpdateRolePermission(int id, string pids)
+        {
+            string[] strs = pids.Split(',');
+            IQueryable<Permission> permissions = PermissionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            Role role = RoleBll.GetById(id);
+            role.Permission.Clear();
+            permissions.ToList().ForEach(r => role.Permission.Add(r));
+            RoleBll.UpdateEntity(role);
+            bool b = RoleBll.SaveChanges() > 0;
+            return ResultData(null, b, b ? "权限分配成功！" : "权限分配失败！");
+        }
+
+        public ActionResult User(int id)
+        {
+            Permission permission = PermissionBll.GetById(id);
+            return View(permission);
+        }
+        public ActionResult Role(int id)
+        {
+            Permission permission = PermissionBll.GetById(id);
+            return View(permission);
+        }
+        public ActionResult Function(int id)
+        {
+            Permission permission = PermissionBll.GetById(id);
+            return View(permission);
+        }
+
+        public ActionResult NoHasUser(int id)
+        {
+            IList<UserInfo> list = new List<UserInfo>();
+            PermissionBll.GetById(id).UserPermission.ToList().ForEach(p => list.Add(p.UserInfo));
+            IEnumerable<UserInfo> userInfos = UserInfoBll.LoadEntities(r => true).ToList().Except(list);
+            return ResultData(Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList()));
+        }
+
+        public ActionResult UserList(int id)
+        {
+            IList<UserInfo> list = new List<UserInfo>();
+            PermissionBll.GetById(id).UserPermission.ToList().ForEach(p => list.Add(p.UserInfo));
+            return ResultData(Mapper.Map<IList<UserInfoOutputDto>>(list));
+        }
+
+        public ActionResult UpdatePermission(int id, string uids)
+        {
+            string[] strs = uids.Split(',');
+            IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            Permission permission = PermissionBll.GetById(id);
+            bool b = UserPermissionBll.DeleteEntity(u => u.PermissionId.Equals(permission.Id)) > 0;
+            IList<UserPermission> list = new List<UserPermission>();
+            userInfos.ToList().ForEach(p => list.Add(new UserPermission() { PermissionId = permission.Id, UserInfoId = p.Id, HasPermission = true }));
+            UserPermissionBll.AddEntities(list);
+            return ResultData(null, b, b ? "用户分配成功！" : "用户分配失败！");
+        }
+
+        public ActionResult NoHasRole(int id)
+        {
+            IEnumerable<Role> roles = RoleBll.LoadEntities(r => true).ToList().Except(PermissionBll.GetById(id).Role.ToList());
+            return ResultData(Mapper.Map<IList<RoleOutputDto>>(roles.ToList()));
+        }
+
+        public ActionResult RoleList(int id)
+        {
+            return ResultData(Mapper.Map<IList<RoleOutputDto>>(PermissionBll.GetById(id).Role.ToList()));
+        }
+
+        public ActionResult UpdatePermissionRole(int id, string rids)
+        {
+            string[] strs = rids.Split(',');
+            IQueryable<Role> roles = RoleBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            Permission permission = PermissionBll.GetById(id);
+            permission.Role.Clear();
+            roles.ToList().ForEach(r => permission.Role.Add(r));
+            PermissionBll.UpdateEntity(permission);
+            bool b = PermissionBll.SaveChanges() > 0;
+            return ResultData(null, b, b ? "权限角色分配成功！" : "权限角色分配失败！");
+        }
+
+        public ActionResult GetFunction(int id, int type)
+        {
+            Permission permission = PermissionBll.GetById(id);
+            List<Function> list = permission.Function.Where(c => c.FunctionType == (type == 1 ? FunctionType.Menu : FunctionType.Operating)).ToList();
+            DataTableViewModel model = new DataTableViewModel() { data = Mapper.Map<IList<FunctionOutputDto>>(list), recordsFiltered = list.Count, recordsTotal = list.Count };
+            return Content(model.ToJsonString());
+        }
     }
 }

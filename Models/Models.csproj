@@ -70,6 +70,7 @@
     <Compile Include="Application\PermissionContext.cs" />
     <Compile Include="Dto\FunctionInputDto.cs" />
     <Compile Include="Dto\FunctionOutputDto.cs" />
+    <Compile Include="Enum\HttpMethod.cs" />
     <Compile Include="ViewModel\DataTableViewModel.cs" />
     <Compile Include="ViewModel\PageDataViewModel.cs" />
     <Compile Include="Dto\PermissionInputDto.cs" />

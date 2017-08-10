@@ -1,0 +1,288 @@
+﻿@{
+    ViewBag.Title = "角色列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Content/global/plugins/datatables/jquery.dataTables.js"></script>
+<script src="~/Content/global/plugins/datatables/dataTables.bootstrap.js"></script>
+<link href="~/Content/global/plugins/datatables/dataTables.bootstrap.css" rel="stylesheet"/>
+
+<style type="text/css">
+    .modal-dialog {
+        top: 35%;
+        width: 220px;
+    }
+
+    .modal-dialog {
+        top: 35%;
+        width: 220px;
+    }
+
+    .modal-dialog {
+        top: 35%;
+        width: 220px;
+    }
+
+    .modal-dialog {
+        top: 35%;
+        width: 220px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <button type="button" class="btn btn-default pull-right" id="add">添加角色</button>
+            </div>
+            <div class="box-body">
+                <table id="userInfosTable" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>角色名</th>
+                        <th>配置</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="deleteWindow" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="deleteModalLabel">
+                        警告
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    确认删除？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-primary" id="delWinBtnRight">
+                        确认
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="warningAlert" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="warningModalLabel">
+                    警告
+                </h4>
+                <div class="modal-body" id="warningModelBody">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<input type="hidden" id="deleteId"/>
+<script>
+	$(function() {
+		loadData();
+
+		$("#delWinBtnRight").bind("click", function() {
+			var uid = $("#deleteId").val();
+			$.ajax({
+				type: "Post",
+				url: "/Role/Delete",
+				data: {
+					id: uid
+				},
+				dataType: "json",
+				success: function(data) {
+					if (data.Success) {
+						location.reload();
+					} else {
+						showWarningAlert(data.Message);
+					}
+					$("#deleteWindow").modal("hide");
+				}
+			});
+		});
+
+		$("#add").click(function() {
+			swal({
+				title: "添加角色",
+				text: "请输入角色名:",
+				input: "text",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				animation: "slide-from-top",
+				confirmButtonText: "确认",
+				cancelButtonText: "取消",
+				inputPlaceholder: "请输入角色名",
+                preConfirm: function (inputValue) {
+                    return new Promise(function (resolve) {
+	                    if (inputValue === false) {
+		                    return false;
+	                    }
+	                    if (inputValue === "") {
+		                    swal.showInputError("角色名不能为空!");
+		                    return false;
+	                    }
+	                    $.post("/Role/Add", {
+		                    RoleName: inputValue
+	                    }, function(data) {
+		                    data = JSON.parse(data);
+		                    resolve(data);
+	                    });
+					});
+				},
+				allowOutsideClick: false
+			}).then(function(data) {
+                if (data.Success) {
+					swal("添加成功!", "已新增角色：" + data.Data.RoleName, "success");
+					table.ajax.reload();
+				} else {
+					swal("添加失败!", data.Message, "error");
+				}
+			}, function(error) {
+				swal("操作被取消!", "未做任何更改!", "info");
+			});
+		});
+
+	});
+	var table;
+
+	function loadData() {
+		table = $('#userInfosTable').DataTable({
+			"language": {
+				"sProcessing": "正在处理中，请稍候...",
+				"sLengthMenu": "每页显示 _MENU_ 项",
+				"sZeroRecords": "没有匹配结果",
+				"sInfo": "显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项",
+				"sInfoEmpty": "显示第 0 至 0 项，共 0 项",
+				"sInfoFiltered": "(由 _MAX_ 项过滤)",
+				"sInfoPostFix": "",
+				"sSearch": "搜索:",
+				"sUrl": "",
+				"sEmptyTable": "表中数据为空",
+				"sLoadingRecords": "正在拼命加载...",
+				"sInfoThousands": ",",
+				"oPaginate": {
+					"sFirst": "首页",
+					"sPrevious": "上一页",
+					"sNext": "下一页",
+					"sLast": "末页"
+				},
+				"oAria": {
+					"sSortAscending": ": 以升序排列此列",
+					"sSortDescending": ": 以降序排列此列"
+				},
+				"deferRender": true
+			},
+			"processing": true,
+			"serverSide": true,
+			"ajax": "/Role/GetPageData",
+			"paging": true,
+			"lengthChange": true,
+			"searching": true,
+			"ordering": false,
+			"info": true,
+			"autoWidth": true,
+			"columns": [
+				{
+					"data": "RoleName"
+				},
+				{
+					"data": "RoleName"
+				},
+				{
+					"data": "RoleName"
+				}
+			],
+			"createdRow": function(row, data, index) {
+				$('td', row).eq(1).html(
+					"<a type='button' class='btn btn-default' href='/Role/UserGroup/" + data.Id + "'>用户组</a>" +
+					"<a type='button' class='btn btn-default' href='/Role/Permission/" + data.Id + "'>权限</a>"
+				);
+				$('td', row).eq(2).html(
+					"<button type='button' class='btn btn-default' onclick='edit(" + data.Id + ",\"" + data.RoleName +
+					"\")'>修改</button> " +
+					"<a type='button' class='btn btn-default' href='/Role/Get/" + data.Id + "'>详细</a>" +
+					"<button type='button' class='btn btn-default' onclick='openDeleteWindow(" + data.Id + ");'>删除</button>"
+				);
+			}
+		});
+	}
+
+	function showWarningAlert(warningMsg) {
+		$("#warningAlert").modal("show");
+		//5秒后自动关
+		setTimeout(function() { $('#warningAlert').modal("hide"); }, 5000);
+	}
+
+	function goToPage(targetUrl) {
+		window.location.href = targetUrl;
+	}
+
+	function openDeleteWindow(uid) {
+		$("#deleteId").val(uid);
+		$("#deleteWindow").modal("show");
+
+	}
+
+	function edit(id, name) {
+		swal({
+			title: '修改【' + name + '】角色为：',
+			type: 'info',
+			html:
+				'<input id="id" type="hidden" value="' + id + '">' +
+					'<input id="name" placeholder="角色名" value=\"' + name + '\" class="form-control">',
+			showCloseButton: true,
+			showCancelButton: true,
+			confirmButtonText:'确定',
+			cancelButtonText:'取消',
+			preConfirm: function() {
+                return new Promise(function (resolve) {
+	                var s = $("#name").val();
+	                if (s == "") {
+		                return false;
+	                }
+	                $.post("/Role/Update", {
+		                Id: $("#id").val(),
+		                RoleName: s
+	                }, function(data) {
+		                data = JSON.parse(data);
+                        resolve(data);
+	                });
+				});
+			},
+			allowOutsideClick: false
+		}).then(function(data) {
+			if (data.Success) {
+				swal("修改成功!", "修改后的角色：" + s, "success");
+				table.ajax.reload();
+			} else {
+				swal("修改失败!", data.Message, "error");
+			}
+		}, function(error) {
+			swal("操作被取消!", "未做任何更改!", "info");
+		});
+	}
+</script>

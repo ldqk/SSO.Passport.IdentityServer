@@ -1,0 +1,249 @@
+﻿@using Models.Entity
+@using Models.Enum
+@model Permission
+
+@{
+    ViewBag.Title = $" 功能列表【{Model.PermissionName}】";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Content/global/plugins/datatables/jquery.dataTables.js"></script>
+<script src="~/Content/global/plugins/datatables/dataTables.bootstrap.js"></script>
+<link href="~/Content/global/plugins/datatables/dataTables.bootstrap.css" rel="stylesheet"/>
+
+<style type="text/css">
+    .modal-dialog {
+        top: 35%;
+        width: 220px;
+    }
+
+    .modal-dialog {
+        top: 35%;
+        width: 220px;
+    }
+
+    .modal-dialog {
+        top: 35%;
+        width: 220px;
+    }
+
+    .modal-dialog {
+        top: 35%;
+        width: 220px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <a type="button" class="btn btn-default pull-right" href="/Function/Add">添加用户</a>
+            </div>
+            <div class="box-body">
+                <div class="page-header">
+                    <h3>操作权限</h3>
+                </div>
+                <table id="operatingTable" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>功能名</th>
+                        <th>控制器名</th>
+                        <th>方法名</th>
+                        <th>http请求方式</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="page-header">
+                    <h3>菜单权限</h3>
+                </div>
+                <table id="menuTable" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>菜单名</th>
+                        <th>控制器名</th>
+                        <th>方法名</th>
+                        <th>http请求方式</th>
+                        <th>图标URL</th>
+                        <th>class样式</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+	var otable, mtable;
+	$(function() {
+		otable = $('#operatingTable').DataTable({
+			"language": {
+				"sProcessing": "正在处理中，请稍候...",
+				"sLengthMenu": "每页显示 _MENU_ 项",
+				"sZeroRecords": "没有匹配结果",
+				"sInfo": "显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项",
+				"sInfoEmpty": "显示第 0 至 0 项，共 0 项",
+				"sInfoFiltered": "(由 _MAX_ 项过滤)",
+				"sInfoPostFix": "",
+				"sSearch": "搜索:",
+				"sUrl": "",
+				"sEmptyTable": "表中数据为空",
+				"sLoadingRecords": "正在拼命加载...",
+				"sInfoThousands": ",",
+				"oPaginate": {
+					"sFirst": "首页",
+					"sPrevious": "上一页",
+					"sNext": "下一页",
+					"sLast": "末页"
+				},
+				"oAria": {
+					"sSortAscending": ": 以升序排列此列",
+					"sSortDescending": ": 以降序排列此列"
+				},
+				"deferRender": true
+			},
+			"processing": true,
+			"serverSide": true,
+			"ajax": "/Permission/GetFunction/@Model.Id?type=2",
+			"paging": true,
+			"lengthChange": true,
+			"searching": true,
+			"ordering": false,
+			"info": true,
+			"autoWidth": true,
+			"columns": [
+				{
+					"data": "Name"
+				},
+				{
+					"data": "Controller"
+				},
+				{
+					"data": "Action"
+				},
+				{
+					"data": "HttpMethod"
+				},
+				{
+					"data": "Id"
+				}
+			],
+			"createdRow": function(row, data, index) {
+				$('td', row).eq(4).html(
+					"<a type='button' class='btn btn-default' href='/Function/Edit" + data.Id + "'>修改</a> " +
+					"<a type='button' class='btn btn-default' onclick='del(" + data.Id + ");''>删除</a> "
+				);
+			}
+		});
+
+		mtable = $('#menuTable').DataTable({
+			"language": {
+				"sProcessing": "正在处理中，请稍候...",
+				"sLengthMenu": "每页显示 _MENU_ 项",
+				"sZeroRecords": "没有匹配结果",
+				"sInfo": "显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项",
+				"sInfoEmpty": "显示第 0 至 0 项，共 0 项",
+				"sInfoFiltered": "(由 _MAX_ 项过滤)",
+				"sInfoPostFix": "",
+				"sSearch": "搜索:",
+				"sUrl": "",
+				"sEmptyTable": "表中数据为空",
+				"sLoadingRecords": "正在拼命加载...",
+				"sInfoThousands": ",",
+				"oPaginate": {
+					"sFirst": "首页",
+					"sPrevious": "上一页",
+					"sNext": "下一页",
+					"sLast": "末页"
+				},
+				"oAria": {
+					"sSortAscending": ": 以升序排列此列",
+					"sSortDescending": ": 以降序排列此列"
+				},
+				"deferRender": true
+			},
+			"processing": true,
+			"serverSide": true,
+			"ajax": "/Permission/GetFunction/@Model.Id?type=1",
+			"paging": true,
+			"lengthChange": true,
+			"searching": true,
+			"ordering": false,
+			"info": true,
+			"autoWidth": true,
+			"columns": [
+				{
+					"data": "Name"
+				},
+				{
+					"data": "Controller"
+				},
+				{
+					"data": "Action"
+				},
+				{
+					"data": "HttpMethod"
+				},
+				{
+					"data": "IconUrl"
+				},
+				{
+					"data": "CssStyle"
+				},
+				{
+					"data": "Id"
+				}
+			],
+			"createdRow": function(row, data, index) {
+				$('td', row).eq(6).html(
+					"<a type='button' class='btn btn-default' onclick='edit(" + data.Id + ");''>修改</a> " +
+					"<a type='button' class='btn btn-default' onclick='del(" + data.Id + ");''>删除</a> "
+				);
+			}
+		});
+	});
+    
+	function del(id) {
+		swal({
+			title: "确认删除?",
+			text: "确认删除这条记录？!",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "确认",
+			cancelButtonText: "取消",
+			showLoaderOnConfirm: true,
+			preConfirm: function() {
+                return new Promise(function (resolve) {
+	                $.post("/Function/Delete", {
+		                id
+	                }, function(data) {
+                        data = JSON.parse(data);
+		                resolve(data);
+	                });
+				});
+			},
+			allowOutsideClick: false
+		}).then(function(data) {
+			if (data.Success) {
+				swal("删除成功！", data.Message, "success");
+				otable.ajax.reload();
+				mtable.ajax.reload();
+			} else {
+				swal("删除失败！", data.Message, "error");
+			}
+		}, function() {
+			swal("操作被取消！", "密码不会被更改！", "error");
+		});
+	}
+</script>

@@ -1,0 +1,106 @@
+﻿@model Models.Entity.Permission
+
+@{
+    ViewBag.Title = $" 用户管理【{Model.PermissionName}】";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h2>为权限【@Model.PermissionName】分配到用户</h2>
+</div>
+<div>
+    <div class="box">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-sm-6 col-lg-5 col-md-5">
+                    <div class="form-group">
+                        <label>不包含用户</label>
+                        <select multiple class="form-control" id="noItem" style="height: 410px"></select>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-7 col-md-7">
+                    <div class="form-group">
+                        <label>已拥有用户</label>
+                        <select multiple class="form-control" id="hasItem" style="height: 410px"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row container">
+                <button class="btn btn-default" id="addBtn">修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+	$(function() {
+        InitSelect("/Permission/NoHasUser", "noItem");
+        InitSelect("/Permission/UserList", "hasItem");
+		$("#noItem").bind("change", function() {
+			MoveSelectOption("noItem", "hasItem");
+		});
+		$("#hasItem").bind("change", function() {
+			MoveSelectOption("hasItem", "noItem");
+		});
+
+		$("#addBtn").bind("click", function() {
+			InitAddBtn();
+		});
+	});
+
+	function MoveSelectOption(fromSelect, toSelect) {
+
+		var selectText = $("#" + fromSelect).find("option:selected").text();
+		var selectValue = $("#" + fromSelect).val();
+
+		$("#" + fromSelect + " option[value='" + selectValue + "']").remove();
+		$("#" + toSelect).prepend("<option value='" + selectValue + "'>" + selectText + "</option>");
+	}
+
+	function InitSelect(url, selectName) {
+		$.ajax({
+			cache: true,
+			type: "POST",
+			url: url,
+			data: {
+				id: '@Model.Id'
+			},
+			async: false,
+			success: function(data) {
+				var jsonData = JSON.parse(data);
+				if (jsonData.Success) {
+					$.each(jsonData.Data, function(index, item) {
+						$("#" + selectName).prepend("<option value='" + item.Id + "'>" + item.Username + "</option>");
+					});
+				} else {
+
+				}
+			}
+		});
+	}
+
+	function InitAddBtn() {
+		var itemValues = "";
+		$('#hasItem option').each(function(i, selected) {
+			itemValues += $(selected).val() + ",";
+		});
+
+		$.ajax({
+			cache: true,
+			type: "POST",
+            url: "/Permission/UpdatePermission",
+			data: {
+				id: '@Model.Id',
+				uids: itemValues
+			},
+			async: false,
+			success: function(data) {
+				data = JSON.parse(data);
+				if (data.Success) {
+					history.back();
+				} else {
+					$("#warringMsg").html("<p class='text-danger'>" + data.Message + "</p>");
+				}
+			}
+		});
+	}
+</script>

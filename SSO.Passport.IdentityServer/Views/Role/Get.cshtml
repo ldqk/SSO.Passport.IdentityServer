@@ -1,0 +1,36 @@
+﻿@model Models.Entity.Role
+
+@{
+    ViewBag.Title = $"角色【{Model.RoleName}】详细信息";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<table class="table table-responsive table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>角色名</th>
+        <th>包含用户组</th>
+        <th>包含权限</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>@Model.RoleName</td>
+        <td>
+            @{
+                var ps = Model.UserGroupPermission;
+                foreach(var p in ps) {
+                    @Html.ActionLink(p.UserGroup.GroupName, "Get", "UserGroup", new {id = p.UserGroupId}, null)<text> , </text>
+                }
+            }
+        </td>
+        <td>
+            @{
+                var us = Model.Permission;
+                foreach(var p in us) {
+                    @Html.ActionLink(p.PermissionName, "Get", "Permission", new {id = p.Id}, null)<text> , </text>
+                }
+            }
+        </td>
+    </tr>
+    </tbody>
+</table>

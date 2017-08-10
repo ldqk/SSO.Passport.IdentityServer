@@ -21,5 +21,8 @@ namespace Models.Dto
 
         public int ParentId { get; set; }
         public FunctionType FunctionType { get; set; }
+        public PermissionInputDto Permission { get; set; }
     }
+
+
 }

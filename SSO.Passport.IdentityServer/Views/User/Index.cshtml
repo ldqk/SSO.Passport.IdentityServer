@@ -170,6 +170,7 @@
 					"<a type='button' class='btn btn-default' href='/User/Role/" + data.Id +"'>角色</a> "
 				);
 				$('td', row).eq(5).html(
+                    "<a type='button' class='btn btn-default' href='/User/Get/" + data.Id + "'>详细</a>"+
 					"<button type='button' class='btn btn-default' onclick='goToPage(\"/User/Edit/" + data.Id +"\");'>修改</button> " +
 					"<button type='button' class='btn btn-default' onclick='openDeleteWindow(\"" + data.Id + "\");'>删除</button>" +
 					"<a type='button' class='btn btn-default' href='/User/ChangePassword/"+ data.Id +"'>修改密码</a>"

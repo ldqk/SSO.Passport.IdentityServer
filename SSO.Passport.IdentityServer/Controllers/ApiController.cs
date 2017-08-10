@@ -90,13 +90,13 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 return ResultData(model, false, $"电话号码{model.PhoneNumber}已经存在！");
             }
-            Match match = model.Email.MatchEmail(out bool flag);
-            if (!match.Success)
+            model.Email.MatchEmail(out bool flag);
+            if (!flag)
             {
                 return ResultData(model, false, $"邮箱格式不正确！");
             }
-            match = model.PhoneNumber.MatchPhoneNumber(out flag);
-            if (!match.Success)
+            model.PhoneNumber.MatchPhoneNumber(out flag);
+            if (!flag)
             {
                 return ResultData(model, false, $"手机号码格式不正确！");
             }

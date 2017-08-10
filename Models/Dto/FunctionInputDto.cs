@@ -15,7 +15,7 @@ namespace Models.Dto
 
         public string CssStyle { get; set; }
 
-        public string HttpMethod { get; set; }
+        public HttpMethod HttpMethod { get; set; }
 
         public bool IsAvailable { get; set; }
 

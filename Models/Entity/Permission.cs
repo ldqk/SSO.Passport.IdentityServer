@@ -17,6 +17,7 @@ namespace Models.Entity
         [Key]
         public int Id { get; set; }
 
+        [Display(Name = "х╗оч")]
         [Required]
         public string PermissionName { get; set; }
 

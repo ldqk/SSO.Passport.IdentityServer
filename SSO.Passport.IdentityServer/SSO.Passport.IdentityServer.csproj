@@ -572,6 +572,19 @@
     <Content Include="Views\User\Permission.cshtml" />
     <Content Include="Views\UserGroup\User.cshtml" />
     <Content Include="Views\UserGroup\Role.cshtml" />
+    <Content Include="Views\Role\Index.cshtml" />
+    <Content Include="Views\Role\Get.cshtml" />
+    <Content Include="Views\User\Get.cshtml" />
+    <Content Include="Views\Permission\Get.cshtml" />
+    <Content Include="Views\Role\UserGroup.cshtml" />
+    <Content Include="Views\Role\Permission.cshtml" />
+    <Content Include="Views\Permission\Index.cshtml" />
+    <Content Include="Views\Permission\User.cshtml" />
+    <Content Include="Views\Permission\Role.cshtml" />
+    <Content Include="Views\Permission\Function.cshtml" />
+    <Content Include="Views\Function\Index.cshtml" />
+    <Content Include="Views\Function\Edit.cshtml" />
+    <Content Include="Views\Function\Add.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -664,7 +677,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>taskkill /f /im vbcsc*</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

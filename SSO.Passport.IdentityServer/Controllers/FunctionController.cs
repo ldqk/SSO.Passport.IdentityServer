@@ -24,7 +24,10 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserInfoBll = userInfoBll;
         }
 
-
+        public ActionResult Index()
+        {
+            return View();
+        }
         public ActionResult Get(int id)
         {
             FunctionOutputDto dto = Mapper.Map<FunctionOutputDto>(FunctionBll.GetById(id));
@@ -47,39 +50,66 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult GetPageData(int page = 1, int size = 10)
         {
             IQueryable<Function> pageData = FunctionBll.LoadPageEntitiesNoTracking(page, size, out int totalCount, c => true, c => c.Controller);
-            PageDataViewModel model = new PageDataViewModel()
+            DataTableViewModel model = new DataTableViewModel()
             {
-                Data = Mapper.Map<IList<FunctionOutputDto>>(pageData),
-                PageIndex = page,
-                PageSize = size,
-                TotalPage = Math.Ceiling(totalCount.To<double>() / size.To<double>()).ToInt32(),
-                TotalCount = totalCount
+                data = Mapper.Map<IList<FunctionOutputDto>>(pageData),
+                recordsFiltered = totalCount,
+                recordsTotal = totalCount
             };
-            return ResultData(model, pageData.Any());
+            return Content(model.ToJsonString());
         }
 
         public ActionResult GetPageDataByType(int id, int page = 1, int size = 10)
         {
             IQueryable<Function> pageData = FunctionBll.LoadPageEntitiesNoTracking(page, size, out int totalCount, c => c.FunctionType == (id == 1 ? FunctionType.Menu : FunctionType.Operating), c => c.Controller);
-            PageDataViewModel model = new PageDataViewModel()
+            DataTableViewModel model = new DataTableViewModel()
             {
-                Data = Mapper.Map<IList<FunctionOutputDto>>(pageData),
-                PageIndex = page,
-                PageSize = size,
-                TotalPage = Math.Ceiling(totalCount.To<double>() / size.To<double>()).ToInt32(),
-                TotalCount = totalCount
+                data = Mapper.Map<IList<FunctionOutputDto>>(pageData),
+                recordsFiltered = totalCount,
+                recordsTotal = totalCount
             };
-            return ResultData(model, pageData.Any());
+            return Content(model.ToJsonString());
         }
 
+        public ActionResult Add()
+        {
+            ViewBag.PermissionId = new SelectList(PermissionBll.LoadEntitiesNoTracking(c => true), "Id", "PermissionName");
+            return View();
+        }
+
+        [HttpPost]
         public ActionResult Add(FunctionInputDto function)
         {
+            if (function.FunctionType <= 0 || function.FunctionType > FunctionType.Operating)
+            {
+                return ResultData("", false, "请选择一个权限类型");
+            }
+            if (function.HttpMethod <= 0 || function.HttpMethod > HttpMethod.Proppatch)
+            {
+                return ResultData("", false, "请选择一个HTTP请求方式");
+            }
+            function.IsAvailable = true;
             FunctionOutputDto dto = Mapper.Map<FunctionOutputDto>(FunctionBll.AddEntitySaved(Mapper.Map<Function>(function)));
             return ResultData(dto);
         }
 
+        public ActionResult Edit(int id)
+        {
+            Function fun = FunctionBll.GetById(id);
+            ViewBag.PermissionId = new SelectList(PermissionBll.LoadEntitiesNoTracking(c => true), "Id", "PermissionName", fun.Permission.Id);
+            return View(fun);
+        }
+
         public ActionResult Update(FunctionInputDto dto)
         {
+            if (dto.FunctionType <= 0 || dto.FunctionType > FunctionType.Operating)
+            {
+                return ResultData("", false, "请选择一个权限类型");
+            }
+            if (dto.HttpMethod <= 0 || dto.HttpMethod > HttpMethod.Proppatch)
+            {
+                return ResultData("", false, "请选择一个HTTP请求方式");
+            }
             Function function = FunctionBll.GetById(dto.Id);
             function.Controller = dto.Controller;
             function.Action = dto.Action;
@@ -88,6 +118,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             function.IconUrl = dto.IconUrl;
             function.IsAvailable = dto.IsAvailable;
             function.ParentId = dto.ParentId;
+            function.FunctionType = dto.FunctionType;
             Permission permission = PermissionBll.GetById(dto.PermissionId);
             if (permission != null)
             {

@@ -152,5 +152,6 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserGroup @group = UserGroupBll.GetById(id);
             return View(group);
         }
+
     }
 }
