@@ -39,7 +39,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult GetAllList()
         {
-            IQueryable<Permission> permissions = PermissionBll.LoadEntitiesNoTracking(r => true);
+            IQueryable<Permission> permissions = PermissionBll.LoadEntities(r => true);
             IList<PermissionOutputDto> list = Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList());
             return ResultData(list, permissions.Any());
         }
@@ -49,7 +49,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             var search = Request["search[value]"];
             bool b = search.IsNullOrEmpty();
             var page = start / length + 1;
-            IQueryable<Permission> permissions = PermissionBll.LoadPageEntitiesNoTracking(page, length, out int totalCount, r => b || r.PermissionName.Contains(search), r => r.Id);
+            IQueryable<Permission> permissions = PermissionBll.LoadPageEntities(page, length, out int totalCount, r => b || r.PermissionName.Contains(search), r => r.Id, true);
             DataTableViewModel model = new DataTableViewModel() { data = Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList()), recordsFiltered = totalCount, recordsTotal = totalCount };
             return Content(model.ToJsonString());
         }
@@ -279,14 +279,5 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, b, b ? "权限角色分配成功！" : "权限角色分配失败！");
         }
 
-        public ActionResult GetFunction(int id, int type, int start = 1, int length = 10)
-        {
-            var search = Request["search[value]"];
-            bool b = search.IsNullOrEmpty();
-            Permission permission = PermissionBll.GetById(id);
-            List<Function> list = permission.Function.Where(c => c.FunctionType == (type == 1 ? FunctionType.Menu : FunctionType.Operating) && (b || c.Controller.Contains(search) || c.Action.Contains(search) || c.Name.Contains(search))).OrderBy(c => c.Id).Skip(start - 1).Take(length).ToList();
-            DataTableViewModel model = new DataTableViewModel() { data = Mapper.Map<IList<FunctionOutputDto>>(list), recordsFiltered = list.Count, recordsTotal = list.Count };
-            return Content(model.ToJsonString());
-        }
     }
 }

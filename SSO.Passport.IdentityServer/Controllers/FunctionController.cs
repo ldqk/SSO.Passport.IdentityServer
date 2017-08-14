@@ -58,12 +58,15 @@ namespace SSO.Passport.IdentityServer.Controllers
             return Content(model.ToJsonString());
         }
 
-        public ActionResult GetPageDataByType(int id, int page = 1, int size = 10)
+        public ActionResult GetPageDataByType(int id, int start = 1, int length = 10)
         {
-            IQueryable<Function> pageData = FunctionBll.LoadPageEntitiesNoTracking(page, size, out int totalCount, c => c.FunctionType == (id == 1 ? FunctionType.Menu : FunctionType.Operating), c => c.Controller);
+            var search = Request["search[value]"];
+            bool b = search.IsNullOrEmpty();
+            var page = start / length + 1;
+            IQueryable<Function> pageData = FunctionBll.LoadPageEntitiesNoTracking(page, length, out int totalCount, c => c.FunctionType == (id == 1 ? FunctionType.Menu : FunctionType.Operating) && (b || c.Name.Contains(search) || c.Controller.Contains(search) || c.Action.Contains(search)), c => c.Controller);
             DataTableViewModel model = new DataTableViewModel()
             {
-                data = Mapper.Map<IList<FunctionOutputDto>>(pageData),
+                data = Mapper.Map<IList<FunctionOutputDto>>(pageData.ToList()),
                 recordsFiltered = totalCount,
                 recordsTotal = totalCount
             };
@@ -95,7 +98,6 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult Edit(int id)
         {
             Function fun = FunctionBll.GetById(id);
-            ViewBag.PermissionId = new SelectList(PermissionBll.LoadEntitiesNoTracking(c => true), "Id", "PermissionName", fun.Permission.Id);
             return View(fun);
         }
 
@@ -118,27 +120,8 @@ namespace SSO.Passport.IdentityServer.Controllers
             function.IsAvailable = dto.IsAvailable;
             function.ParentId = dto.ParentId;
             function.FunctionType = dto.FunctionType;
-            Permission permission = PermissionBll.GetById(dto.PermissionId);
-            if (permission != null)
-            {
-                function.PermissionId = dto.PermissionId;
-            }
             bool res = FunctionBll.UpdateEntitySaved(function);
             return res ? ResultData(dto, message: "修改成功！") : ResultData(null, false, "修改失败！");
-        }
-
-
-        public ActionResult ChangePermission(int id, int pid)
-        {
-            Function function = FunctionBll.GetById(id);
-            Permission permission = PermissionBll.GetById(pid);
-            if (permission != null && function != null)
-            {
-                function.PermissionId = permission.Id;
-                bool res = FunctionBll.UpdateEntitySaved(function);
-                return res ? ResultData(Mapper.Map<FunctionOutputDto>(function), message: $"权限成功修改为：{permission.PermissionName}！") : ResultData(null, false, "权限修改失败！");
-            }
-            return ResultData(null, false, "数据不存在！");
         }
         public ActionResult ChangeType(int id, int tid)
         {
@@ -163,6 +146,58 @@ namespace SSO.Passport.IdentityServer.Controllers
             string[] ids = id.Split(',');
             bool b = FunctionBll.DeleteEntity(r => ids.Contains(r.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
+        }
+
+        public ActionResult PermissionNoHasFunction(int id)
+        {
+            IEnumerable<Function> functions = FunctionBll.LoadEntities(r => true).ToList().Except(PermissionBll.GetById(id).Function.ToList());
+            return ResultData(Mapper.Map<IList<FunctionOutputDto>>(functions.ToList()));
+        }
+
+        public ActionResult PermissionFunctionList(int id)
+        {
+            return ResultData(Mapper.Map<IList<FunctionOutputDto>>(PermissionBll.GetById(id).Function.ToList()));
+        }
+
+        public ActionResult UpdatePermissionFunction(int id, string fids)
+        {
+            string[] strs = fids.Split(',');
+            IQueryable<Function> functions = FunctionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            Permission permission = PermissionBll.GetById(id);
+            permission.Function.Clear();
+            functions.ToList().ForEach(r => permission.Function.Add(r));
+            PermissionBll.UpdateEntity(permission);
+            bool b = PermissionBll.SaveChanges() > 0;
+            return ResultData(null, b, b ? "权限功能分配成功！" : "权限功能分配失败！");
+        }
+
+        public ActionResult Permission(int id)
+        {
+            Function function = FunctionBll.GetById(id);
+            return View(function);
+        }
+
+        public ActionResult NoHasPermission(int id)
+        {
+            IEnumerable<Permission> permissions = PermissionBll.LoadEntities(r => true).ToList().Except(FunctionBll.GetById(id).Permission.ToList());
+            return ResultData(Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList()));
+        }
+
+        public ActionResult PermissionList(int id)
+        {
+            return ResultData(Mapper.Map<IList<PermissionOutputDto>>(FunctionBll.GetById(id).Permission.ToList()));
+        }
+
+        public ActionResult UpdateFunctionPermission(int id, string pids)
+        {
+            string[] strs = pids.Split(',');
+            IQueryable<Permission> permissions = PermissionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            Function function = FunctionBll.GetById(id);
+            function.Permission.Clear();
+            permissions.ToList().ForEach(r => function.Permission.Add(r));
+            FunctionBll.UpdateEntity(function);
+            bool b = FunctionBll.SaveChanges() > 0;
+            return ResultData(null, b, b ? "权限功能分配成功！" : "权限功能分配失败！");
         }
     }
 }

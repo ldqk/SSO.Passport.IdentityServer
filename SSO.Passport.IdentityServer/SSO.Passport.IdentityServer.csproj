@@ -586,6 +586,7 @@
     <Content Include="Views\Function\Edit.cshtml" />
     <Content Include="Views\Function\Add.cshtml" />
     <Content Include="Views\Function\Get.cshtml" />
+    <Content Include="Views\Function\Permission.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -617,6 +618,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\MyExceptionFilterAttribute.cs" />
+    <Compile Include="Models\SessionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -634,13 +636,29 @@
     <TypeScriptCompile Include="Scripts\typings\microsoft-ajax\microsoft.ajax.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{f7def70a-7eea-4c03-866b-e351b352711c}</Project>
+      <Name>BLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{138F01FA-B23F-4ACA-93DB-D899BB244A1A}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{f1a452f8-2757-4130-aecd-4cdcb675419f}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Factory\DALFactory.csproj">
+      <Project>{d927561b-5ed4-4599-8209-16f9d1f5461d}</Project>
+      <Name>DALFactory</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IBLL\IBLL.csproj">
       <Project>{939493B4-A47C-43E2-99E3-92459CD0EB1E}</Project>
       <Name>IBLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IDAL\IDAL.csproj">
+      <Project>{7997fb01-c9c1-4793-a430-9ca3c3852b37}</Project>
+      <Name>IDAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
       <Project>{F64BA0EF-9DCD-4A5C-8758-BE688A3DD8CC}</Project>

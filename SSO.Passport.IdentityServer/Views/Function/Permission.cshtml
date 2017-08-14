@@ -1,12 +1,12 @@
-﻿@model Models.Entity.Permission
+﻿@model Models.Entity.Function
 
 @{
-    ViewBag.Title = $" 功能管理【{Model.PermissionName}】";
+    ViewBag.Title = $" 权限管理【{Model.Name}】";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="page-header">
-    <h2>为权限【@Model.PermissionName】分配功能</h2>
+    <h2>为功能【@Model.Name】分配权限</h2>
 </div>
 <div>
     <div class="box">
@@ -14,13 +14,13 @@
             <div class="row">
                 <div class="col-sm-6 col-lg-5 col-md-5">
                     <div class="form-group">
-                        <label>不包含功能</label>
+                        <label>不包含权限</label>
                         <select multiple class="form-control" id="noItem" style="height: 410px"></select>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-7 col-md-7">
                     <div class="form-group">
-                        <label>已拥有功能</label>
+                        <label>已拥有权限</label>
                         <select multiple class="form-control" id="hasItem" style="height: 410px"></select>
                     </div>
                 </div>
@@ -33,8 +33,8 @@
 </div>
 <script>
 	$(function() {
-		InitSelect("/Function/PermissionNoHasFunction", "noItem");
-        InitSelect("/Function/PermissionFunctionList", "hasItem");
+        InitSelect("/Function/NoHasPermission", "noItem");
+		InitSelect("/Function/PermissionList", "hasItem");
 		$("#noItem").bind("change", function() {
 			MoveSelectOption("noItem", "hasItem");
 		});
@@ -69,7 +69,7 @@
 				var jsonData = JSON.parse(data);
 				if (jsonData.Success) {
 					$.each(jsonData.Data, function(index, item) {
-						$("#" + selectName).prepend("<option value='" + item.Id + "'>" + item.Name + "　( /"+item.Controller+"/"+item.Action+" )</option>");
+						$("#" + selectName).prepend("<option value='" + item.Id + "'>" + item.PermissionName + "</option>");
 					});
 				} else {
 
@@ -87,10 +87,10 @@
 		$.ajax({
 			cache: true,
 			type: "POST",
-            url: "/Function/UpdatePermissionFunction",
+            url: "/Function/UpdateFunctionPermission",
 			data: {
 				id: '@Model.Id',
-				fids: itemValues
+				pids: itemValues
 			},
 			async: false,
 			success: function(data) {

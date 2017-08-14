@@ -30,7 +30,7 @@ namespace Models.Application
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Permission>().HasMany(e => e.Function).WithRequired(e => e.Permission).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Permission>().HasMany(e => e.Function).WithMany(e => e.Permission).Map(m => m.ToTable("PermissionFunction"));
 
             modelBuilder.Entity<Permission>().HasMany(e => e.Role).WithMany(e => e.Permission).Map(m => m.ToTable("RolePermission"));
 

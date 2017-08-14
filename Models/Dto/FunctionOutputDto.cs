@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Models.Enum;
 
 namespace Models.Dto
@@ -21,7 +22,8 @@ namespace Models.Dto
 
         public int ParentId { get; set; }
         public FunctionType FunctionType { get; set; }
-        public PermissionInputDto Permission { get; set; }
+        public virtual ICollection<PermissionInputDto> Permission { get; set; }
+
     }
 
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Models.Enum;
@@ -40,13 +41,9 @@ namespace Models.Entity
 
         public int ParentId { get; set; }
 
-        [Display(Name = "所属权限")]
-        [ForeignKey("Permission")]
-        public int PermissionId { get; set; }
-
         [Display(Name = "权限类型")]
         public FunctionType FunctionType { get; set; }
 
-        public virtual Permission Permission { get; set; }
+        public virtual ICollection<Permission> Permission { get; set; }
     }
 }

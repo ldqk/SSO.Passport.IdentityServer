@@ -137,17 +137,21 @@
 					"data": "HttpMethod"
                 },
                 {
-                    "data": "Permission.PermissionName"
+                    "data": "Id"
                 },
 				{
 					"data": "Id"
 				}
 			],
-			"createdRow": function(row, data, index) {
-				$('td', row).eq(4).html(
-                    "<a href='/Permission/Get/" + data.Permission.Id + "'>" + data.Permission.PermissionName +"</a> "
-				);
+            "createdRow": function (row, data, index) {
+                var ps = data.Permission;
+                var html = "";
+	            ps.map(function(item, index, array) {
+		            html += "<a href='/Permission/Get/" + item.Id + "'>" + item.PermissionName +"</a> ";
+	            });
+                $('td', row).eq(4).html(html);
 				$('td', row).eq(5).html(
+                    "<a type='button' class='btn btn-default' href='/Function/Permission/" + data.Id + "'>权限</a> " +
 					"<a class='btn btn-default' href='/Function/Edit/" + data.Id + "'>修改</a> " +
 					"<a class='btn btn-default' onclick='del(" + data.Id + ");''>删除</a> "
 				);
@@ -209,17 +213,21 @@
 					"data": "CssStyle"
                 },
                 {
-                    "data": "Permission.PermissionName"
+                    "data": "Id"
                 },
 				{
 					"data": "Id"
 				}
 			],
 			"createdRow": function(row, data, index) {
-				$('td', row).eq(6).html(
-					"<a href='/Permission/Get/" + data.Permission.Id + "'>" + data.Permission.PermissionName + "</a> "
-				);
+				var ps = data.Permission;
+				var html = "";
+				ps.map(function(item, index, array) {
+					html += "<a href='/Permission/Get/" + item.Id + "'>" + item.PermissionName + "</a> ";
+				});
+				$('td', row).eq(6).html(html);
                 $('td', row).eq(7).html(
+                    "<a type='button' class='btn btn-default' href='/Function/Permission/" + data.Id + "'>权限</a> " +
                     "<a type='button' class='btn btn-default' href='/Function/Edit/" + data.Id + "'>修改</a> " +
 					"<a type='button' class='btn btn-default' onclick='del(" + data.Id + ");''>删除</a> "
 				);

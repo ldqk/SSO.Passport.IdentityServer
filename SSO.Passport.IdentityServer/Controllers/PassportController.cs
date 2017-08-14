@@ -90,6 +90,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 if (userInfo != null)
                 {
                     Session.SetByRedis(userInfo.MapTo<UserInfoLoginModel>());
+                    SessionHelper.Set(userInfo.Id.ToString(), userInfo.MapTo<UserInfoLoginModel>());
                     return RedirectToAction("PassportCenter", "Passport", new { Token = Request["Token"], ReturnUrl = Regex.Replace(Request["ReturnUrl"], @"ticket=(.{36})&token=(.{32})", String.Empty) });
                 }
             }
@@ -119,6 +120,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             if (userInfo != null)
             {
                 Session.SetByRedis(userInfo.MapTo<UserInfoLoginModel>());
+                SessionHelper.Set(userInfo.Id.ToString(), userInfo.MapTo<UserInfoLoginModel>());
                 Response.Cookies.Add(new HttpCookie(Constants.USER_COOKIE_KEY) { HttpOnly = true, Value = userInfo.Id.ToString(), Expires = DateTime.Now.AddHours(2) });
                 if (remem.Trim().Contains(new[] { "on", "true" })) //是否记住登录
                 {
@@ -253,6 +255,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 var passCookie = new HttpCookie("password", Server.UrlEncode(model.Password.Trim()).AESEncrypt()) { Expires = DateTime.Now.AddDays(7) };
                 Response.Cookies.Add(passCookie);
                 Session.SetByRedis(userInfo.MapTo<UserInfoLoginModel>());
+                SessionHelper.Set(userInfo.Id.ToString(), userInfo.MapTo<UserInfoLoginModel>());
 
                 #endregion
 

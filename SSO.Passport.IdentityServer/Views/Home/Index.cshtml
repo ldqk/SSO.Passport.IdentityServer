@@ -1,11 +1,12 @@
 ﻿@model IList<Tuple<string, string>>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "首页_API调用列表";
+    ViewBag.Title = "首页_Dashboard";
 }
 <div>
-    <h1>API调用列表</h1>
-    @foreach (Tuple<string, string> tuple in Model) {
+    <h1>Dashboard</h1>
+    <h4>欢迎使用IdentifyServer</h4>
+    @*@foreach (Tuple<string, string> tuple in Model) {
         <p>@(Request.Url.Scheme + "://" + Request.Url.Authority + "/" + tuple.Item1 + "/" + tuple.Item2)</p>
-    }
+    }*@
 </div>
