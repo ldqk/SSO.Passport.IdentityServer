@@ -41,14 +41,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         }
         public ActionResult GetAllListByType(int id)
         {
-            IQueryable<Function> entities = FunctionBll.LoadEntitiesNoTracking(c => c.FunctionType == ((id == 1) ? FunctionType.Menu : FunctionType.Operating));
+            IQueryable<Function> entities = FunctionBll.LoadEntities(c => c.FunctionType == ((id == 1) ? FunctionType.Menu : FunctionType.Operating));
             IList<FunctionOutputDto> list = Mapper.Map<IList<FunctionOutputDto>>(entities.ToList());
             return ResultData(list, entities.Any());
         }
 
         public ActionResult GetPageData(int page = 1, int size = 10)
         {
-            IQueryable<Function> pageData = FunctionBll.LoadPageEntitiesNoTracking(page, size, out int totalCount, c => true, c => c.Controller);
+            IQueryable<Function> pageData = FunctionBll.LoadPageEntities(page, size, out int totalCount, c => true, c => c.Controller);
             DataTableViewModel model = new DataTableViewModel()
             {
                 data = Mapper.Map<IList<FunctionOutputDto>>(pageData),
@@ -63,7 +63,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             var search = Request["search[value]"];
             bool b = search.IsNullOrEmpty();
             var page = start / length + 1;
-            IQueryable<Function> pageData = FunctionBll.LoadPageEntitiesNoTracking(page, length, out int totalCount, c => c.FunctionType == (id == 1 ? FunctionType.Menu : FunctionType.Operating) && (b || c.Name.Contains(search) || c.Controller.Contains(search) || c.Action.Contains(search)), c => c.Controller);
+            IQueryable<Function> pageData = FunctionBll.LoadPageEntities(page, length, out int totalCount, c => c.FunctionType == (id == 1 ? FunctionType.Menu : FunctionType.Operating) && (b || c.Name.Contains(search) || c.Controller.Contains(search) || c.Action.Contains(search)), c => c.Controller);
             DataTableViewModel model = new DataTableViewModel()
             {
                 data = Mapper.Map<IList<FunctionOutputDto>>(pageData.ToList()),
@@ -75,7 +75,6 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Add()
         {
-            ViewBag.PermissionId = new SelectList(PermissionBll.LoadEntitiesNoTracking(c => true), "Id", "PermissionName");
             return View();
         }
 

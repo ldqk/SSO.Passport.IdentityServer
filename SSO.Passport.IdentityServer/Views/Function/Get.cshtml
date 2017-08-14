@@ -1,4 +1,5 @@
-﻿@using Models.Enum
+﻿@using Models.Entity
+@using Models.Enum
 @model Models.Entity.Function
 
 @{
@@ -36,7 +37,9 @@
                 <td>操作权限</td>
             }
             <td>
-                @Html.ActionLink(Model.Permission.PermissionName,"Get","Permission",new{id=Model.PermissionId},null)
+                @foreach(Permission p in Model.Permission) {
+                    @Html.ActionLink(p.PermissionName, "Get", "Permission", new {id = p.Id}, null)
+                }
             </td>
         </tr>
     </tbody>

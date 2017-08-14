@@ -9,8 +9,10 @@ using Masuit.Tools;
 using Models.Dto;
 using Models.Entity;
 using Models.Enum;
+using Models.ViewModel;
 using Newtonsoft.Json;
 using SSO.Core.Client;
+using SSO.Passport.IdentityServer.Models;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
@@ -102,6 +104,18 @@ namespace SSO.Passport.IdentityServer.Controllers
             }
             UserInfo userInfo = UserInfoBll.Register(Mapper.Map<UserInfo>(model));
             return ResultData(Mapper.Map<UserInfoOutputDto>(userInfo));
+        }
+
+        [Authority(Code = AuthCodeEnum.Public)]
+        public ActionResult Login(string name, string pwd)
+        {
+            UserInfo userInfo = UserInfoBll.Login(name, pwd);
+            if (userInfo != null)
+            {
+                SessionHelper.Set(userInfo.Id.ToString(), userInfo.MapTo<UserInfoLoginModel>());
+                return ResultData(new { user = Mapper.Map<UserInfoViewModel>(userInfo), menus = Mapper.Map<IList<FunctionOutputDto>>(UserInfoBll.GetPermissionList(userInfo, FunctionType.Menu)) });
+            }
+            return ResultData(null, false, "用户名或密码错误！");
         }
     }
 }

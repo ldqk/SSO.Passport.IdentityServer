@@ -34,7 +34,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult GetAllList()
         {
-            IQueryable<UserGroup> groups = UserGroupBll.LoadEntitiesNoTracking(r => true);
+            IQueryable<UserGroup> groups = UserGroupBll.LoadEntities(r => true);
             IList<UserGroupOutputDto> list = Mapper.Map<IList<UserGroupOutputDto>>(groups.ToList());
             return ResultData(list, groups.Any());
         }
@@ -44,7 +44,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             var search = Request["search[value]"];
             bool b = search.IsNullOrEmpty();
             var page = start / length + 1;
-            IQueryable<UserGroup> groups = UserGroupBll.LoadPageEntitiesNoTracking(page, length, out int totalCount, r => b || r.GroupName.Contains(search), r => r.Id);
+            IQueryable<UserGroup> groups = UserGroupBll.LoadPageEntities(page, length, out int totalCount, r => b || r.GroupName.Contains(search), r => r.Id);
             DataTableViewModel model = new DataTableViewModel() { data = Mapper.Map<IList<UserGroupOutputDto>>(groups.ToList()), recordsFiltered = totalCount, recordsTotal = totalCount };
             return Content(model.ToJsonString());
         }

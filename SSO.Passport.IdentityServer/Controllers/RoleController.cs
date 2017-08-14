@@ -38,7 +38,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult GetAllList()
         {
-            IQueryable<Role> roles = RoleBll.LoadEntitiesNoTracking(r => true);
+            IQueryable<Role> roles = RoleBll.LoadEntities(r => true);
             IList<RoleOutputDto> list = Mapper.Map<IList<RoleOutputDto>>(roles.ToList());
             return ResultData(list, roles.Any());
         }
@@ -48,7 +48,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             var search = Request["search[value]"];
             bool b = search.IsNullOrEmpty();
             var page = start / length + 1;
-            IQueryable<Role> roles = RoleBll.LoadPageEntitiesNoTracking(page, length, out int totalCount, r => b || r.RoleName.Contains(search), r => r.Id);
+            IQueryable<Role> roles = RoleBll.LoadPageEntities(page, length, out int totalCount, r => b || r.RoleName.Contains(search), r => r.Id);
             DataTableViewModel model = new DataTableViewModel() { data = Mapper.Map<IList<RoleOutputDto>>(roles.ToList()), recordsFiltered = totalCount, recordsTotal = totalCount };
             return Content(model.ToJsonString());
         }

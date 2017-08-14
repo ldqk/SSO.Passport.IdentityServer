@@ -33,7 +33,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult GetAllList()
         {
-            IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntitiesNoTracking(u => true);
+            IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntities(u => true);
             IList<UserInfoOutputDto> list = Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList());
             return ResultData(list);
         }
@@ -43,7 +43,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             var search = Request["search[value]"];
             bool b = search.IsNullOrEmpty();
             var page = start / length + 1;
-            IQueryable<UserInfo> userInfos = UserInfoBll.LoadPageEntitiesNoTracking(page, length, out int totalCount, u => b || u.Username.Contains(search), u => u.Id, false);
+            IQueryable<UserInfo> userInfos = UserInfoBll.LoadPageEntities(page, length, out int totalCount, u => b || u.Username.Contains(search), u => u.Id, false);
             DataTableViewModel model = new DataTableViewModel()
             {
                 data = Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList()),
