@@ -54,17 +54,17 @@ namespace IBLL
         /// <summary>
         /// 获取权限列表
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        IList<Function> GetPermissionList(UserInfo user);
+        IList<Function> GetPermissionList(Guid id);
 
         /// <summary>
         /// 根据类型获取权限列表
         /// </summary>
-        /// <param name="userInfo"></param>
+        /// <param name="id"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        IEnumerable<Function> GetPermissionList(UserInfo userInfo, FunctionType type);
+        IEnumerable<Function> GetPermissionList(Guid id, FunctionType type);
 
         /// <summary>
         /// 修改密码

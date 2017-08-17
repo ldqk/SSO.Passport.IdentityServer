@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
-
+using Autofac.Integration.Wcf;
 namespace SSO.Passport.IdentityServer
 {
     /// <summary>
@@ -34,5 +34,6 @@ namespace SSO.Passport.IdentityServer
             //5.0 将当前容器交给MVC底层，保证容器不被销毁，控制器由autofac来创建
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
+
     }
 }

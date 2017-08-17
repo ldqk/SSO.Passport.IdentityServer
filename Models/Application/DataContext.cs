@@ -8,12 +8,12 @@ using static System.Data.Entity.Core.Objects.ObjectContext;
 
 namespace Models.Application
 {
-    public class PermissionContext : DbContext
+    public class DataContext : DbContext
     {
-        public PermissionContext() : base("name=PermissionContext")
+        public DataContext() : base("name=DataContext")
         {
             Database.CreateIfNotExists();
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<PermissionContext, Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
 #if DEBUG
             Database.Log = Console.WriteLine;
 #endif
@@ -29,18 +29,14 @@ namespace Models.Application
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Permission>().HasMany(e => e.Function).WithMany(e => e.Permission).Map(m => m.ToTable("PermissionFunction"));
-
             modelBuilder.Entity<Permission>().HasMany(e => e.Role).WithMany(e => e.Permission).Map(m => m.ToTable("RolePermission"));
-
-            modelBuilder.Entity<Role>().HasMany(e => e.UserGroupPermission).WithRequired(e => e.Role).WillCascadeOnDelete(false);
-
+            modelBuilder.Entity<Role>().HasMany(e => e.UserGroupPermission).WithRequired(e => e.Role).WillCascadeOnDelete(true);
             modelBuilder.Entity<Role>().HasMany(e => e.UserInfo).WithMany(e => e.Role).Map(m => m.ToTable("UserInfoRole"));
-
-            modelBuilder.Entity<UserGroup>().HasMany(e => e.UserGroupPermission).WithRequired(e => e.UserGroup).WillCascadeOnDelete(false);
-
+            modelBuilder.Entity<UserGroup>().HasMany(e => e.UserGroupPermission).WithRequired(e => e.UserGroup).WillCascadeOnDelete(true);
             modelBuilder.Entity<UserGroup>().HasMany(e => e.UserInfo).WithMany(e => e.UserGroup).Map(m => m.ToTable("UserInfoUserGroup"));
+            modelBuilder.Entity<UserInfo>().HasMany(e => e.UserPermission).WithRequired(e => e.UserInfo).WillCascadeOnDelete(true);
+            modelBuilder.Entity<Permission>().HasMany(e => e.UserPermission).WithRequired(e => e.Permission).WillCascadeOnDelete(true);
         }
 
         //ÖØÐ´ SaveChanges

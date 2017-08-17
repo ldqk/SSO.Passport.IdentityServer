@@ -50,6 +50,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppClient2", "WebAppClient2\WebAppClient2.csproj", "{CFC71DAD-E391-4CAF-B3B3-12283D194510}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{323BB3CF-ECEA-4BC9-B1C5-E2BF9752C961}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2D184674-8CCB-4D7E-9F8B-91FEC4DB0093} = {2D184674-8CCB-4D7E-9F8B-91FEC4DB0093}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

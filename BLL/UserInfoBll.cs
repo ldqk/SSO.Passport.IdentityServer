@@ -36,7 +36,7 @@ namespace BLL
             {
                 var lastLoginTime = userInfo.LastLoginTime;
                 userInfo.LastLoginTime = DateTime.Now;
-                SaveChangesAsync();
+                SaveChanges();
                 string key = userInfo.SaltKey;
                 string pwd = userInfo.Password;
                 password = password.MDString2(key);
@@ -100,11 +100,11 @@ namespace BLL
         /// <summary>
         /// 获取权限列表
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public IList<Function> GetPermissionList(UserInfo user)
+        public IList<Function> GetPermissionList(Guid id)
         {
-            user = GetByUsername(user.Username);
+            var user = GetFirstEntity(u => u.Id.Equals(id));
             List<Function> list = new List<Function>(); //所有允许的权限
             if (user != null)
             {
@@ -143,12 +143,12 @@ namespace BLL
         /// <summary>
         /// 根据类型获取权限列表
         /// </summary>
-        /// <param name="userInfo"></param>
+        /// <param name="id"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public IEnumerable<Function> GetPermissionList(UserInfo userInfo, FunctionType type)
+        public IEnumerable<Function> GetPermissionList(Guid id, FunctionType type)
         {
-            IList<Function> list = GetPermissionList(userInfo);
+            IList<Function> list = GetPermissionList(id);
             return list.Where(c => c.FunctionType.Equals(type));
         }
 

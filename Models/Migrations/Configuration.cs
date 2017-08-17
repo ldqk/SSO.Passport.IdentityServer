@@ -11,7 +11,7 @@ using Models.Enum;
 
 namespace Models.Migrations
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<PermissionContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<DataContext>
     {
         public Configuration()
         {
@@ -19,7 +19,7 @@ namespace Models.Migrations
             AutomaticMigrationDataLossAllowed = true;
         }
 
-        protected override void Seed(PermissionContext context)
+        protected override void Seed(DataContext context)
         {
 #if DEBUG
             //var salt = $"{new Random().StrictNext()}{DateTime.Now.GetTotalMilliseconds()}".MDString2(Guid.NewGuid().ToString()).Base64Encrypt();

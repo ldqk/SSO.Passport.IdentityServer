@@ -15,7 +15,7 @@ namespace DAL
 {
     public class BaseDal<T> : IBaseDal<T> where T : class, new()
     {
-        private DbContext db = WebExtension.GetDbContext<PermissionContext>();
+        private DbContext db = WebExtension.GetDbContext<DataContext>();
 
         /// <summary>
         /// 基本查询方法，获取一个集合

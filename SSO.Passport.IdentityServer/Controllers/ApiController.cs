@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using AutoMapper;
 using IBLL;
@@ -9,7 +8,6 @@ using Masuit.Tools;
 using Models.Dto;
 using Models.Entity;
 using Models.Enum;
-using Models.ViewModel;
 using Newtonsoft.Json;
 using SSO.Core.Client;
 using SSO.Passport.IdentityServer.Models;
@@ -19,6 +17,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 #if !DEBUG
     [Authority(Code = AuthCodeEnum.HashCheck)] 
 #endif
+    [MyExceptionFilter]
 
     public class ApiController : Controller
     {
@@ -34,6 +33,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             return Content(JsonConvert.SerializeObject(new { Success = isTrue, Message = message, Data = data }, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Ignore }));
         }
 
+
         public ActionResult GetUser(Guid id)
         {
             UserInfo userInfo = UserInfoBll.GetById(id);
@@ -44,15 +44,13 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult GetPermission(Guid id)
         {
-            UserInfo userInfo = UserInfoBll.GetById(id);
-            IEnumerable<Function> list = UserInfoBll.GetPermissionList(userInfo);
+            IEnumerable<Function> list = UserInfoBll.GetPermissionList(id);
             return ResultData(Mapper.Map<IList<FunctionOutputDto>>(list.ToList()));
         }
 
         public ActionResult GetMenu(Guid id)
         {
-            UserInfo userInfo = UserInfoBll.GetById(id);
-            IEnumerable<Function> list = UserInfoBll.GetPermissionList(userInfo, FunctionType.Menu);
+            IEnumerable<Function> list = UserInfoBll.GetPermissionList(id, FunctionType.Menu);
             return ResultData(Mapper.Map<IList<FunctionOutputDto>>(list.ToList()));
         }
 
@@ -113,7 +111,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             if (userInfo != null)
             {
                 SessionHelper.Set(userInfo.Id.ToString(), userInfo.MapTo<UserInfoLoginModel>());
-                return ResultData(new { user = Mapper.Map<UserInfoViewModel>(userInfo), menus = Mapper.Map<IList<FunctionOutputDto>>(UserInfoBll.GetPermissionList(userInfo, FunctionType.Menu)) });
+                return ResultData(new { user = userInfo.MapTo<UserInfoLoginModel>(), menus = UserInfoBll.GetPermissionList(userInfo.Id, FunctionType.Menu).Select(c => new { id = c.CssStyle, name = c.Name, icon = c.IconUrl, url = c.Controller + c.Action, show = true }) });
             }
             return ResultData(null, false, "用户名或密码错误！");
         }
