@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
@@ -116,7 +115,6 @@ namespace SSO.Passport.IdentityServer.Controllers
             function.CssStyle = dto.CssStyle;
             function.HttpMethod = dto.HttpMethod;
             function.IconUrl = dto.IconUrl;
-            function.IsAvailable = dto.IsAvailable;
             function.ParentId = dto.ParentId;
             function.FunctionType = dto.FunctionType;
             bool res = FunctionBll.UpdateEntitySaved(function);
