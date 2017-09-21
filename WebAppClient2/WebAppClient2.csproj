@@ -125,10 +125,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -138,7 +136,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\_references.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -156,10 +153,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="Scripts\typings\bootstrap\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SSO.Core\SSO.Core.csproj">
