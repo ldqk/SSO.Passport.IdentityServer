@@ -1,0 +1,632 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PermissionModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Function">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Controller" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Action" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IconUrl" Type="nvarchar(max)" />
+          <Property Name="CssStyle" Type="nvarchar(max)" />
+          <Property Name="HttpMethod" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsAvailable" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ParentId" Type="nvarchar(max)" />
+          <Property Name="PermissionId" Type="int" Nullable="false" />
+          <Property Name="FunctionType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PermissionName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="RolePermission">
+          <Key>
+            <PropertyRef Name="Permission_Id" />
+            <PropertyRef Name="Role_Id" />
+          </Key>
+          <Property Name="Permission_Id" Type="int" Nullable="false" />
+          <Property Name="Role_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ParentId" Type="int" />
+        </EntityType>
+        <EntityType Name="UserGroupPermission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HasPermission" Type="bit" Nullable="false" />
+          <Property Name="UserGroupId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Username" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="SaltKey" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="LastLoginTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="UserInfoRole">
+          <Key>
+            <PropertyRef Name="Role_Id" />
+            <PropertyRef Name="UserInfo_Id" />
+          </Key>
+          <Property Name="Role_Id" Type="int" Nullable="false" />
+          <Property Name="UserInfo_Id" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserInfoUserGroup">
+          <Key>
+            <PropertyRef Name="UserGroup_Id" />
+            <PropertyRef Name="UserInfo_Id" />
+          </Key>
+          <Property Name="UserGroup_Id" Type="int" Nullable="false" />
+          <Property Name="UserInfo_Id" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserPermission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HasPermission" Type="bit" Nullable="false" />
+          <Property Name="UserInfoId" Type="uniqueidentifier" />
+          <Property Name="PermissionId" Type="int" />
+        </EntityType>
+        <Association Name="FK_dbo_Function_dbo_Permission_PermissionId">
+          <End Role="Permission" Type="Self.Permission" Multiplicity="1" />
+          <End Role="Function" Type="Self.Function" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Function">
+              <PropertyRef Name="PermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_RolePermission_dbo_Permission_Permission_Id">
+          <End Role="Permission" Type="Self.Permission" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="RolePermission" Type="Self.RolePermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolePermission">
+              <PropertyRef Name="Permission_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_RolePermission_dbo_Role_Role_Id">
+          <End Role="Role" Type="Self.Role" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="RolePermission" Type="Self.RolePermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolePermission">
+              <PropertyRef Name="Role_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserGroupPermission_dbo_Role_RoleId">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="UserGroupPermission" Type="Self.UserGroupPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserGroupPermission">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId">
+          <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="1" />
+          <End Role="UserGroupPermission" Type="Self.UserGroupPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserGroupPermission">
+              <PropertyRef Name="UserGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserInfoRole_dbo_Role_Role_Id">
+          <End Role="Role" Type="Self.Role" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserInfoRole" Type="Self.UserInfoRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserInfoRole">
+              <PropertyRef Name="Role_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserInfoRole_dbo_UserInfo_UserInfo_Id">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserInfoRole" Type="Self.UserInfoRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserInfoRole">
+              <PropertyRef Name="UserInfo_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserInfoUserGroup_dbo_UserGroup_UserGroup_Id">
+          <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserInfoUserGroup" Type="Self.UserInfoUserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserInfoUserGroup">
+              <PropertyRef Name="UserGroup_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserInfoUserGroup_dbo_UserInfo_UserInfo_Id">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserInfoUserGroup" Type="Self.UserInfoUserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserInfoUserGroup">
+              <PropertyRef Name="UserInfo_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserPermission_dbo_Permission_PermissionId">
+          <End Role="Permission" Type="Self.Permission" Multiplicity="0..1" />
+          <End Role="UserPermission" Type="Self.UserPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserPermission">
+              <PropertyRef Name="PermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserPermission_dbo_UserInfo_UserInfoId">
+          <End Role="UserInfo" Type="Self.UserInfo" Multiplicity="0..1" />
+          <End Role="UserPermission" Type="Self.UserPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserPermission">
+              <PropertyRef Name="UserInfoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PermissionModelStoreContainer">
+          <EntitySet Name="Function" EntityType="Self.Function" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Permission" EntityType="Self.Permission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RolePermission" EntityType="Self.RolePermission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserGroup" EntityType="Self.UserGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserGroupPermission" EntityType="Self.UserGroupPermission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserInfo" EntityType="Self.UserInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserInfoRole" EntityType="Self.UserInfoRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserInfoUserGroup" EntityType="Self.UserInfoUserGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserPermission" EntityType="Self.UserPermission" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_Function_dbo_Permission_PermissionId" Association="Self.FK_dbo_Function_dbo_Permission_PermissionId">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="Function" EntitySet="Function" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_RolePermission_dbo_Permission_Permission_Id" Association="Self.FK_dbo_RolePermission_dbo_Permission_Permission_Id">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="RolePermission" EntitySet="RolePermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_RolePermission_dbo_Role_Role_Id" Association="Self.FK_dbo_RolePermission_dbo_Role_Role_Id">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="RolePermission" EntitySet="RolePermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserGroupPermission_dbo_Role_RoleId" Association="Self.FK_dbo_UserGroupPermission_dbo_Role_RoleId">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserGroupPermission" EntitySet="UserGroupPermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId" Association="Self.FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId">
+            <End Role="UserGroup" EntitySet="UserGroup" />
+            <End Role="UserGroupPermission" EntitySet="UserGroupPermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserInfoRole_dbo_Role_Role_Id" Association="Self.FK_dbo_UserInfoRole_dbo_Role_Role_Id">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserInfoRole" EntitySet="UserInfoRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserInfoRole_dbo_UserInfo_UserInfo_Id" Association="Self.FK_dbo_UserInfoRole_dbo_UserInfo_UserInfo_Id">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="UserInfoRole" EntitySet="UserInfoRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserInfoUserGroup_dbo_UserGroup_UserGroup_Id" Association="Self.FK_dbo_UserInfoUserGroup_dbo_UserGroup_UserGroup_Id">
+            <End Role="UserGroup" EntitySet="UserGroup" />
+            <End Role="UserInfoUserGroup" EntitySet="UserInfoUserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserInfoUserGroup_dbo_UserInfo_UserInfo_Id" Association="Self.FK_dbo_UserInfoUserGroup_dbo_UserInfo_UserInfo_Id">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="UserInfoUserGroup" EntitySet="UserInfoUserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserPermission_dbo_Permission_PermissionId" Association="Self.FK_dbo_UserPermission_dbo_Permission_PermissionId">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="UserPermission" EntitySet="UserPermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserPermission_dbo_UserInfo_UserInfoId" Association="Self.FK_dbo_UserPermission_dbo_UserInfo_UserInfoId">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="UserPermission" EntitySet="UserPermission" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PermissionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="PermissionContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Permission" EntityType="PermissionModel.Permission" />
+          <EntitySet Name="Role" EntityType="PermissionModel.Role" />
+          <EntitySet Name="UserGroup" EntityType="PermissionModel.UserGroup" />
+          <EntitySet Name="UserGroupPermission" EntityType="PermissionModel.UserGroupPermission" />
+          <EntitySet Name="UserInfo" EntityType="PermissionModel.UserInfo" />
+          <EntitySet Name="UserPermission" EntityType="PermissionModel.UserPermission" />
+          <AssociationSet Name="FK_dbo_UserPermission_dbo_Permission_PermissionId" Association="PermissionModel.FK_dbo_UserPermission_dbo_Permission_PermissionId">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="UserPermission" EntitySet="UserPermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserGroupPermission_dbo_Role_RoleId" Association="PermissionModel.FK_dbo_UserGroupPermission_dbo_Role_RoleId">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserGroupPermission" EntitySet="UserGroupPermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId" Association="PermissionModel.FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId">
+            <End Role="UserGroup" EntitySet="UserGroup" />
+            <End Role="UserGroupPermission" EntitySet="UserGroupPermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserPermission_dbo_UserInfo_UserInfoId" Association="PermissionModel.FK_dbo_UserPermission_dbo_UserInfo_UserInfoId">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="UserPermission" EntitySet="UserPermission" />
+          </AssociationSet>
+          <AssociationSet Name="RolePermission" Association="PermissionModel.RolePermission">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="Role" EntitySet="Role" />
+          </AssociationSet>
+          <AssociationSet Name="UserInfoRole" Association="PermissionModel.UserInfoRole">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserInfo" EntitySet="UserInfo" />
+          </AssociationSet>
+          <AssociationSet Name="UserInfoUserGroup" Association="PermissionModel.UserInfoUserGroup">
+            <End Role="UserGroup" EntitySet="UserGroup" />
+            <End Role="UserInfo" EntitySet="UserInfo" />
+          </AssociationSet>
+          <EntitySet Name="Function" EntityType="PermissionModel.Function" />
+          <AssociationSet Name="FK_dbo_Function_dbo_Permission_PermissionId" Association="PermissionModel.FK_dbo_Function_dbo_Permission_PermissionId">
+            <End Role="Permission" EntitySet="Permission" />
+            <End Role="Function" EntitySet="Function" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PermissionName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserPermission" Relationship="PermissionModel.FK_dbo_UserPermission_dbo_Permission_PermissionId" FromRole="Permission" ToRole="UserPermission" />
+          <NavigationProperty Name="Role" Relationship="PermissionModel.RolePermission" FromRole="Permission" ToRole="Role" />
+          <NavigationProperty Name="Function" Relationship="PermissionModel.FK_dbo_Function_dbo_Permission_PermissionId" FromRole="Permission" ToRole="Function" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserGroupPermission" Relationship="PermissionModel.FK_dbo_UserGroupPermission_dbo_Role_RoleId" FromRole="Role" ToRole="UserGroupPermission" />
+          <NavigationProperty Name="Permission" Relationship="PermissionModel.RolePermission" FromRole="Role" ToRole="Permission" />
+          <NavigationProperty Name="UserInfo" Relationship="PermissionModel.UserInfoRole" FromRole="Role" ToRole="UserInfo" />
+        </EntityType>
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ParentId" Type="Int32" />
+          <NavigationProperty Name="UserGroupPermission" Relationship="PermissionModel.FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId" FromRole="UserGroup" ToRole="UserGroupPermission" />
+          <NavigationProperty Name="UserInfo" Relationship="PermissionModel.UserInfoUserGroup" FromRole="UserGroup" ToRole="UserInfo" />
+        </EntityType>
+        <EntityType Name="UserGroupPermission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HasPermission" Type="Boolean" Nullable="false" />
+          <Property Name="UserGroupId" Type="Int32" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="PermissionModel.FK_dbo_UserGroupPermission_dbo_Role_RoleId" FromRole="UserGroupPermission" ToRole="Role" />
+          <NavigationProperty Name="UserGroup" Relationship="PermissionModel.FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId" FromRole="UserGroupPermission" ToRole="UserGroup" />
+        </EntityType>
+        <EntityType Name="UserInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SaltKey" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LastLoginTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="UserPermission" Relationship="PermissionModel.FK_dbo_UserPermission_dbo_UserInfo_UserInfoId" FromRole="UserInfo" ToRole="UserPermission" />
+          <NavigationProperty Name="Role" Relationship="PermissionModel.UserInfoRole" FromRole="UserInfo" ToRole="Role" />
+          <NavigationProperty Name="UserGroup" Relationship="PermissionModel.UserInfoUserGroup" FromRole="UserInfo" ToRole="UserGroup" />
+        </EntityType>
+        <EntityType Name="UserPermission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HasPermission" Type="Boolean" Nullable="false" />
+          <Property Name="UserInfoId" Type="Guid" />
+          <Property Name="PermissionId" Type="Int32" />
+          <NavigationProperty Name="Permission" Relationship="PermissionModel.FK_dbo_UserPermission_dbo_Permission_PermissionId" FromRole="UserPermission" ToRole="Permission" />
+          <NavigationProperty Name="UserInfo" Relationship="PermissionModel.FK_dbo_UserPermission_dbo_UserInfo_UserInfoId" FromRole="UserPermission" ToRole="UserInfo" />
+        </EntityType>
+        <Association Name="FK_dbo_UserPermission_dbo_Permission_PermissionId">
+          <End Type="PermissionModel.Permission" Role="Permission" Multiplicity="0..1" />
+          <End Type="PermissionModel.UserPermission" Role="UserPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserPermission">
+              <PropertyRef Name="PermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserGroupPermission_dbo_Role_RoleId">
+          <End Type="PermissionModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="PermissionModel.UserGroupPermission" Role="UserGroupPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserGroupPermission">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId">
+          <End Type="PermissionModel.UserGroup" Role="UserGroup" Multiplicity="1" />
+          <End Type="PermissionModel.UserGroupPermission" Role="UserGroupPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserGroupPermission">
+              <PropertyRef Name="UserGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserPermission_dbo_UserInfo_UserInfoId">
+          <End Type="PermissionModel.UserInfo" Role="UserInfo" Multiplicity="0..1" />
+          <End Type="PermissionModel.UserPermission" Role="UserPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserPermission">
+              <PropertyRef Name="UserInfoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="RolePermission">
+          <End Type="PermissionModel.Permission" Role="Permission" Multiplicity="*" />
+          <End Type="PermissionModel.Role" Role="Role" Multiplicity="*" />
+        </Association>
+        <Association Name="UserInfoRole">
+          <End Type="PermissionModel.Role" Role="Role" Multiplicity="*" />
+          <End Type="PermissionModel.UserInfo" Role="UserInfo" Multiplicity="*" />
+        </Association>
+        <Association Name="UserInfoUserGroup">
+          <End Type="PermissionModel.UserGroup" Role="UserGroup" Multiplicity="*" />
+          <End Type="PermissionModel.UserInfo" Role="UserInfo" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Function">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Controller" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Action" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IconUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CssStyle" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="HttpMethod" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsAvailable" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ParentId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PermissionId" Type="Int32" Nullable="false" />
+          <Property Name="FunctionType" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Permission" Relationship="PermissionModel.FK_dbo_Function_dbo_Permission_PermissionId" FromRole="Function" ToRole="Permission" />
+        </EntityType>
+        <Association Name="FK_dbo_Function_dbo_Permission_PermissionId">
+          <End Type="PermissionModel.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="PermissionModel.Function" Role="Function" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Function">
+              <PropertyRef Name="PermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PermissionModelStoreContainer" CdmEntityContainer="PermissionContext">
+          <EntitySetMapping Name="Permission">
+            <EntityTypeMapping TypeName="PermissionModel.Permission">
+              <MappingFragment StoreEntitySet="Permission">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PermissionName" ColumnName="PermissionName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role">
+            <EntityTypeMapping TypeName="PermissionModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserGroup">
+            <EntityTypeMapping TypeName="PermissionModel.UserGroup">
+              <MappingFragment StoreEntitySet="UserGroup">
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserGroupPermission">
+            <EntityTypeMapping TypeName="PermissionModel.UserGroupPermission">
+              <MappingFragment StoreEntitySet="UserGroupPermission">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="UserGroupId" ColumnName="UserGroupId" />
+                <ScalarProperty Name="HasPermission" ColumnName="HasPermission" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserInfo">
+            <EntityTypeMapping TypeName="PermissionModel.UserInfo">
+              <MappingFragment StoreEntitySet="UserInfo">
+                <ScalarProperty Name="LastLoginTime" ColumnName="LastLoginTime" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SaltKey" ColumnName="SaltKey" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserPermission">
+            <EntityTypeMapping TypeName="PermissionModel.UserPermission">
+              <MappingFragment StoreEntitySet="UserPermission">
+                <ScalarProperty Name="PermissionId" ColumnName="PermissionId" />
+                <ScalarProperty Name="UserInfoId" ColumnName="UserInfoId" />
+                <ScalarProperty Name="HasPermission" ColumnName="HasPermission" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="RolePermission" TypeName="PermissionModel.RolePermission" StoreEntitySet="RolePermission">
+            <EndProperty Name="Role">
+              <ScalarProperty Name="Id" ColumnName="Role_Id" />
+            </EndProperty>
+            <EndProperty Name="Permission">
+              <ScalarProperty Name="Id" ColumnName="Permission_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserInfoRole" TypeName="PermissionModel.UserInfoRole" StoreEntitySet="UserInfoRole">
+            <EndProperty Name="UserInfo">
+              <ScalarProperty Name="Id" ColumnName="UserInfo_Id" />
+            </EndProperty>
+            <EndProperty Name="Role">
+              <ScalarProperty Name="Id" ColumnName="Role_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserInfoUserGroup" TypeName="PermissionModel.UserInfoUserGroup" StoreEntitySet="UserInfoUserGroup">
+            <EndProperty Name="UserInfo">
+              <ScalarProperty Name="Id" ColumnName="UserInfo_Id" />
+            </EndProperty>
+            <EndProperty Name="UserGroup">
+              <ScalarProperty Name="Id" ColumnName="UserGroup_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="Function">
+            <EntityTypeMapping TypeName="PermissionModel.Function">
+              <MappingFragment StoreEntitySet="Function">
+                <ScalarProperty Name="FunctionType" ColumnName="FunctionType" />
+                <ScalarProperty Name="PermissionId" ColumnName="PermissionId" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="IsAvailable" ColumnName="IsAvailable" />
+                <ScalarProperty Name="HttpMethod" ColumnName="HttpMethod" />
+                <ScalarProperty Name="CssStyle" ColumnName="CssStyle" />
+                <ScalarProperty Name="IconUrl" ColumnName="IconUrl" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
