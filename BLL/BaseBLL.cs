@@ -25,6 +25,16 @@ namespace BLL
         }
 
         /// <summary>
+        /// 基本查询方法，获取一个被AutoMapper映射后的集合
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>还未执行的SQL语句</returns>
+        public IQueryable<TDto> LoadEntities<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.LoadEntities<TDto>(where);
+        }
+
+        /// <summary>
         /// 基本查询方法，获取一个集合，优先从缓存读取
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -33,6 +43,17 @@ namespace BLL
         public IEnumerable<T> LoadEntitiesFromCache(Expression<Func<T, bool>> @where, int timespan = 30)
         {
             return BaseDal.LoadEntitiesFromCache(where, timespan);
+        }
+
+        /// <summary>
+        /// 基本查询方法，获取一个被AutoMapper映射后的集合，优先从缓存读取
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <param name="timespan">缓存过期时间</param>
+        /// <returns>还未执行的SQL语句</returns>
+        public IEnumerable<TDto> LoadEntitiesFromCache<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        {
+            return BaseDal.LoadEntitiesFromCache<TDto>(where);
         }
 
         /// <summary>
@@ -46,6 +67,16 @@ namespace BLL
         }
 
         /// <summary>
+        /// 基本查询方法，获取一个被AutoMapper映射后的集合，优先从二级缓存读取
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>还未执行的SQL语句</returns>
+        public IEnumerable<TDto> LoadEntitiesFromL2Cache<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.LoadEntitiesFromL2Cache<TDto>(where);
+        }
+
+        /// <summary>
         /// 基本查询方法，获取一个集合(异步)
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -53,6 +84,16 @@ namespace BLL
         public Task<IQueryable<T>> LoadEntitiesAsync(Expression<Func<T, bool>> @where)
         {
             return BaseDal.LoadEntitiesAsync(where);
+        }
+
+        /// <summary>
+        /// 基本查询方法，获取一个被AutoMapper映射后的集合(异步)
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>还未执行的SQL语句</returns>
+        public Task<IQueryable<TDto>> LoadEntitiesAsync<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.LoadEntitiesAsync<TDto>(where);
         }
 
         /// <summary>
@@ -67,6 +108,17 @@ namespace BLL
         }
 
         /// <summary>
+        /// 基本查询方法，获取一个被AutoMapper映射后的集合，优先从缓存读取(异步)
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <param name="timespan">缓存过期时间</param>
+        /// <returns>还未执行的SQL语句</returns>
+        public Task<IEnumerable<TDto>> LoadEntitiesFromCacheAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        {
+            return BaseDal.LoadEntitiesFromCacheAsync<TDto>(where, timespan);
+        }
+
+        /// <summary>
         /// 基本查询方法，获取一个集合，优先从二级缓存读取(异步)
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -77,6 +129,16 @@ namespace BLL
         }
 
         /// <summary>
+        /// 基本查询方法，获取一个被AutoMapper映射后的集合，优先从二级缓存读取(异步)
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>还未执行的SQL语句</returns>
+        public Task<EFCachedQueryable<TDto>> LoadEntitiesFromL2CacheAsync<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.LoadEntitiesFromL2CacheAsync<TDto>(where);
+        }
+
+        /// <summary>
         /// 基本查询方法，获取一个集合（不跟踪实体）
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -84,6 +146,16 @@ namespace BLL
         public IQueryable<T> LoadEntitiesNoTracking(Expression<Func<T, bool>> @where)
         {
             return BaseDal.LoadEntitiesNoTracking(where);
+        }
+
+        /// <summary>
+        /// 基本查询方法，获取一个被AutoMapper映射后的集合（不跟踪实体）
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>还未执行的SQL语句</returns>
+        public IQueryable<TDto> LoadEntitiesNoTracking<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.LoadEntitiesNoTracking<TDto>(where);
         }
 
         /// <summary>
@@ -98,6 +170,17 @@ namespace BLL
         }
 
         /// <summary>
+        /// 基本查询方法，获取一个被AutoMapper映射后的集合，优先从缓存读取(不跟踪实体)
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <param name="timespan">缓存过期时间</param>
+        /// <returns>实体集合</returns>
+        public IEnumerable<TDto> LoadEntitiesFromCacheNoTracking<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        {
+            return BaseDal.LoadEntitiesFromCacheNoTracking<TDto>(where, timespan);
+        }
+
+        /// <summary>
         /// 基本查询方法，获取一个集合，优先从二级缓存读取(不跟踪实体)
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -108,6 +191,16 @@ namespace BLL
         }
 
         /// <summary>
+        /// 基本查询方法，获取一个被AutoMapper映射后的集合，优先从二级缓存读取(不跟踪实体)
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体集合</returns>
+        public IEnumerable<TDto> LoadEntitiesFromL2CacheNoTracking<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.LoadEntitiesFromL2CacheNoTracking<TDto>(where);
+        }
+
+        /// <summary>
         /// 基本查询方法，获取一个集合（异步，不跟踪实体）
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -115,6 +208,16 @@ namespace BLL
         public Task<IQueryable<T>> LoadEntitiesNoTrackingAsync(Expression<Func<T, bool>> @where)
         {
             return BaseDal.LoadEntitiesNoTrackingAsync(where);
+        }
+
+        /// <summary>
+        /// 基本查询方法，获取一个被AutoMapper映射后的集合（异步，不跟踪实体）
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体集合</returns>
+        public Task<IQueryable<TDto>> LoadEntitiesNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.LoadEntitiesNoTrackingAsync<TDto>(where);
         }
 
         /// <summary>
@@ -129,6 +232,17 @@ namespace BLL
         }
 
         /// <summary>
+        ///  基本查询方法，获取一个被AutoMapper映射后的集合，优先从缓存读取(异步，不跟踪实体)
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <param name="timespan">缓存过期时间</param>
+        /// <returns>实体集合</returns>
+        public Task<IEnumerable<TDto>> LoadEntitiesFromCacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        {
+            return BaseDal.LoadEntitiesFromCacheNoTrackingAsync<TDto>(where, timespan);
+        }
+
+        /// <summary>
         ///  基本查询方法，获取一个集合，优先从二级缓存读取(异步，不跟踪实体)
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -139,6 +253,16 @@ namespace BLL
         }
 
         /// <summary>
+        ///  基本查询方法，获取一个被AutoMapper映射后的集合，优先从二级缓存读取(异步，不跟踪实体)
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体集合</returns>
+        public Task<EFCachedQueryable<TDto>> LoadEntitiesFromL2CacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.LoadEntitiesFromL2CacheNoTrackingAsync<TDto>(where);
+        }
+
+        /// <summary>
         /// 获取第一条数据
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -146,6 +270,16 @@ namespace BLL
         public T GetFirstEntity(Expression<Func<T, bool>> @where)
         {
             return LoadEntities(where).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体</returns>
+        public TDto GetFirstEntity<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.GetFirstEntity<TDto>(where);
         }
 
         /// <summary>
@@ -160,6 +294,17 @@ namespace BLL
         }
 
         /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据，优先从缓存读取
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <param name="timespan">缓存过期时间</param>
+        /// <returns>实体</returns>
+        public TDto GetFirstEntityFromCache<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        {
+            return BaseDal.GetFirstEntityFromCache<TDto>(where, timespan);
+        }
+
+        /// <summary>
         /// 获取第一条数据，优先从缓存读取
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -167,6 +312,26 @@ namespace BLL
         public T GetFirstEntityFromL2Cache(Expression<Func<T, bool>> @where)
         {
             return BaseDal.GetFirstEntityFromL2Cache(where);
+        }
+
+        /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据，优先从缓存读取
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体</returns>
+        public TDto GetFirstEntityFromL2Cache<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.GetFirstEntityFromL2Cache<TDto>(where);
+        }
+
+        /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体</returns>
+        public Task<TDto> GetFirstEntityAsync<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.GetFirstEntityAsync<TDto>(where);
         }
 
         /// <summary>
@@ -181,6 +346,17 @@ namespace BLL
         }
 
         /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据，优先从缓存读取(异步)
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <param name="timespan">缓存过期时间</param>
+        /// <returns>实体</returns>
+        public Task<TDto> GetFirstEntityFromCacheAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        {
+            return BaseDal.GetFirstEntityFromCacheAsync<TDto>(where, timespan);
+        }
+
+        /// <summary>
         /// 获取第一条数据，优先从二级缓存读取(异步)
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -188,6 +364,16 @@ namespace BLL
         public Task<T> GetFirstEntityFromL2CacheAsync(Expression<Func<T, bool>> @where)
         {
             return BaseDal.GetFirstEntityFromL2CacheAsync(where);
+        }
+
+        /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据，优先从二级缓存读取(异步)
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体</returns>
+        public Task<TDto> GetFirstEntityFromL2CacheAsync<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.GetFirstEntityFromL2CacheAsync<TDto>(where);
         }
 
         /// <summary>
@@ -211,6 +397,16 @@ namespace BLL
         }
 
         /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据（不跟踪实体）
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体</returns>
+        public TDto GetFirstEntityNoTracking<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.GetFirstEntityNoTracking<TDto>(where);
+        }
+
+        /// <summary>
         /// 获取第一条数据，优先从缓存读取（不跟踪实体）
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -219,6 +415,17 @@ namespace BLL
         public T GetFirstEntityFromCacheNoTracking(Expression<Func<T, bool>> @where, int timespan = 30)
         {
             return BaseDal.GetFirstEntityFromCacheNoTracking(where, timespan);
+        }
+
+        /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据，优先从缓存读取（不跟踪实体）
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <param name="timespan">缓存过期时间</param>
+        /// <returns>实体</returns>
+        public TDto GetFirstEntityFromCacheNoTracking<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        {
+            return BaseDal.GetFirstEntityFromCacheNoTracking<TDto>(where, timespan);
         }
 
         /// <summary>
@@ -232,6 +439,16 @@ namespace BLL
         }
 
         /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据，优先从二级缓存读取（不跟踪实体）
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体</returns>
+        public TDto GetFirstEntityFromL2CacheNoTracking<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.GetFirstEntityFromL2CacheNoTracking<TDto>(where);
+        }
+
+        /// <summary>
         /// 获取第一条数据（异步，不跟踪实体）
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -239,6 +456,16 @@ namespace BLL
         public Task<T> GetFirstEntityNoTrackingAsync(Expression<Func<T, bool>> @where)
         {
             return BaseDal.GetFirstEntityNoTrackingAsync(where);
+        }
+
+        /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据（异步，不跟踪实体）
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体</returns>
+        public Task<TDto> GetFirstEntityNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.GetFirstEntityNoTrackingAsync<TDto>(where);
         }
 
         /// <summary>
@@ -253,6 +480,17 @@ namespace BLL
         }
 
         /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据，优先从缓存读取（异步，不跟踪实体）
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <param name="timespan">缓存过期时间</param>
+        /// <returns>实体</returns>
+        public Task<TDto> GetFirstEntityFromCacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        {
+            return BaseDal.GetFirstEntityFromCacheNoTrackingAsync<TDto>(where, timespan);
+        }
+
+        /// <summary>
         /// 获取第一条数据，优先从缓存读取（异步，不跟踪实体）
         /// </summary>
         /// <param name="where">查询条件</param>
@@ -260,6 +498,16 @@ namespace BLL
         public Task<T> GetFirstEntityFromL2CacheNoTrackingAsync(Expression<Func<T, bool>> @where)
         {
             return BaseDal.GetFirstEntityFromL2CacheNoTrackingAsync(where);
+        }
+
+        /// <summary>
+        /// 获取第一条被AutoMapper映射后的数据，优先从缓存读取（异步，不跟踪实体）
+        /// </summary>
+        /// <param name="where">查询条件</param>
+        /// <returns>实体</returns>
+        public Task<TDto> GetFirstEntityFromL2CacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
+        {
+            return BaseDal.GetFirstEntityFromL2CacheNoTrackingAsync<TDto>(where);
         }
 
         /// <summary>
@@ -300,6 +548,22 @@ namespace BLL
         }
 
         /// <summary>
+        /// 高效分页查询方法，取出被AutoMapper映射后的数据集合
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <param name="pageIndex">第几页</param>
+        /// <param name="pageSize">每页大小</param>
+        /// <param name="totalCount">数据总数</param>
+        /// <param name="where">where Lambda条件表达式</param>
+        /// <param name="orderby">orderby Lambda条件表达式</param>
+        /// <param name="isAsc">升序降序</param>
+        /// <returns>还未执行的SQL语句</returns>
+        public IQueryable<TDto> LoadPageEntities<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc)
+        {
+            return BaseDal.LoadPageEntities<TS, TDto>(pageIndex, pageSize, out totalCount, where, orderby, isAsc);
+        }
+
+        /// <summary>
         /// 高效分页查询方法，优先从缓存读取
         /// </summary>
         /// <typeparam name="TS"></typeparam>
@@ -314,6 +578,28 @@ namespace BLL
         public IEnumerable<T> LoadPageEntitiesFromCache<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
         {
             return BaseDal.LoadPageEntitiesFromCache(pageIndex, pageSize, out totalCount, where, orderby, isAsc, timespan);
+        }
+
+        /// <summary>
+        /// 高效分页查询方法，优先从缓存读取，取出被AutoMapper映射后的数据集合
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <typeparam name="TDto"></typeparam>
+        /// <param name="pageIndex">第几页</param>
+        /// <param name="pageSize">每页大小</param>
+        /// <param name="totalCount">数据总数</param>
+        /// <param name="where">where Lambda条件表达式</param>
+        /// <param name="orderby">orderby Lambda条件表达式</param>
+        /// <param name="isAsc">升序降序</param>
+        /// <param name="timespan">缓存过期时间</param>
+        /// <returns>还未执行的SQL语句</returns>
+        /// <exception cref="OverflowException">
+        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
+        /// <exception cref="ArgumentException">
+        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
+        public IEnumerable<TDto> LoadPageEntitiesFromCache<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc, int timespan = 30) where TDto : class
+        {
+            return BaseDal.LoadPageEntitiesFromCache<TS, TDto>(pageIndex, pageSize, out totalCount, where, orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -337,6 +623,27 @@ namespace BLL
         }
 
         /// <summary>
+        /// 高效分页查询方法，优先从二级缓存读取，取出被AutoMapper映射后的数据集合
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <typeparam name="TDto"></typeparam>
+        /// <param name="pageIndex">第几页</param>
+        /// <param name="pageSize">每页大小</param>
+        /// <param name="totalCount">数据总数</param>
+        /// <param name="where">where Lambda条件表达式</param>
+        /// <param name="orderby">orderby Lambda条件表达式</param>
+        /// <param name="isAsc">升序降序</param>
+        /// <returns>还未执行的SQL语句</returns>
+        /// <exception cref="OverflowException">
+        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
+        /// <exception cref="ArgumentException">
+        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
+        public IEnumerable<TDto> LoadPageEntitiesFromL2Cache<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc)
+        {
+            return BaseDal.LoadPageEntitiesFromL2Cache<TS, TDto>(pageIndex, pageSize, out totalCount, where, orderby, isAsc);
+        }
+
+        /// <summary>
         /// 高效分页查询方法（不跟踪实体）
         /// </summary>
         /// <typeparam name="TS"></typeparam>
@@ -350,6 +657,23 @@ namespace BLL
         public IQueryable<T> LoadPageEntitiesNoTracking<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
             return BaseDal.LoadPageEntitiesNoTracking(pageIndex, pageSize, out totalCount, where, orderby, isAsc);
+        }
+
+        /// <summary>
+        /// 高效分页查询方法，取出被AutoMapper映射后的数据集合（不跟踪实体）
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <typeparam name="TDto"></typeparam>
+        /// <param name="pageIndex">第几页</param>
+        /// <param name="pageSize">每页大小</param>
+        /// <param name="totalCount">数据总数</param>
+        /// <param name="where">where Lambda条件表达式</param>
+        /// <param name="orderby">orderby Lambda条件表达式</param>
+        /// <param name="isAsc">升序降序</param>
+        /// <returns>还未执行的SQL语句</returns>
+        public IQueryable<TDto> LoadPageEntitiesNoTracking<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        {
+            return BaseDal.LoadPageEntitiesNoTracking<TS, TDto>(pageIndex, pageSize, out totalCount, where, orderby, isAsc);
         }
 
         /// <summary>
@@ -370,6 +694,28 @@ namespace BLL
         }
 
         /// <summary>
+        /// 高效分页查询方法，取出被AutoMapper映射后的数据集合，优先从缓存读取（不跟踪实体）
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <typeparam name="TDto"></typeparam>
+        /// <param name="pageIndex">第几页</param>
+        /// <param name="pageSize">每页大小</param>
+        /// <param name="totalCount">数据总数</param>
+        /// <param name="where">where Lambda条件表达式</param>
+        /// <param name="orderby">orderby Lambda条件表达式</param>
+        /// <param name="isAsc">升序降序</param>
+        /// <param name="timespan">缓存过期时间</param>
+        /// <returns>还未执行的SQL语句</returns>
+        /// <exception cref="OverflowException">
+        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
+        /// <exception cref="ArgumentException">
+        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
+        public IEnumerable<TDto> LoadPageEntitiesFromCacheNoTracking<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
+        {
+            return BaseDal.LoadPageEntitiesFromCacheNoTracking<TS, TDto>(pageIndex, pageSize, out totalCount, where, orderby, isAsc, timespan);
+        }
+
+        /// <summary>
         /// 高效分页查询方法，优先从缓存读取（不跟踪实体）
         /// </summary>
         /// <typeparam name="TS"></typeparam>
@@ -387,6 +733,27 @@ namespace BLL
         public IEnumerable<T> LoadPageEntitiesFromL2CacheNoTracking<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
             return BaseDal.LoadPageEntitiesFromL2CacheNoTracking(pageIndex, pageSize, out totalCount, where, orderby, isAsc);
+        }
+
+        /// <summary>
+        /// 高效分页查询方法，取出被AutoMapper映射后的数据集合，优先从缓存读取（不跟踪实体）
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <typeparam name="TDto"></typeparam>
+        /// <param name="pageIndex">第几页</param>
+        /// <param name="pageSize">每页大小</param>
+        /// <param name="totalCount">数据总数</param>
+        /// <param name="where">where Lambda条件表达式</param>
+        /// <param name="orderby">orderby Lambda条件表达式</param>
+        /// <param name="isAsc">升序降序</param>
+        /// <returns>还未执行的SQL语句</returns>
+        /// <exception cref="OverflowException">
+        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
+        /// <exception cref="ArgumentException">
+        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
+        public IEnumerable<TDto> LoadPageEntitiesFromL2CacheNoTracking<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        {
+            return BaseDal.LoadPageEntitiesFromL2CacheNoTracking<TS, TDto>(pageIndex, pageSize, out totalCount, where, orderby, isAsc);
         }
 
         /// <summary>

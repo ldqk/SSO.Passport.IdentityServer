@@ -15,7 +15,7 @@ using SSO.Passport.IdentityServer.Models;
 namespace SSO.Passport.IdentityServer.Controllers
 {
 #if !DEBUG
-    [Authority(Code = AuthCodeEnum.HashCheck)] 
+    //[Authority(Code = AuthCodeEnum.HashCheck)] 
 #endif
     [MyExceptionFilter]
 
@@ -114,6 +114,18 @@ namespace SSO.Passport.IdentityServer.Controllers
                 return ResultData(new { user = userInfo.MapTo<UserInfoLoginModel>(), menus = UserInfoBll.GetPermissionList(userInfo.Id, FunctionType.Menu).Select(c => new { id = c.CssStyle, name = c.Name, icon = c.IconUrl, url = c.Controller + c.Action, show = true }) });
             }
             return ResultData(null, false, "用户名或密码错误！");
+        }
+
+        public ActionResult ChangeUsername(Guid id, string username)
+        {
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            if (!username.Equals(userInfo.Username) && UserInfoBll.UsernameExist(username))
+            {
+                return ResultData(null, false, $"用户名{username}已经存在，请尝试更换其他用户名！");
+            }
+            userInfo.Username = username;
+            bool b = UserInfoBll.UpdateEntitySaved(userInfo);
+            return ResultData(Mapper.Map<UserInfoOutputDto>(userInfo), b, b ? $"用户名修改成功，新用户名为{username}。" : "用户名修改失败！");
         }
     }
 }

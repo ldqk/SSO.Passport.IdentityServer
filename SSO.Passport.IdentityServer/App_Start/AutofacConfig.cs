@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
-using Autofac.Integration.Wcf;
+
 namespace SSO.Passport.IdentityServer
 {
     /// <summary>

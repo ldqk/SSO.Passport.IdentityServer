@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Text;
 using System.Web.Mvc;
+using Common;
 using IBLL;
 using Masuit.Tools;
+using Masuit.Tools.Hardware;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
@@ -17,10 +17,28 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Index()
         {
-            //IList<Tuple<string, string>> list = new List<Tuple<string, string>>();
-            //Assembly.GetExecutingAssembly().GetTypes().Where(t => t.FullName.EndsWith("Controller")).ForEach(t => t.GetMethods().Where(m => m.IsPublic && m.ReturnType.IsAssignableFrom(typeof(ActionResult)) && !m.Name.StartsWith("get_")).ForEach(m => list.Add(new Tuple<string, string>(t.Name.Substring(0, t.Name.IndexOf("Controller", StringComparison.Ordinal)), m.Name))));
-            //return View(list);
             return View();
+        }
+
+        public ActionResult GetBaseInfo()
+        {
+            List<CpuInfo> cpuInfo = SystemInfo.GetCpuInfo();
+            RamInfo ramInfo = SystemInfo.GetRamInfo();
+            string osVersion = SystemInfo.GetOsVersion();
+            var total = new StringBuilder();
+            var free = new StringBuilder();
+            var usage = new StringBuilder();
+            SystemInfo.DiskTotalSpace().ForEach(kv => { total.Append(kv.Key + kv.Value + " | "); });
+            SystemInfo.DiskFree().ForEach(kv => free.Append(kv.Key + kv.Value + " | "));
+            SystemInfo.DiskUsage().ForEach(kv => usage.Append(kv.Key + kv.Value.ToString("P") + " | "));
+            IList<string> mac = SystemInfo.GetMacAddress();
+            IList<string> ips = SystemInfo.GetIPAddress();
+            return Json(new { cpuInfo, ramInfo, osVersion, diskInfo = new { total = total.ToString(), free = free.ToString(), usage = usage.ToString() }, netInfo = new { mac, ips } }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetHistoryList()
+        {
+            return Json(new { cpu = CommonHelper.HistoryCpuLoad, mem = CommonHelper.HistoryMemoryUsage, temp = CommonHelper.HistoryCpuTemp, read = CommonHelper.HistoryIORead, write = CommonHelper.HistoryIOWrite, down = CommonHelper.HistoryNetReceive, up = CommonHelper.HistoryNetSend }, JsonRequestBehavior.AllowGet);
         }
     }
 }

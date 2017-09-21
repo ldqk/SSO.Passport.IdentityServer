@@ -1,12 +1,598 @@
-﻿@model IList<Tuple<string, string>>
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "首页_Dashboard";
 }
-<div>
-    <h1>Dashboard</h1>
-    <h4>欢迎使用IdentifyServer</h4>
-    @*@foreach (Tuple<string, string> tuple in Model) {
-        <p>@(Request.Url.Scheme + "://" + Request.Url.Authority + "/" + tuple.Item1 + "/" + tuple.Item2)</p>
-    }*@
+<script src="https://cdn.bootcss.com/angular.js/1.6.6/angular.min.js"></script>
+<script src="https://cdn.bootcss.com/highcharts/5.0.14/highcharts.js"></script>
+<script src="https://cdn.bootcss.com/highcharts/5.0.14/highcharts-more.js"></script>
+<script src="https://cdn.bootcss.com/highcharts/5.0.14/js/modules/solid-gauge.js"></script>
+<script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+<script src="https://cdn.bootcss.com/signalr.js/2.2.2/jquery.signalR.min.js"></script>
+<script src="https://cdn.bootcss.com/angular-signalr-hub/1.6.3/signalr-hub.min.js"></script>
+<script src="/signalr/hubs"></script><!--后端SignalR根据注册的路由生成的js脚本-->
+
+<h1>Dashboard</h1>
+<div class="divider"></div>
+<div ng-app="myApp" ng-controller="home">
+    <div>
+        <div class="page-header">
+            <h2 class="text-center">
+                服务器性能概览
+            </h2>
+        </div>
+        <table class="table table-condensed table-hover table-responsive">
+            <tbody>
+            <tr>
+                <td>操作系统</td>
+                <th colspan="2">{{osVersion}}</th>
+                <td>CPU型号</td>
+                <th colspan="2">{{cpu.Type}}</th>
+            </tr>
+            <tr>
+                <td>CPU位宽</td>
+                <th>{{cpu.DataWidth}} 位</th>
+                <td>CPU核心数</td>
+                <th>{{cpu.NumberOfCores}} 核心</th>
+                <td>CPU线程数</td>
+                <th>{{cpu.NumberOfLogicalProcessors}} 线程</th>
+            </tr>
+            <tr>
+                <td>CPU基础频率</td>
+                <th>{{cpu.CurrentClockSpeed}} MHz</th>
+                <td>CPU睿频</td>
+                <th>{{cpu.MaxClockSpeed}} MHz</th>
+                <td>CPU温度</td>
+                <th>{{cpu.Temperature}} ℃</th>
+            </tr>
+            <tr>
+                <td>CPU当前频率</td>
+                <th>{{cpu.CpuLoad*cpu.MaxClockSpeed/100|number:2}} MHz</th>
+                <td>CPU使用率</td>
+                <th>{{cpu.CpuLoad|number:2}} %</th>
+                <td>物理总内存</td>
+                <th>{{memory.PhysicalMemory/1048576|number:2}} MB</th>
+            </tr>
+            <tr>
+                <td>物理内存已使用</td>
+                <th>{{(memory.PhysicalMemory*memory.MemoryUsage/104857600)|number:2}} MB</th>
+                <td>物理内存剩余</td>
+                <th>{{(memory.PhysicalMemory*(100-memory.MemoryUsage)/104857600)|number:2}} MB</th>
+                <td>内存使用率</td>
+                <th>{{memory.MemoryUsage|number:2}} %</th>
+            </tr>
+            <tr>
+                <td>虚拟内存总数</td>
+                <th>{{memory.TotalPageFile/1048576|number:2}} MB</th>
+                <td>虚拟内存已使用</td>
+                <th>{{(memory.TotalPageFile-memory.AvailablePageFile)/1048576|number:2}} MB</th>
+                <td>虚拟内存可用</td>
+                <th>{{memory.AvailablePageFile/1048576|number:2}} MB</th>
+            </tr>
+            <tr>
+                <td colspan="1">磁盘总空间</td>
+                <th colspan="5">{{disk.total}}</th>
+            </tr>
+            <tr>
+                <td colspan="1">磁盘剩余空间</td>
+                <th colspan="5">{{disk.free}}</th>
+            </tr>
+            <tr>
+                <td colspan="1">磁盘使用率</td>
+                <th colspan="5">{{disk.usage}}</th>
+            </tr>
+            <tr ng-repeat="item in netInfo.mac">
+                <td>MAC地址-{{$index}}</td>
+                <th colspan="2">{{item}}</th>
+                <td>IP地址-{{$index}}</td>
+                <th colspan="2">{{netInfo.ips[$index]}}</th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <div>
+            <div class="page-header">
+                <h2 class="text-center">性能实时监控</h2>
+            </div>
+            <div class="row">
+                <div id="container-speed" class="col-md-3" style="height: 200px;"></div>
+                <div id="container-rpm" class="col-md-3" style="height: 200px;"></div>
+                <div id="container-temp" class="col-md-3" style="height: 200px;"></div>
+                <div id="container-io" class="col-md-3" style="height: 200px;"></div>
+            </div>
+        </div>
+        <div id="cpu"></div>
+        <div>
+            <div class="page-header">
+                <h2 class="text-center">
+                    磁盘和网络
+                </h2>
+            </div>
+            <div class="row">
+                <div id="io" class="col-md-6" style="height: 300px;"></div>
+                <div id="net" class="col-md-6" style="height: 300px;"></div>
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+	var myApp = angular.module('myApp', [ "SignalR"]);
+    myApp.controller("home", ["$scope", "$http", "Hub", function ($scope, $http, Hub) {
+        var loadsdata = [];
+        var netdata = [];
+        var iodata = [];
+        var currentCpuLoad = 0;
+        var currentMemUsage = 0;
+        var currentTemper = 0;
+        var currentRead = 0;
+        var currentWrite = 0;
+        var currentUp = 0;
+        var currentDown = 0;
+        var speed = 0;
+        $scope.cpu = {};
+        $scope.memory = {};
+
+        $http.post("/home/GetBaseInfo", null).then(function (res) {
+            var data = res.data;
+            $scope.cpu = data.cpuInfo[0];
+            $scope.memory = data.ramInfo;
+            $scope.disk = data.diskInfo;
+            $scope.osVersion = data.osVersion;
+            $scope.netInfo = data.netInfo;
+        });
+
+        var hub = new Hub('myhub', {
+            rootPath: '/signalr',
+            listeners: {
+                "receiveLoad": function (data) {
+                    data = JSON.parse(data);
+                    loadsdata.push(data);
+                    currentCpuLoad = data[1];
+                    currentMemUsage = data[2];
+                    currentTemper = data[3];
+                    $scope.cpu.CpuLoad = currentCpuLoad;
+                    $scope.memory.MemoryUsage = currentMemUsage;
+                    $scope.cpu.Temperature = currentTemper;
+                    $scope.$apply();
+                },
+                "receiveReadWrite": function (data) {
+                    data = JSON.parse(data);
+                    iodata.push(data);
+                    currentRead = data[1];
+                    currentWrite = data[2];
+                    speed = currentWrite;
+                },
+                "receiveUpDown": function (data) {
+                    data = JSON.parse(data);
+                    netdata.push(data);
+                    currentUp = data[1];
+                    currentDown = data[2];
+                }
+            },
+            methods: ['update'],
+            errorHandler: function (error) {
+                //console.log(error);
+            },
+            stateChanged: function (state) {
+                switch (state.newState) {
+                    case $.signalR.connectionState.connecting:
+                        break;
+                    case $.signalR.connectionState.connected:
+                        {
+                            hub.update();
+                        }
+                        break;
+                    case $.signalR.connectionState.reconnecting:
+
+                        break;
+                    case $.signalR.connectionState.disconnected:
+                        break;
+                }
+            }
+        });
+        hub.disconnect();
+        hub.connect();
+
+        $.post("/home/GetHistoryList", null, function (data) {
+            $('#cpu').highcharts({
+                chart: {
+                    type: 'spline',
+                    animation: Highcharts.svg,
+                    events: {
+                        load: function () {
+                            var series1 = this.series[0],
+                                series2 = this.series[1],
+                                series3 = this.series[2];
+                            setInterval(function () {
+                                let ld = loadsdata.pop();
+                                if (ld) {
+                                    series1.addPoint([ld[0], ld[1]], true, true);
+                                    series2.addPoint([ld[0], ld[2]], true, true);
+                                    series3.addPoint([ld[0], ld[3]], true, true);
+                                }
+                            }, 2000);
+                        },
+                        backgroundColor: 'transparent',
+                    }
+                },
+                plotOptions: {
+                    series: {
+                        marker: {
+                            enabled: false
+                        }
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    verticalAlign: 'top',
+                    floating: true,
+                    x: -50,
+                    y: 0
+                },
+                credits: {
+                    enabled: false
+                },
+                title: {
+                    text: '资源使用率'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    tickPixelInterval: 150
+                },
+                yAxis: [
+                    {
+                        title: {
+                            text: '使用率（%）'
+                        },
+                        min: 0
+                    }, {
+                        title: {
+                            text: 'CPU内核温度（℃）'
+                        },
+                        min: 40,
+                        opposite: true
+                    }
+                ],
+                tooltip: {
+                    formatter: function () {
+                        return '时间点：<b>' + Highcharts.dateFormat("%H:%M:%S", this.points[0].x) + '</b><br/>' +
+                            'CPU使用率：<b>' + Highcharts.numberFormat(this.points[0].y, 2) + '%</b><br/>' +
+                            '内存使用率：<b>' + Highcharts.numberFormat(this.points[1].y, 2) + '%</b><br/>' +
+                            'CPU内核温度：<b>' + Highcharts.numberFormat(this.points[2].y, 0) + '℃</b><br/>';
+                    },
+                    crosshairs: true,
+                    shared: true
+                },
+                series: [{
+                    name: 'CPU使用率',
+                    data: data.cpu,
+                    tooltip: {
+                        valueSuffix: ' %'
+                    }
+                }, {
+                    name: '内存使用率',
+                    data: data.mem,
+                    tooltip: {
+                        valueSuffix: ' %'
+                    }
+                }, {
+                    name: 'CPU温度',
+                    yAxis: 1,
+                    data: data.temp,
+                    tooltip: {
+                        valueSuffix: '℃'
+                    }
+                }],
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        }
+                    }]
+                }
+            });
+            $('#io').highcharts({
+                chart: {
+                    type: 'spline',
+                    animation: Highcharts.svg,
+                    events: {
+                        load: function () {
+                            var series1 = this.series[0],
+                                series2 = this.series[1];
+                            setInterval(function () {
+                                let io = iodata.pop();
+                                if (io) {
+                                    series1.addPoint([io[0], io[1]], true, true);
+                                    series2.addPoint([io[0], io[2]], true, true);
+                                }
+                            }, 2000);
+                        }
+                    }
+                },
+                plotOptions: {
+                    series: {
+                        marker: {
+                            enabled: false
+                        }
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    verticalAlign: 'top',
+                    floating: true,
+                    x: -50,
+                    y: 0
+                },
+                credits: {
+                    enabled: false
+                },
+                title: {
+                    text: '磁盘I/O'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    tickPixelInterval: 150
+                },
+                yAxis: {
+                    title: {
+                        text: '速率(KBps)'
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '时间点：<b>' + Highcharts.dateFormat("%H:%M:%S", this.points[0].x) + '</b><br/>' +
+                            '读：<b>' + Highcharts.numberFormat(this.points[0].y, 0) + 'KBps</b><br/>' +
+                            '写：<b>' + Highcharts.numberFormat(this.points[1].y, 0) + 'KBps</b><br/>';
+                    },
+                    crosshairs: true,
+                    shared: true
+                },
+                series: [{
+                    name: '读',
+                    data: data.read,
+                    tooltip: {
+                        valueSuffix: 'KBps'
+                    }
+                }, {
+                    name: '写',
+                    data: data.write,
+                    tooltip: {
+                        valueSuffix: 'KBps'
+                    }
+                }]
+            });
+            $('#net').highcharts({
+                chart: {
+                    type: 'spline',
+                    animation: Highcharts.svg,
+                    events: {
+                        load: function () {
+                            var series1 = this.series[0],
+                                series2 = this.series[1];
+                            setInterval(function () {
+                                let net = netdata.pop();
+                                if (net) {
+                                    series1.addPoint([net[0], net[1]], true, true);
+                                    series2.addPoint([net[0], net[2]], true, true);
+                                }
+                            }, 2000);
+                        }
+                    }
+                },
+                plotOptions: {
+                    series: {
+                        marker: {
+                            enabled: false
+                        }
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    verticalAlign: 'top',
+                    floating: true,
+                    x: -50,
+                    y: 0
+                },
+                credits: {
+                    enabled: false
+                },
+                title: {
+                    text: '网络状态'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    tickPixelInterval: 150
+                },
+                yAxis: {
+                    title: {
+                        text: '速率(KBps)'
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '时间点：<b>' + Highcharts.dateFormat("%H:%M:%S", this.points[0].x) + '</b><br/>' +
+                            '上行：<b>' + Highcharts.numberFormat(this.points[0].y, 0) + 'KBps</b><br/>' +
+                            '下行：<b>' + Highcharts.numberFormat(this.points[1].y, 0) + 'KBps</b><br/>';
+                    },
+                    crosshairs: true,
+                    shared: true
+                },
+                series: [{
+                    name: '上行',
+                    data: data.up,
+                    tooltip: {
+                        valueSuffix: 'KBps'
+                    }
+                }, {
+                    name: '下行',
+                    data: data.down,
+                    tooltip: {
+                        valueSuffix: 'KBps'
+                    }
+                }]
+            });
+        });
+
+        var gaugeOptions = {
+            chart: {
+                type: 'solidgauge'
+            },
+            title: null,
+            pane: {
+                center: ['50%', '85%'],
+                size: '140%',
+                startAngle: -90,
+                endAngle: 90,
+                background: {
+                    backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
+                    innerRadius: '60%',
+                    outerRadius: '100%',
+                    shape: 'arc'
+                }
+            },
+            tooltip: {
+                enabled: false
+            },
+            yAxis: {
+                stops: [
+                    [0.1, '#55BF3B'], // green
+                    [0.5, '#DDDF0D'], // yellow
+                    [0.9, '#DF5353'] // red
+                ],
+                lineWidth: 0,
+                minorTickInterval: null,
+                tickPixelInterval: 400,
+                tickWidth: 0,
+                title: {
+                    y: -70
+                },
+                labels: {
+                    y: 16
+                }
+            },
+            plotOptions: {
+                solidgauge: {
+                    dataLabels: {
+                        y: 5,
+                        borderWidth: 0,
+                        useHTML: true
+                    }
+                }
+            }
+        };
+        $('#container-speed').highcharts(Highcharts.merge(gaugeOptions, {
+            yAxis: {
+                min: 0,
+                max: 100,
+                title: {
+                    text: 'CPU使用率'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'CPU使用率',
+                data: [0],
+                dataLabels: {
+                    format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y:.2f}%</span><br/>'
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                }
+            }]
+        }));
+        $('#container-rpm').highcharts(Highcharts.merge(gaugeOptions, {
+            yAxis: {
+                min: 0,
+                max: 100,
+                title: {
+                    text: '内存使用率'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: '内存使用率',
+                data: [0],
+                dataLabels: {
+                    format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y:.1f}%</span><br/>'
+                },
+                tooltip: {
+                    valueSuffix: ' %'
+                }
+            }]
+        }));
+        $('#container-temp').highcharts(Highcharts.merge(gaugeOptions, {
+            yAxis: {
+                min: 0,
+                max: 100,
+                title: {
+                    text: 'CPU当前温度'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'CPU当前温度',
+                data: [1],
+                dataLabels: {
+                    format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}℃</span><br/>'
+                },
+                tooltip: {
+                    valueSuffix: ' ℃'
+                }
+            }]
+        }));
+        $('#container-io').highcharts(Highcharts.merge(gaugeOptions, {
+            yAxis: {
+                min: 0,
+                max: 500000,
+                title: {
+                    text: '磁盘I/O'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: '磁盘I/O',
+                data: [1],
+                dataLabels: {
+                    format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y:.0f}KBps</span><br/>'
+                },
+                tooltip: {
+                    valueSuffix: ' KBps'
+                }
+            }]
+        }));
+        setInterval(function () {
+            var chart = $('#container-speed').highcharts(), point;
+            if (chart) {
+                point = chart.series[0].points[0];
+                point.update(currentCpuLoad);
+            }
+            chart = $('#container-rpm').highcharts();
+            if (chart) {
+                point = chart.series[0].points[0];
+                point.update(currentMemUsage);
+            }
+            chart = $('#container-temp').highcharts();
+            if (chart) {
+                point = chart.series[0].points[0];
+                point.update(currentTemper);
+            }
+            chart = $('#container-io').highcharts();
+            if (chart) {
+                point = chart.series[0].points[0];
+                point.update(speed);
+            }
+        }, 1000);
+    }]);
+</script>

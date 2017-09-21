@@ -86,7 +86,7 @@ namespace SSO.Core.Client
                 {
                     filterContext.Result = new JsonResult() { Data = new { Success = false, Message = "URL参数不完整！" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet, ContentEncoding = Encoding.UTF8, ContentType = "application/json" };
                 }
-                else if (sec - time.ToInt32() > 30) //然后时效性检查，URL在30秒内有效，若超时，则截断本次请求
+                else if (sec - time.ToInt32() > 43200) //然后时效性检查，URL在12h内有效，若超时，则截断本次请求
                 {
                     filterContext.Result = new JsonResult() { Data = new { Success = false, Message = "该URL已经失效！" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet, ContentEncoding = Encoding.UTF8, ContentType = "application/json" };
                 }
