@@ -56,7 +56,8 @@
 		$("#" + toSelect).prepend("<option value='" + selectValue + "'>" + selectText + "</option>");
 	}
 
-	function InitSelect(url, selectName) {
+    function InitSelect(url, selectName) {
+        $(".loading1").show();
 		$.ajax({
 			cache: true,
 			type: "POST",
@@ -73,7 +74,8 @@
 					});
 				} else {
 
-				}
+                }
+                $(".loading1").hide();
 			}
 		});
 	}

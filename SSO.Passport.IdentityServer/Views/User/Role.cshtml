@@ -55,7 +55,8 @@
 		$("#" + toSelect).prepend("<option value='" + selectValue + "'>" + selectText + "</option>");
 	}
 
-	function InitSelect(url, selectName) {
+    function InitSelect(url, selectName) {
+        $(".loading1").show();
 		$.ajax({
 			cache: true,
 			type: "POST",
@@ -72,12 +73,14 @@
 					});
 				} else {
 
-				}
+                }
+                $(".loading1").hide();
 			}
 		});
 	}
 
-	function InitAddBtn() {
+    function InitAddBtn() {
+        $(".loading1").show();
 		var itemValues = "";
 		$('#hasItem option').each(function(i, selected) {
 			itemValues += $(selected).val() + ",";
@@ -98,7 +101,8 @@
 					history.back();
 				} else {
 					$("#warringMsg").html("<p class='text-danger'>" + data.Message + "</p>");
-				}
+                }
+                $(".loading1").hide();
 			}
 		});
 	}

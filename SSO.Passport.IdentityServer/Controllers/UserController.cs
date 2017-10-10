@@ -31,19 +31,14 @@ namespace SSO.Passport.IdentityServer.Controllers
             return View(userInfo);
         }
 
-        public ActionResult GetAllList()
-        {
-            IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntities(u => true);
-            IList<UserInfoOutputDto> list = Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList());
-            return ResultData(list);
-        }
+        public ActionResult GetAllList() => ResultData(UserInfoBll.GetAllFromL2Cache<UserInfoOutputDto>());
 
         public ActionResult GetPageData(int start = 1, int length = 10)
         {
             var search = Request["search[value]"];
             bool b = search.IsNullOrEmpty();
             var page = start / length + 1;
-            IQueryable<UserInfo> userInfos = UserInfoBll.LoadPageEntities(page, length, out int totalCount, u => b || u.Username.Contains(search), u => u.Id, false);
+            var userInfos = UserInfoBll.LoadPageEntities(page, length, out int totalCount, u => b || u.Username.Contains(search), u => u.Id, false).ToList();
             DataTableViewModel model = new DataTableViewModel()
             {
                 data = Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList()),
@@ -125,7 +120,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult Update(UserInfoInputDto model, int? gid)
         {
             UserInfo user = UserInfoBll.GetById(model.Id);
-            IQueryable<UserInfo> all = UserInfoBll.LoadEntities(u => !u.Username.Equals(user.Username) && !u.Email.Equals(user.Email) && !u.PhoneNumber.Equals(user.PhoneNumber));
+            IEnumerable<UserInfo> all = UserInfoBll.LoadEntities(u => !u.Username.Equals(user.Username) && !u.Email.Equals(user.Email) && !u.PhoneNumber.Equals(user.PhoneNumber));
             if (all.Any(u => u.Username.Equals(model.Username)))
             {
                 return ResultData(model, false, $"用户名{model.Username}已经存在！");
@@ -175,14 +170,13 @@ namespace SSO.Passport.IdentityServer.Controllers
             userInfo.Role.Clear();
             userInfo.UserPermission.Clear();
             UserInfoBll.UpdateEntity(userInfo);
-            bool b = UserInfoBll.DeleteById(id);
-            UserInfoBll.SaveChanges();
+            bool b = UserInfoBll.DeleteByIdSaved(id);
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
-            IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntities(u => ids.Contains(u.Id.ToString()));
+            IEnumerable<UserInfo> userInfos = UserInfoBll.LoadEntities(u => ids.Contains(u.Id.ToString()));
             userInfos.ForEach(u =>
             {
                 u.UserGroup.Clear();
@@ -212,7 +206,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult NoHasUser(int id)
         {
-            IEnumerable<UserInfo> userInfos = UserInfoBll.LoadEntities(r => true).ToList().Except(UserGroupBll.GetById(id).UserInfo.ToList());
+            IEnumerable<UserInfo> userInfos = UserInfoBll.GetAll().ToList().Except(UserGroupBll.GetById(id).UserInfo);
             return ResultData(Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList()));
         }
 
@@ -224,7 +218,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult UpdateGroup(int id, string uids)
         {
             string[] strs = uids.Split(',');
-            IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            IEnumerable<UserInfo> userInfos = UserInfoBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
             UserGroup @group = UserGroupBll.GetById(id);
             @group.UserInfo.Clear();
             userInfos.ToList().ForEach(r => @group.UserInfo.Add(r));

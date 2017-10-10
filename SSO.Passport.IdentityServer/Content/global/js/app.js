@@ -769,4 +769,5 @@ function _init() {
       }
     });
   };
+
 }(jQuery));

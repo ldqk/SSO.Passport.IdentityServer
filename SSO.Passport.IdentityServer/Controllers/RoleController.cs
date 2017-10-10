@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using IBLL;
@@ -38,9 +37,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult GetAllList()
         {
-            IQueryable<Role> roles = RoleBll.LoadEntities(r => true);
-            IList<RoleOutputDto> list = Mapper.Map<IList<RoleOutputDto>>(roles.ToList());
-            return ResultData(list, roles.Any());
+            IEnumerable<RoleOutputDto> roles = RoleBll.GetAllFromL2Cache<RoleOutputDto>();
+            return ResultData(roles, roles.Any());
         }
 
         public ActionResult GetPageData(int start = 1, int length = 10)
@@ -61,7 +59,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 RoleBll.AddEntitySaved(Mapper.Map<Role>(model));
                 return ResultData(model);
             }
-            return ResultData(null, exist, $"{model.RoleName}已经存在！");
+            return ResultData(null, true, $"{model.RoleName}已经存在！");
         }
 
         public ActionResult Update(RoleInputDto model)
@@ -79,14 +77,14 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Delete(int id)
         {
-            bool b = RoleBll.DeleteEntity(r => r.Id == id) > 0;
+            bool b = RoleBll.DeleteEntitySaved(r => r.Id == id) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
-            bool b = RoleBll.DeleteEntity(r => ids.Contains(r.Id.ToString())) > 0;
+            bool b = RoleBll.DeleteEntitySaved(r => ids.Contains(r.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
@@ -101,7 +99,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult RemoveUserGroup(int id, int rid)
         {
-            List<UserGroupPermission> list = UserGroupPermissionBll.LoadEntities(p => p.UserGroupId.Equals(id) && p.RoleId.Equals(rid)).ToList();
+            IEnumerable<UserGroupPermission> list = UserGroupPermissionBll.LoadEntities(p => p.UserGroupId.Equals(id) && p.RoleId.Equals(rid));
             bool res = UserGroupPermissionBll.DeleteEntitiesSaved(list);
             UserGroup @group = UserGroupBll.GetById(id);
             Role role = RoleBll.GetById(rid);
@@ -130,7 +128,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult UserNoHasRole(Guid id)
         {
-            IEnumerable<Role> roles = RoleBll.LoadEntities(r => true).ToList().Except(UserInfoBll.GetById(id).Role.ToList());
+            IEnumerable<Role> roles = RoleBll.GetAll().ToList().Except(UserInfoBll.GetById(id).Role);
             return ResultData(Mapper.Map<IList<RoleOutputDto>>(roles.ToList()));
         }
         public ActionResult UserRoleList(Guid id)
@@ -141,10 +139,10 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult UpdateUserRole(Guid id, string rids)
         {
             string[] strs = rids.Split(',');
-            IQueryable<Role> roles = RoleBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            IEnumerable<Role> roles = RoleBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
             UserInfo userInfo = UserInfoBll.GetById(id);
             userInfo.Role.Clear();
-            roles.ToList().ForEach(r => userInfo.Role.Add(r));
+            roles.ForEach(r => userInfo.Role.Add(r));
             bool b = UserInfoBll.SaveChanges() > 0;
             return ResultData(null, b, b ? "角色分配成功！" : "角色分配失败！");
         }
@@ -154,21 +152,21 @@ namespace SSO.Passport.IdentityServer.Controllers
         {
             IList<Role> list = new List<Role>();
             UserGroupBll.GetById(id).UserGroupPermission.ToList().ForEach(p => list.Add(p.Role));
-            IEnumerable<Role> roles = RoleBll.LoadEntities(r => true).ToList().Except(list);
+            IEnumerable<Role> roles = RoleBll.GetAll().ToList().Except(list);
             return ResultData(Mapper.Map<IList<RoleOutputDto>>(roles.ToList()));
         }
 
         public ActionResult GroupList(int id)
         {
             IList<Role> list = new List<Role>();
-            UserGroupBll.GetById(id).UserGroupPermission.ToList().ForEach(p => list.Add(p.Role));
+            UserGroupBll.GetById(id).UserGroupPermission.ForEach(p => list.Add(p.Role));
             return ResultData(Mapper.Map<IList<RoleOutputDto>>(list));
         }
 
         public ActionResult UpdateGroup(int id, string rids)
         {
             string[] strs = rids.Split(',');
-            IQueryable<Role> roles = RoleBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            IEnumerable<Role> roles = RoleBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
             UserGroup @group = UserGroupBll.GetById(id);
             bool b = UserGroupPermissionBll.DeleteEntity(u => u.UserGroupId.Equals(@group.Id)) > 0;
             IList<UserGroupPermission> list = new List<UserGroupPermission>();
@@ -192,22 +190,22 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult NoHasUserGroup(int id)
         {
             IList<UserGroup> list = new List<UserGroup>();
-            RoleBll.GetById(id).UserGroupPermission.ToList().ForEach(p => list.Add(p.UserGroup));
-            IEnumerable<UserGroup> groups = UserGroupBll.LoadEntities(r => true).ToList().Except(list);
+            RoleBll.GetById(id).UserGroupPermission.ForEach(p => list.Add(p.UserGroup));
+            IEnumerable<UserGroup> groups = UserGroupBll.GetAll().ToList().Except(list);
             return ResultData(Mapper.Map<IList<UserGroupOutputDto>>(groups.ToList()));
         }
 
         public ActionResult UserGroupList(int id)
         {
             IList<UserGroup> list = new List<UserGroup>();
-            RoleBll.GetById(id).UserGroupPermission.ToList().ForEach(p => list.Add(p.UserGroup));
+            RoleBll.GetById(id).UserGroupPermission.ForEach(p => list.Add(p.UserGroup));
             return ResultData(Mapper.Map<IList<UserGroupOutputDto>>(list));
         }
 
         public ActionResult UpdateRole(int id, string gids)
         {
             string[] strs = gids.Split(',');
-            IQueryable<UserGroup> groups = UserGroupBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            IEnumerable<UserGroup> groups = UserGroupBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
             Role role = RoleBll.GetById(id);
             bool b = UserGroupPermissionBll.DeleteEntity(u => u.RoleId.Equals(role.Id)) > 0;
             IList<UserGroupPermission> list = new List<UserGroupPermission>();

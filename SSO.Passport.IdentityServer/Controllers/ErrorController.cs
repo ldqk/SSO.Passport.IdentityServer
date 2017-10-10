@@ -4,10 +4,10 @@ namespace SSO.Passport.IdentityServer.Controllers
 {
     public class ErrorController : Controller
     {
-        // GET: Error
+        [Route("error")]
         public ActionResult Index()
         {
-            return Content("404 error");
+            return Content("503 Service Unavailable！");
         }
     }
 }

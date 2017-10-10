@@ -134,14 +134,14 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Delete(int id)
         {
-            bool res = FunctionBll.DeleteEntity(c => c.Id == id) > 0;
+            bool res = FunctionBll.DeleteEntitySaved(c => c.Id == id) > 0;
             return ResultData(null, res, res ? "删除成功！" : "删除失败！");
         }
 
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
-            bool b = FunctionBll.DeleteEntity(r => ids.Contains(r.Id.ToString())) > 0;
+            bool b = FunctionBll.DeleteEntitySaved(r => ids.Contains(r.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
@@ -159,12 +159,11 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult UpdatePermissionFunction(int id, string fids)
         {
             string[] strs = fids.Split(',');
-            IQueryable<Function> functions = FunctionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            IEnumerable<Function> functions = FunctionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
             Permission permission = PermissionBll.GetById(id);
             permission.Function.Clear();
             functions.ToList().ForEach(r => permission.Function.Add(r));
-            PermissionBll.UpdateEntity(permission);
-            bool b = PermissionBll.SaveChanges() > 0;
+            bool b = PermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, b, b ? "权限功能分配成功！" : "权限功能分配失败！");
         }
 
@@ -176,7 +175,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult NoHasPermission(int id)
         {
-            IEnumerable<Permission> permissions = PermissionBll.LoadEntities(r => true).ToList().Except(FunctionBll.GetById(id).Permission.ToList());
+            IEnumerable<Permission> permissions = PermissionBll.GetAll().ToList().Except(FunctionBll.GetById(id).Permission.ToList());
             return ResultData(Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList()));
         }
 
@@ -188,12 +187,11 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult UpdateFunctionPermission(int id, string pids)
         {
             string[] strs = pids.Split(',');
-            IQueryable<Permission> permissions = PermissionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            IEnumerable<Permission> permissions = PermissionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
             Function function = FunctionBll.GetById(id);
             function.Permission.Clear();
             permissions.ToList().ForEach(r => function.Permission.Add(r));
-            FunctionBll.UpdateEntity(function);
-            bool b = FunctionBll.SaveChanges() > 0;
+            bool b = FunctionBll.UpdateEntitySaved(function);
             return ResultData(null, b, b ? "权限功能分配成功！" : "权限功能分配失败！");
         }
     }

@@ -1,5 +1,9 @@
-﻿@using Models.Entity
+﻿@using Masuit.Tools.Win32
+@using Models.Entity
 @using Models.Enum
+@{
+    string[] colors = { "success", "info", "warning", "danger", "default" };
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +13,7 @@
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico"/>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
-    <link href="~/Content/global/css/AdminLTE.min.css" rel="stylesheet"/>
+    <link href="~/Content/global/css/AdminLTE.css" rel="stylesheet"/>
     <link href="~/Content/global/css/skins/_all-skins.css" rel="stylesheet"/>
     <link href="http://cdn.bootcss.com/limonte-sweetalert2/6.6.2/sweetalert2.css" rel="stylesheet">
 
@@ -75,5 +79,38 @@
         </section>
     </div>
 </div>
+    <div id="loading">
+        <div class="loading1 animated fadeIn">
+            <div class="loadEffect">
+                @for (int i = 0; i < 7; i++)
+                {
+                    <div>
+                        <span class="bg-@colors[new Random().StrictNext() % 5]"></span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+<script>
+
+    //全局加载动画
+    $("a[href]").click(function (e) {
+        if ($(this).attr("target")) {
+            return;
+        }
+        if ($(this).attr("href").indexOf("#") >= 0) {
+            return;
+        }
+        $(".loading1").show();
+        setTimeout(function () {
+            $(".loading1").hide();
+            window.notie.alert({
+                type: 4,
+                text: "页面加载失败！",
+                time: 4
+            });
+        }, 60000);
+    });
+</script>

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using IBLL;
 using Masuit.Tools;
 using Models.Dto;
 using Models.Entity;
-using Models.Enum;
 using Models.ViewModel;
 
 namespace SSO.Passport.IdentityServer.Controllers
@@ -39,9 +37,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult GetAllList()
         {
-            IQueryable<Permission> permissions = PermissionBll.LoadEntities(r => true);
-            IList<PermissionOutputDto> list = Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList());
-            return ResultData(list, permissions.Any());
+            IEnumerable<PermissionOutputDto> permissions = PermissionBll.GetAllFromL2Cache<PermissionOutputDto>();
+            return ResultData(permissions, permissions.Any());
         }
 
         public ActionResult GetPageData(int start = 1, int length = 10)
@@ -62,7 +59,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 PermissionBll.AddEntitySaved(Mapper.Map<Permission>(model));
                 return ResultData(model);
             }
-            return ResultData(null, exist, $"{model.PermissionName}已经存在！");
+            return ResultData(null, true, $"{model.PermissionName}已经存在！");
         }
 
         public ActionResult Update(PermissionInputDto model)
@@ -80,34 +77,33 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Delete(int id)
         {
-            bool b = PermissionBll.DeleteEntity(p => p.Id == id) > 0;
+            bool b = PermissionBll.DeleteEntitySaved(p => p.Id == id) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
-            bool b = PermissionBll.DeleteEntity(r => ids.Contains(r.Id.ToString())) > 0;
+            bool b = PermissionBll.DeleteEntitySaved(r => ids.Contains(r.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
         public ActionResult AddUser(Guid id, int pid)
         {
-            Task<int> task = UserPermissionBll.AddEntitySavedAsync(new UserPermission() { UserInfoId = id, PermissionId = pid, HasPermission = true });
-            Task<UserInfo> userInfo = UserInfoBll.GetByIdAsync(id);
-            Task<Permission> permission = PermissionBll.GetByIdAsync(pid);
-            bool saved = task.Result > 0;
-            return ResultData(null, saved, saved ? $"成功为用户{userInfo.Result.Username}分配临时权限{permission.Result.PermissionName}！" : "分配权限失败！");
+            UserPermission userPermission = UserPermissionBll.AddEntitySaved(new UserPermission() { UserInfoId = id, PermissionId = pid, HasPermission = true });
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            Permission permission = PermissionBll.GetById(pid);
+            bool saved = userPermission != null;
+            return ResultData(null, saved, saved ? $"成功为用户{userInfo.Username}分配临时权限{permission.PermissionName}！" : "分配权限失败！");
         }
 
         public ActionResult RemoveUser(Guid id, int pid)
         {
             List<UserPermission> list = UserPermissionBll.LoadEntities(p => p.UserInfoId.Equals(id) && p.PermissionId.Equals(pid)).ToList();
-            Task<int> task = UserPermissionBll.DeleteEntitiesSavedAsync(list);
+            bool b = UserPermissionBll.DeleteEntitiesSaved(list);
             UserInfo userInfo = UserInfoBll.GetById(id);
             Permission permission = PermissionBll.GetById(pid);
-            bool saved = task.Result > 0;
-            return ResultData(null, saved, saved ? $"成功将{userInfo.Username}的{permission.PermissionName}权限移除！" : "移除失败！");
+            return ResultData(null, b, b ? $"成功将{userInfo.Username}的{permission.PermissionName}权限移除！" : "移除失败！");
         }
 
         public ActionResult Toggle(string uid, string pid, string has)
@@ -142,15 +138,15 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult NoHasPermission(Guid id)
         {
             IList<Permission> list = new List<Permission>();
-            UserInfoBll.GetById(id).UserPermission.ToList().ForEach(p => list.Add(p.Permission));
-            IEnumerable<Permission> permissions = PermissionBll.LoadEntities(r => true).ToList().Except(list);
+            UserInfoBll.GetById(id).UserPermission.ForEach(p => list.Add(p.Permission));
+            IEnumerable<Permission> permissions = PermissionBll.GetAll().ToList().Except(list);
             return ResultData(Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList()));
         }
 
         public ActionResult UserPermissionList(Guid id)
         {
             IList<Permission> list = new List<Permission>();
-            UserInfoBll.GetById(id).UserPermission.ToList().ForEach(p => list.Add(p.Permission));
+            UserInfoBll.GetById(id).UserPermission.ForEach(p => list.Add(p.Permission));
             return ResultData(Mapper.Map<IList<PermissionOutputDto>>(list));
 
         }
@@ -158,12 +154,11 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult UpdateUserPermission(Guid id, string pids)
         {
             string[] strs = pids.Split(',');
-            IQueryable<Permission> permissions = PermissionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            List<Permission> permissions = PermissionBll.LoadEntities(r => strs.Contains(r.Id.ToString())).ToList();
             UserInfo userInfo = UserInfoBll.GetById(id);
-            bool b = UserPermissionBll.DeleteEntity(u => u.UserInfoId.Equals(userInfo.Id)) > 0;
-            IList<UserPermission> list = new List<UserPermission>();
-            permissions.ToList().ForEach(p => list.Add(new UserPermission() { UserInfoId = userInfo.Id, PermissionId = p.Id, HasPermission = true }));
-            UserPermissionBll.AddEntities(list);
+            UserPermissionBll.DeleteEntity(u => u.UserInfoId.Equals(userInfo.Id));
+            permissions.ForEach(p => UserPermissionBll.AddEntity(new UserPermission() { UserInfoId = userInfo.Id, PermissionId = p.Id, HasPermission = true }));
+            bool b = UserPermissionBll.SaveChanges() > 0;
             return ResultData(null, b, b ? "临时权限分配成功！" : "临时权限分配失败！");
         }
 
@@ -192,7 +187,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult RoleNoHasPermission(int id)
         {
-            IEnumerable<Permission> permissions = PermissionBll.LoadEntities(r => true).ToList().Except(RoleBll.GetById(id).Permission.ToList());
+            IEnumerable<Permission> permissions = PermissionBll.GetAll().ToList().Except(RoleBll.GetById(id).Permission.ToList());
             return ResultData(Mapper.Map<IList<PermissionOutputDto>>(permissions.ToList()));
         }
 
@@ -204,10 +199,10 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult UpdateRolePermission(int id, string pids)
         {
             string[] strs = pids.Split(',');
-            IQueryable<Permission> permissions = PermissionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            IEnumerable<Permission> permissions = PermissionBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
             Role role = RoleBll.GetById(id);
             role.Permission.Clear();
-            permissions.ToList().ForEach(r => role.Permission.Add(r));
+            permissions.ForEach(r => role.Permission.Add(r));
             RoleBll.UpdateEntity(role);
             bool b = RoleBll.SaveChanges() > 0;
             return ResultData(null, b, b ? "权限分配成功！" : "权限分配失败！");
@@ -232,33 +227,33 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult NoHasUser(int id)
         {
             IList<UserInfo> list = new List<UserInfo>();
-            PermissionBll.GetById(id).UserPermission.ToList().ForEach(p => list.Add(p.UserInfo));
-            IEnumerable<UserInfo> userInfos = UserInfoBll.LoadEntities(r => true).ToList().Except(list);
+            PermissionBll.GetById(id).UserPermission.ForEach(p => list.Add(p.UserInfo));
+            IEnumerable<UserInfo> userInfos = UserInfoBll.GetAll().ToList().Except(list);
             return ResultData(Mapper.Map<IList<UserInfoOutputDto>>(userInfos.ToList()));
         }
 
         public ActionResult UserList(int id)
         {
             IList<UserInfo> list = new List<UserInfo>();
-            PermissionBll.GetById(id).UserPermission.ToList().ForEach(p => list.Add(p.UserInfo));
+            PermissionBll.GetById(id).UserPermission.ForEach(p => list.Add(p.UserInfo));
             return ResultData(Mapper.Map<IList<UserInfoOutputDto>>(list));
         }
 
         public ActionResult UpdatePermission(int id, string uids)
         {
             string[] strs = uids.Split(',');
-            IQueryable<UserInfo> userInfos = UserInfoBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            IEnumerable<UserInfo> userInfos = UserInfoBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
             Permission permission = PermissionBll.GetById(id);
-            bool b = UserPermissionBll.DeleteEntity(u => u.PermissionId.Equals(permission.Id)) > 0;
+            UserPermissionBll.DeleteEntity(u => u.PermissionId.Equals(permission.Id));
             IList<UserPermission> list = new List<UserPermission>();
-            userInfos.ToList().ForEach(p => list.Add(new UserPermission() { PermissionId = permission.Id, UserInfoId = p.Id, HasPermission = true }));
-            UserPermissionBll.AddEntities(list);
+            userInfos.ForEach(p => list.Add(new UserPermission() { PermissionId = permission.Id, UserInfoId = p.Id, HasPermission = true }));
+            bool b = UserPermissionBll.AddEntities(list).Any();
             return ResultData(null, b, b ? "用户分配成功！" : "用户分配失败！");
         }
 
         public ActionResult NoHasRole(int id)
         {
-            IEnumerable<Role> roles = RoleBll.LoadEntities(r => true).ToList().Except(PermissionBll.GetById(id).Role.ToList());
+            IEnumerable<Role> roles = RoleBll.GetAll().ToList().Except(PermissionBll.GetById(id).Role.ToList());
             return ResultData(Mapper.Map<IList<RoleOutputDto>>(roles.ToList()));
         }
 
@@ -270,7 +265,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult UpdatePermissionRole(int id, string rids)
         {
             string[] strs = rids.Split(',');
-            IQueryable<Role> roles = RoleBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            IEnumerable<Role> roles = RoleBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
             Permission permission = PermissionBll.GetById(id);
             permission.Role.Clear();
             roles.ToList().ForEach(r => permission.Role.Add(r));

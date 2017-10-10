@@ -32,11 +32,7 @@ namespace SSO.Passport.IdentityServer
 
         protected void Application_Error(object sender, EventArgs e)
         {
-#if DEBUG
-            throw (Exception)sender;
-#else
-            Response.Redirect("/Error");
-#endif
+
         }
 
         protected void Session_End(object sender, EventArgs e)

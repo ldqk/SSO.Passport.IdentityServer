@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Web.Mvc;
 using Masuit.Tools.Logging;
 
@@ -12,17 +11,19 @@ namespace SSO.Passport.IdentityServer.Models
     {
         /// <summary>在发生异常时调用。</summary>
         /// <param name="filterContext">操作筛选器上下文。</param>
-        /// <exception cref="ArgumentException">该对象必须为运行时 <see cref="N:System.Reflection" /> 对象</exception>
         public override void OnException(ExceptionContext filterContext)
         {
             LogManager.Error(filterContext.Exception.Source, filterContext.Exception);
-            filterContext.Result = new JsonResult
+            filterContext.HttpContext.Response.StatusCode = 503;
+            if (filterContext.HttpContext.Request.HttpMethod.ToLower().Equals("get"))
             {
-                Data = new { Success = false, Message = "服务器发生错误！" },
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                ContentEncoding = Encoding.UTF8,
-                ContentType = "application/json"
-            };
+                filterContext.Result = new RedirectResult("/error"); //new ErrorController().ServiceUnavailable();
+            }
+            else
+            {
+                filterContext.Result = new JsonResult() { ContentEncoding = Encoding.UTF8, ContentType = "application/json", Data = new { StatusCode = 500, Success = false, Message = "服务器发生错误！" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+            filterContext.ExceptionHandled = true; //设置异常已经处理
         }
     }
 }

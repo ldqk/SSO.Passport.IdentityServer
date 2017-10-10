@@ -34,9 +34,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult GetAllList()
         {
-            IQueryable<UserGroup> groups = UserGroupBll.LoadEntities(r => true);
-            IList<UserGroupOutputDto> list = Mapper.Map<IList<UserGroupOutputDto>>(groups.ToList());
-            return ResultData(list, groups.Any());
+            IEnumerable<UserGroupOutputDto> groups = UserGroupBll.GetAllFromL2CacheNoTracking<UserGroupOutputDto>();
+            return ResultData(groups, groups.Any());
         }
 
         public ActionResult GetPageData(int start = 1, int length = 10)
@@ -44,8 +43,8 @@ namespace SSO.Passport.IdentityServer.Controllers
             var search = Request["search[value]"];
             bool b = search.IsNullOrEmpty();
             var page = start / length + 1;
-            IQueryable<UserGroup> groups = UserGroupBll.LoadPageEntities(page, length, out int totalCount, r => b || r.GroupName.Contains(search), r => r.Id);
-            DataTableViewModel model = new DataTableViewModel() { data = Mapper.Map<IList<UserGroupOutputDto>>(groups.ToList()), recordsFiltered = totalCount, recordsTotal = totalCount };
+            IEnumerable<UserGroupOutputDto> groups = UserGroupBll.LoadPageEntitiesFromL2CacheNoTracking<int, UserGroupOutputDto>(page, length, out int totalCount, r => b || r.GroupName.Contains(search), r => r.Id);
+            DataTableViewModel model = new DataTableViewModel() { data = groups.ToList(), recordsFiltered = totalCount, recordsTotal = totalCount };
             return Content(model.ToJsonString());
         }
 
@@ -58,7 +57,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 UserGroupBll.AddEntitySaved(Mapper.Map<UserGroup>(model));
                 return ResultData(model);
             }
-            return ResultData(null, !exist, $"{model.GroupName}已经存在！");
+            return ResultData(null, false, $"{model.GroupName}已经存在！");
         }
 
         public ActionResult Update(UserGroupInputDto model)
@@ -76,14 +75,14 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult Delete(int id)
         {
-            bool b = UserGroupBll.DeleteEntity(g => g.Id == id) > 0;
+            bool b = UserGroupBll.DeleteEntitySaved(g => g.Id == id) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
         public ActionResult Deletes(string id)
         {
             string[] ids = id.Split(',');
-            bool b = UserGroupBll.DeleteEntity(g => ids.Contains(g.Id.ToString())) > 0;
+            bool b = UserGroupBll.DeleteEntitySaved(g => ids.Contains(g.Id.ToString())) > 0;
             return ResultData(null, b, b ? "删除成功！" : "删除失败！");
         }
 
@@ -118,10 +117,9 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, saved, saved ? $"成功将{userInfo.Username}从用户组{f.GroupName}移动到{t.GroupName}！" : "移动失败！");
         }
 
-
         public ActionResult NoHasUserGroup(Guid id)
         {
-            IEnumerable<UserGroup> roles = UserGroupBll.LoadEntities(r => true).ToList().Except(UserInfoBll.GetById(id).UserGroup.ToList());
+            IEnumerable<UserGroup> roles = UserGroupBll.GetAll().ToList().Except(UserInfoBll.GetById(id).UserGroup);
             return ResultData(Mapper.Map<IList<UserGroupOutputDto>>(roles.ToList()));
         }
 
@@ -133,7 +131,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult UpdateUserGroup(Guid id, string gids)
         {
             string[] strs = gids.Split(',');
-            IQueryable<UserGroup> roles = UserGroupBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
+            IEnumerable<UserGroup> roles = UserGroupBll.LoadEntities(r => strs.Contains(r.Id.ToString()));
             UserInfo userInfo = UserInfoBll.GetById(id);
             userInfo.UserGroup.Clear();
             roles.ToList().ForEach(r => userInfo.UserGroup.Add(r));
@@ -152,6 +150,5 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserGroup @group = UserGroupBll.GetById(id);
             return View(group);
         }
-
     }
 }
