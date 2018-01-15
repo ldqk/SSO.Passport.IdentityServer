@@ -29,6 +29,7 @@ namespace ModelCodeGenerate
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public Nullable<System.DateTime> LastLoginTime { get; set; }
+        public int ClientAppId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserPermission> UserPermission { get; set; }
@@ -36,5 +37,6 @@ namespace ModelCodeGenerate
         public virtual ICollection<Role> Role { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserGroup> UserGroup { get; set; }
+        public virtual ClientApp ClientApp { get; set; }
     }
 }

@@ -41,7 +41,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 #endif
             if (userInfo != null)
             {
-                IList<Function> FunctionList = UserInfoBll.GetPermissionList(userInfo.Id);
+                IList<Control> FunctionList = UserInfoBll.GetPermissionList(userInfo.Id);
                 if (!userInfo.Username.ToLower().Contains(new[] { "admin", "sa", "system", "root", "everyone" }) && !FunctionList.Any(c => c.Controller.Equals(controller, StringComparison.InvariantCultureIgnoreCase) && c.Action.Equals(action, StringComparison.InvariantCultureIgnoreCase) && c.HttpMethod.ToString().Equals(method, StringComparison.InvariantCultureIgnoreCase)))
                 {//如果不是系统账户，并且不包含以上权限，则阻断
                     filterContext.Result = new JsonResult { Data = new { Success = false, Message = "无权限访问！" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet, ContentEncoding = Encoding.UTF8, ContentType = "application/json" };

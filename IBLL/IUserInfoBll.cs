@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Dto;
 using Models.Entity;
-using Models.Enum;
 
 namespace IBLL
 {
@@ -56,15 +54,7 @@ namespace IBLL
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        IList<Function> GetPermissionList(Guid id);
-
-        /// <summary>
-        /// 根据类型获取权限列表
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        IEnumerable<Function> GetPermissionList(Guid id, FunctionType type);
+        IList<Control> GetPermissionList(Guid id);
 
         /// <summary>
         /// 修改密码

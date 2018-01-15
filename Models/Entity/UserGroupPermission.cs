@@ -1,14 +1,10 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Entity
 {
     [Table("UserGroupPermission")]
-    public class UserGroupPermission
+    public partial class UserGroupPermission : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
         public bool HasPermission { get; set; }
 
         [ForeignKey("UserGroup")]

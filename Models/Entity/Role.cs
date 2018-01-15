@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Models.Entity
 {
     [Table("Role")]
-    public class Role
+    public partial class Role : BaseEntity
     {
         public Role()
         {
@@ -14,20 +14,14 @@ namespace Models.Entity
             UserInfo = new HashSet<UserInfo>();
         }
 
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         public string RoleName { get; set; }
 
         public string Description { get; set; }
 
-
         public virtual ICollection<UserGroupPermission> UserGroupPermission { get; set; }
 
-
         public virtual ICollection<Permission> Permission { get; set; }
-
 
         public virtual ICollection<UserInfo> UserInfo { get; set; }
     }

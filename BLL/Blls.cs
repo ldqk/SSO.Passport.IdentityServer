@@ -4,7 +4,11 @@ using Models.Entity;
 namespace BLL
 {
 	
-	public partial class FunctionBll :BaseBll<Function>,IFunctionBll{}   
+	public partial class ClientAppBll :BaseBll<ClientApp>,IClientAppBll{}   
+	
+	public partial class ControlBll :BaseBll<Control>,IControlBll{}   
+	
+	public partial class MenuBll :BaseBll<Menu>,IMenuBll{}   
 	
 	public partial class PermissionBll :BaseBll<Permission>,IPermissionBll{}   
 	

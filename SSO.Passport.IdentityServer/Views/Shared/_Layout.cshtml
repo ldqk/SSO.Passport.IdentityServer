@@ -22,9 +22,6 @@
     <script src="http://cdn.bootcss.com/limonte-sweetalert2/6.6.2/sweetalert2.js"></script>
     <script src="http://cdn.bootcss.com/es6-promise/4.1.0/es6-promise.min.js"></script>
     <script src="~/Content/global/js/app.js"></script>
-    <script src="~/Scripts/jquery.validate.js"></script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
     @RenderSection("scripts", required: false)
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -54,7 +51,7 @@
             <ul class="sidebar-menu">
                 <li class="header">菜单</li>
                 @{
-                    IList<Function> list = (ViewBag.FunctionList as IList<Function>)?.Where(c => c.FunctionType == FunctionType.Menu).ToList();
+                    IList<Menu> list = (ViewBag.FunctionList as IList<Menu>)?.Where(c => c.FunctionType == FunctionType.Menu).ToList();
                     if(list.Any()) {
                         foreach(var menu in list) {
                             <li>

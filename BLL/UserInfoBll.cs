@@ -102,25 +102,25 @@ namespace BLL
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IList<Function> GetPermissionList(Guid id)
+        public IList<Control> GetPermissionList(Guid id)
         {
             var user = GetFirstEntity(u => u.Id.Equals(id));
-            List<Function> list = new List<Function>(); //所有允许的权限
+            List<Control> list = new List<Control>(); //所有允许的权限
             if (user != null)
             {
                 //1.0 用户-角色-权限-功能 主线，权限的优先级最低
-                user.Role.ForEach(r => r.Permission.ForEach(p => list.AddRange(p.Function.Where(c => c.IsAvailable))));
+                user.Role.ForEach(r => r.Permission.ForEach(p => list.AddRange(p.Controls.Where(c => c.IsAvailable))));
 
                 //2.0 用户-用户组-角色-权限，权限的优先级其次
                 user.UserGroup?.ForEach(g => g.UserGroupPermission.ForEach(ugp =>
                 {
                     if (ugp.HasPermission)
                     {
-                        ugp.Role.Permission.ForEach(p => list.AddRange(p.Function.Where(c => c.IsAvailable)));
+                        ugp.Role.Permission.ForEach(p => list.AddRange(p.Controls.Where(c => c.IsAvailable)));
                     }
                     else
                     {
-                        ugp.Role.Permission.ForEach(p => list = list.Except(p.Function).ToList());
+                        ugp.Role.Permission.ForEach(p => list = list.Except(p.Controls).ToList());
                     }
                 }));
 
@@ -129,29 +129,17 @@ namespace BLL
                 {
                     if (p.HasPermission)
                     {
-                        list.AddRange(p.Permission.Function.Where(c => c.IsAvailable));
+                        list.AddRange(p.Permission.Controls.Where(c => c.IsAvailable));
                     }
                     else
                     {
-                        list = list.Except(p.Permission.Function).ToList();
+                        list = list.Except(p.Permission.Controls).ToList();
                     }
                 });
             }
             return list.Where(c => c.IsAvailable).Distinct(new FunctionComparision()).ToList();
         }
-
-        /// <summary>
-        /// 根据类型获取权限列表
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public IEnumerable<Function> GetPermissionList(Guid id, FunctionType type)
-        {
-            IList<Function> list = GetPermissionList(id);
-            return list.Where(c => c.FunctionType.Equals(type));
-        }
-
+        
         /// <summary>
         /// 修改密码
         /// </summary>
@@ -221,13 +209,13 @@ namespace BLL
         }
     }
 
-    public class FunctionComparision : IEqualityComparer<Function>
+    public class FunctionComparision : IEqualityComparer<Control>
     {
         /// <summary>Determines whether the specified objects are equal.</summary>
         /// <returns>true if the specified objects are equal; otherwise, false.</returns>
         /// <param name="x">The first object of type <paramref name="T" /> to compare.</param>
         /// <param name="y">The second object of type <paramref name="T" /> to compare.</param>
-        public bool Equals(Function x, Function y)
+        public bool Equals(Control x, Control y)
         {
             return x.Controller.Equals(y.Controller) && x.Action.Equals(y.Action);
         }
@@ -236,7 +224,7 @@ namespace BLL
         /// <returns>A hash code for the specified object.</returns>
         /// <param name="obj">The <see cref="T:System.Object" /> for which a hash code is to be returned.</param>
         /// <exception cref="T:System.ArgumentNullException">The type of <paramref name="obj" /> is a reference type and <paramref name="obj" /> is null.</exception>
-        public int GetHashCode(Function obj)
+        public int GetHashCode(Control obj)
         {
             return 0;
         }

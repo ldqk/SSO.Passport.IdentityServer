@@ -31,6 +31,8 @@ namespace ModelCodeGenerate
         public virtual DbSet<UserGroupPermission> UserGroupPermission { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<UserPermission> UserPermission { get; set; }
-        public virtual DbSet<Function> Function { get; set; }
+        public virtual DbSet<Control> Control { get; set; }
+        public virtual DbSet<ClientApp> ClientApp { get; set; }
+        public virtual DbSet<Menu> Menu { get; set; }
     }
 }

@@ -5,17 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Models.Entity
 {
     [Table("Permission")]
-    public class Permission
+    public partial class Permission : BaseEntity
     {
         public Permission()
         {
-            Function = new HashSet<Function>();
             UserPermission = new HashSet<UserPermission>();
+            Controls = new HashSet<Control>();
+            Menu = new HashSet<Menu>();
             Role = new HashSet<Role>();
         }
 
-        [Key]
-        public int Id { get; set; }
 
         [Display(Name = "х╗оч")]
         [Required]
@@ -23,12 +22,11 @@ namespace Models.Entity
 
         public string Description { get; set; }
 
-
-        public virtual ICollection<Function> Function { get; set; }
-
-
         public virtual ICollection<UserPermission> UserPermission { get; set; }
 
+        public virtual ICollection<Control> Controls { get; set; }
+
+        public virtual ICollection<Menu> Menu { get; set; }
 
         public virtual ICollection<Role> Role { get; set; }
     }

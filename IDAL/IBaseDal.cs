@@ -1478,7 +1478,11 @@ namespace IDAL
     }
 
 	
-	public partial interface IFunctionDal :IBaseDal<Function>{}
+	public partial interface IClientAppDal :IBaseDal<ClientApp>{}
+	
+	public partial interface IControlDal :IBaseDal<Control>{}
+	
+	public partial interface IMenuDal :IBaseDal<Menu>{}
 	
 	public partial interface IPermissionDal :IBaseDal<Permission>{}
 	

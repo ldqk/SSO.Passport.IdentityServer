@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppClient2", "WebAppClie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelCodeGenerate", "ModelCodeGenerate\ModelCodeGenerate.csproj", "{4B6102B6-241A-4404-B095-88B53078ACA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{817D36D3-A5A7-42C6-9476-E0096D06A96C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{4B6102B6-241A-4404-B095-88B53078ACA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B6102B6-241A-4404-B095-88B53078ACA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B6102B6-241A-4404-B095-88B53078ACA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{817D36D3-A5A7-42C6-9476-E0096D06A96C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{817D36D3-A5A7-42C6-9476-E0096D06A96C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{817D36D3-A5A7-42C6-9476-E0096D06A96C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{817D36D3-A5A7-42C6-9476-E0096D06A96C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +127,7 @@ Global
 		{2D184674-8CCB-4D7E-9F8B-91FEC4DB0093} = {9FD11F10-212A-4EAB-BBA0-1D12C72F0A37}
 		{CFC71DAD-E391-4CAF-B3B3-12283D194510} = {8C6375EE-EA6F-4B0E-9099-D7E9F5117268}
 		{4B6102B6-241A-4404-B095-88B53078ACA5} = {35B41AD4-63C0-4E0D-9E25-9465A4A9F70E}
+		{817D36D3-A5A7-42C6-9476-E0096D06A96C} = {8C6375EE-EA6F-4B0E-9099-D7E9F5117268}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {16DD07B8-9675-4965-A305-37A46AAEB343}

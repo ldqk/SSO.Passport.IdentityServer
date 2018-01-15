@@ -19,7 +19,8 @@ namespace ModelCodeGenerate
         {
             this.UserPermission = new HashSet<UserPermission>();
             this.Role = new HashSet<Role>();
-            this.Function = new HashSet<Function>();
+            this.Menu = new HashSet<Menu>();
+            this.Controls = new HashSet<Control>();
         }
     
         public int Id { get; set; }
@@ -31,6 +32,8 @@ namespace ModelCodeGenerate
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Role> Role { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Function> Function { get; set; }
+        public virtual ICollection<Menu> Menu { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Control> Controls { get; set; }
     }
 }

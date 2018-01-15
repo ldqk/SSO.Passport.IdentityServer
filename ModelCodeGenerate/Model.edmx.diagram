@@ -5,12 +5,12 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="37fc5c7ebcfc4047bddcbf502b3ac20f" Name="Diagram1">
-        <EntityTypeShape EntityType="PermissionModel.Permission" Width="1.5" PointX="7.375" PointY="5.75" />
-        <EntityTypeShape EntityType="PermissionModel.Role" Width="1.5" PointX="8" PointY="9.25" />
-        <EntityTypeShape EntityType="PermissionModel.UserGroup" Width="1.5" PointX="2.125" PointY="9.75" />
-        <EntityTypeShape EntityType="PermissionModel.UserGroupPermission" Width="1.5" PointX="5.375" PointY="9.75" />
-        <EntityTypeShape EntityType="PermissionModel.UserInfo" Width="1.5" PointX="2.125" PointY="5.75" />
-        <EntityTypeShape EntityType="PermissionModel.UserPermission" Width="1.5" PointX="4.875" PointY="5.75" />
+        <EntityTypeShape EntityType="PermissionModel.Permission" Width="1.5" PointX="11" PointY="5.875" />
+        <EntityTypeShape EntityType="PermissionModel.Role" Width="1.5" PointX="11" PointY="9.5" />
+        <EntityTypeShape EntityType="PermissionModel.UserGroup" Width="1.5" PointX="5.125" PointY="9.875" />
+        <EntityTypeShape EntityType="PermissionModel.UserGroupPermission" Width="1.5" PointX="8.375" PointY="9.875" />
+        <EntityTypeShape EntityType="PermissionModel.UserInfo" Width="1.5" PointX="5.125" PointY="5.875" />
+        <EntityTypeShape EntityType="PermissionModel.UserPermission" Width="1.5" PointX="7.875" PointY="5.875" />
         <AssociationConnector Association="PermissionModel.FK_dbo_UserPermission_dbo_Permission_PermissionId" />
         <AssociationConnector Association="PermissionModel.FK_dbo_UserGroupPermission_dbo_Role_RoleId" />
         <AssociationConnector Association="PermissionModel.FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId" />
@@ -18,8 +18,14 @@
         <AssociationConnector Association="PermissionModel.RolePermission" />
         <AssociationConnector Association="PermissionModel.UserInfoRole" />
         <AssociationConnector Association="PermissionModel.UserInfoUserGroup" />
-        <EntityTypeShape EntityType="PermissionModel.Function" Width="1.5" PointX="10.125" PointY="5.75" />
-        <AssociationConnector Association="PermissionModel.FK_dbo_Function_dbo_Permission_PermissionId" />
+        <EntityTypeShape EntityType="PermissionModel.Control" Width="1.5" PointX="14" PointY="7" />
+        <EntityTypeShape EntityType="PermissionModel.ClientApp" Width="1.5" PointX="1.5" PointY="7.5" />
+        <AssociationConnector Association="PermissionModel.ClientAppUserInfo" />
+        <AssociationConnector Association="PermissionModel.ClientAppUserGroup" />
+        <EntityTypeShape EntityType="PermissionModel.Menu" Width="1.5" PointX="13.25" PointY="3.125" />
+        <AssociationConnector Association="PermissionModel.MenuMenu" />
+        <AssociationConnector Association="PermissionModel.PermissionMenu" />
+        <AssociationConnector Association="PermissionModel.PermissionControls" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

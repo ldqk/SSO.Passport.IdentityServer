@@ -1595,7 +1595,11 @@ namespace IBLL
         void BulkSaveChanges();
     }
 	
-	public partial interface IFunctionBll : IBaseBll<Function>{}   
+	public partial interface IClientAppBll : IBaseBll<ClientApp>{}   
+	
+	public partial interface IControlBll : IBaseBll<Control>{}   
+	
+	public partial interface IMenuBll : IBaseBll<Menu>{}   
 	
 	public partial interface IPermissionBll : IBaseBll<Permission>{}   
 	

@@ -12,24 +12,23 @@ namespace ModelCodeGenerate
     using System;
     using System.Collections.Generic;
     
-    public partial class UserGroup
+    public partial class ClientApp
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public UserGroup()
+        public ClientApp()
         {
-            this.UserGroupPermission = new HashSet<UserGroupPermission>();
             this.UserInfo = new HashSet<UserInfo>();
+            this.UserGroup = new HashSet<UserGroup>();
         }
     
         public int Id { get; set; }
-        public string GroupName { get; set; }
-        public Nullable<int> ParentId { get; set; }
-        public int ClientAppId { get; set; }
+        public string AppName { get; set; }
+        public string AppId { get; set; }
+        public string AppSecret { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserGroupPermission> UserGroupPermission { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserInfo> UserInfo { get; set; }
-        public virtual ClientApp ClientApp { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserGroup> UserGroup { get; set; }
     }
 }

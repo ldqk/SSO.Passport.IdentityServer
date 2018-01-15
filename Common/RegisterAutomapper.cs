@@ -55,13 +55,7 @@ namespace Common
                 m.CreateMap<PermissionInputDto, Permission>();
                 m.CreateMap<PermissionInputDto, PermissionOutputDto>();
                 m.CreateMap<PermissionOutputDto, PermissionInputDto>();
-
-                m.CreateMap<Function, FunctionOutputDto>();
-                m.CreateMap<FunctionOutputDto, Function>();
-                m.CreateMap<FunctionOutputDto, FunctionInputDto>();
-                m.CreateMap<FunctionInputDto, FunctionOutputDto>();
-                m.CreateMap<FunctionInputDto, Function>();
-                m.CreateMap<Function, FunctionInputDto>();
+                
             });
         }
     }

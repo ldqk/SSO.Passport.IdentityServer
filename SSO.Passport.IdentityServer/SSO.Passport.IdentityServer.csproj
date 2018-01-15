@@ -587,11 +587,6 @@
     <Content Include="Views\Permission\User.cshtml" />
     <Content Include="Views\Permission\Role.cshtml" />
     <Content Include="Views\Permission\Function.cshtml" />
-    <Content Include="Views\Function\Index.cshtml" />
-    <Content Include="Views\Function\Edit.cshtml" />
-    <Content Include="Views\Function\Add.cshtml" />
-    <Content Include="Views\Function\Get.cshtml" />
-    <Content Include="Views\Function\Permission.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -615,7 +610,6 @@
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
-    <Compile Include="Controllers\FunctionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PassportController.cs" />
     <Compile Include="Controllers\PermissionController.cs" />

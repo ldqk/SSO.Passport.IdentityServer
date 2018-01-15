@@ -5,20 +5,18 @@ using Models.Enum;
 
 namespace Models.Entity
 {
-    [Table("Function")]
-    public class Function
+    [Table("Control")]
+    public partial class Control : BaseEntity
     {
-        public Function()
+        public Control()
         {
-            IsAvailable = true;
+            Permission = new HashSet<Permission>();
         }
-        [Key]
-        public int Id { get; set; }
+
 
         [Display(Name = "功能名称")]
         [Required]
         public string Name { get; set; }
-
         [Display(Name = "控制器名称")]
         [Required]
         public string Controller { get; set; }
@@ -27,22 +25,12 @@ namespace Models.Entity
         [Required]
         public string Action { get; set; }
 
-        [Display(Name = "图标URL地址")]
-        public string IconUrl { get; set; }
-
-        [Display(Name = "class样式")]
-        public string CssStyle { get; set; }
-
         [Display(Name = "HTTP请求方式")]
         [Required]
         public HttpMethod HttpMethod { get; set; }
 
+        [Required]
         public bool IsAvailable { get; set; }
-
-        public int ParentId { get; set; }
-
-        [Display(Name = "权限类型")]
-        public FunctionType FunctionType { get; set; }
 
         public virtual ICollection<Permission> Permission { get; set; }
     }

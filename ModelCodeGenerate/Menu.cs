@@ -12,24 +12,25 @@ namespace ModelCodeGenerate
     using System;
     using System.Collections.Generic;
     
-    public partial class UserGroup
+    public partial class Menu
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public UserGroup()
+        public Menu()
         {
-            this.UserGroupPermission = new HashSet<UserGroupPermission>();
-            this.UserInfo = new HashSet<UserInfo>();
+            this.Parent = new HashSet<Menu>();
+            this.Permission = new HashSet<Permission>();
         }
     
         public int Id { get; set; }
-        public string GroupName { get; set; }
-        public Nullable<int> ParentId { get; set; }
-        public int ClientAppId { get; set; }
+        public string IconUrl { get; set; }
+        public string CssStyle { get; set; }
+        public string IsAvailable { get; set; }
+        public int ParentId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserGroupPermission> UserGroupPermission { get; set; }
+        public virtual ICollection<Menu> Parent { get; set; }
+        public virtual Menu Children { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserInfo> UserInfo { get; set; }
-        public virtual ClientApp ClientApp { get; set; }
+        public virtual ICollection<Permission> Permission { get; set; }
     }
 }

@@ -7,7 +7,6 @@ using IBLL;
 using Masuit.Tools;
 using Models.Dto;
 using Models.Entity;
-using Models.Enum;
 using Newtonsoft.Json;
 using SSO.Core.Client;
 using SSO.Passport.IdentityServer.Models;
@@ -44,13 +43,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 
         public ActionResult GetPermission(Guid id)
         {
-            IEnumerable<Function> list = UserInfoBll.GetPermissionList(id);
-            return ResultData(Mapper.Map<IList<FunctionOutputDto>>(list.ToList()));
-        }
-
-        public ActionResult GetMenu(Guid id)
-        {
-            IEnumerable<Function> list = UserInfoBll.GetPermissionList(id, FunctionType.Menu);
+            IEnumerable<Control> list = UserInfoBll.GetPermissionList(id);
             return ResultData(Mapper.Map<IList<FunctionOutputDto>>(list.ToList()));
         }
 
@@ -111,7 +104,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             if (userInfo != null)
             {
                 SessionHelper.Set(userInfo.Id.ToString(), userInfo.MapTo<UserInfoLoginModel>());
-                return ResultData(new { user = userInfo.MapTo<UserInfoLoginModel>(), menus = UserInfoBll.GetPermissionList(userInfo.Id, FunctionType.Menu).Select(c => new { id = c.CssStyle, name = c.Name, icon = c.IconUrl, url = c.Controller + c.Action, show = true }) });
+                return ResultData(new { user = userInfo.MapTo<UserInfoLoginModel>(), menus = UserInfoBll.GetPermissionList(userInfo.Id).Select(c => new { id = c.Id, name = c.Name, url = c.Controller + c.Action, show = true }) });
             }
             return ResultData(null, false, "用户名或密码错误！");
         }

@@ -12,19 +12,22 @@ namespace ModelCodeGenerate
     using System;
     using System.Collections.Generic;
     
-    public partial class Function
+    public partial class Control
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Control()
+        {
+            this.Permission = new HashSet<Permission>();
+        }
+    
         public int Id { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
-        public string IconUrl { get; set; }
-        public string CssStyle { get; set; }
         public string HttpMethod { get; set; }
         public string IsAvailable { get; set; }
-        public string ParentId { get; set; }
-        public int PermissionId { get; set; }
         public int FunctionType { get; set; }
     
-        public virtual Permission Permission { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Permission> Permission { get; set; }
     }
 }
