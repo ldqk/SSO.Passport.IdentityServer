@@ -25,7 +25,7 @@ namespace DALFactory
                 Assembly ass = Assembly.Load(DalNameSpace);
                 return (T)ass.CreateInstance(fullNamespace);
             }
-            catch (Exception)
+            catch
             {
                 try
                 {
@@ -33,7 +33,7 @@ namespace DALFactory
                     Assembly ass = Assembly.LoadFile(DalPath);
                     return (T)ass.CreateInstance(fullNamespace);
                 }
-                catch (Exception)
+                catch
                 {
                     //都出错则往外抛异常
                     throw new Exception("找不到程序集");

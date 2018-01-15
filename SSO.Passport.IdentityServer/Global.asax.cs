@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Z.BulkOperations;
 
 namespace SSO.Passport.IdentityServer
 {
@@ -10,6 +11,7 @@ namespace SSO.Passport.IdentityServer
 
         protected void Application_Start(object sender, EventArgs e)
         {
+            LicenseManager.AddLicense("67;100-MASUIT", "809739091397182EC1ECEA8770EB4218");
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

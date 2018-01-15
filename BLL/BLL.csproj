@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\SSO.Passport.IdentityServer\Bin\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\SSO.Passport.IdentityServer\Bin\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -51,7 +51,6 @@
     <Reference Include="Masuit.Tools, Version=1.8.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Masuit.Tools.1.8.4\lib\net45\Masuit.Tools.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -59,7 +58,6 @@
       <HintPath>..\packages\StackExchange.Redis.1.2.6\lib\net45\StackExchange.Redis.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
   </ItemGroup>
@@ -78,7 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Factory\DALFactory.csproj">
-      <Project>{D927561B-5ED4-4599-8209-16F9D1F5461D}</Project>
+      <Project>{d927561b-5ed4-4599-8209-16f9d1f5461d}</Project>
       <Name>DALFactory</Name>
     </ProjectReference>
     <ProjectReference Include="..\IBLL\IBLL.csproj">
@@ -90,7 +88,7 @@
       <Name>IDAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
-      <Project>{F64BA0EF-9DCD-4A5C-8758-BE688A3DD8CC}</Project>
+      <Project>{5400CA01-CBCF-4531-A388-3057393D5B4F}</Project>
       <Name>Models</Name>
     </ProjectReference>
   </ItemGroup>
@@ -99,7 +97,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Blls.cs</LastGenOutput>
     </Content>
-    <Content Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

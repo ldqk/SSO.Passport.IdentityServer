@@ -2,6 +2,7 @@
  
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -10,8 +11,8 @@ using Models.Entity;
 namespace IDAL
 {   
 	public interface IBaseDal<T> where T : class, new()
-	{
-	    /// <summary>
+    {
+        /// <summary>
         /// 获取所有实体
         /// </summary>
         /// <returns>还未执行的SQL语句</returns>
@@ -135,7 +136,7 @@ namespace IDAL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        IQueryable<T> GetAllNoTracking<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true);
+        IOrderedQueryable<T> GetAllNoTracking<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
         /// 获取所有实体
@@ -294,7 +295,7 @@ namespace IDAL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        IQueryable<T> LoadEntities<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
+        IOrderedQueryable<T> LoadEntities<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
         /// 基本查询方法，获取一个被AutoMapper映射后的集合
@@ -513,7 +514,7 @@ namespace IDAL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        IQueryable<T> LoadEntitiesNoTracking<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
+        IOrderedQueryable<T> LoadEntitiesNoTracking<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
         /// 基本查询方法，获取一个被AutoMapper映射后的集合（不跟踪实体）
@@ -622,7 +623,7 @@ namespace IDAL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        Task<IOrderedQueryable<T>> LoadEntitiesNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
+        Task<IQueryable<T>> LoadEntitiesNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
         /// 基本查询方法，获取一个被AutoMapper映射后的集合（异步，不跟踪实体）
@@ -858,7 +859,7 @@ namespace IDAL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>映射实体</returns>
-        Task<TDto> GetFirstEntityAsync<TS,TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
+        Task<TDto> GetFirstEntityAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
         /// 获取第一条数据，优先从缓存读取(异步)
@@ -897,7 +898,7 @@ namespace IDAL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>实体</returns>
-        Task<TDto> GetFirstEntityFromCacheAsync<TS,TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class;
+        Task<TDto> GetFirstEntityFromCacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class;
 
         /// <summary>
         /// 获取第一条数据，优先从二级缓存读取(异步)
@@ -932,7 +933,7 @@ namespace IDAL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>实体</returns>
-        Task<TDto> GetFirstEntityFromL2CacheAsync<TS,TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
+        Task<TDto> GetFirstEntityFromL2CacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
         /// 获取第一条数据（不跟踪实体）
@@ -967,7 +968,7 @@ namespace IDAL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>实体</returns>
-        TDto GetFirstEntityNoTracking<TS,TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
+        TDto GetFirstEntityNoTracking<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
         /// 获取第一条数据，优先从缓存读取（不跟踪实体）
@@ -1006,7 +1007,7 @@ namespace IDAL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>映射实体</returns>
-        TDto GetFirstEntityFromCacheNoTracking<TS,TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class;
+        TDto GetFirstEntityFromCacheNoTracking<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class;
 
         /// <summary>
         /// 获取第一条数据，优先从二级缓存读取（不跟踪实体）
@@ -1042,7 +1043,7 @@ namespace IDAL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>映射实体</returns>
-        TDto GetFirstEntityFromL2CacheNoTracking<TS,TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
+        TDto GetFirstEntityFromL2CacheNoTracking<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
         /// 获取第一条数据（异步，不跟踪实体）
@@ -1077,7 +1078,7 @@ namespace IDAL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>映射实体</returns>
-        Task<TDto> GetFirstEntityNoTrackingAsync<TS,TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
+        Task<TDto> GetFirstEntityNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
         /// 获取第一条数据，优先从缓存读取（异步，不跟踪实体）
@@ -1116,7 +1117,7 @@ namespace IDAL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>映射实体</returns>
-        Task<TDto> GetFirstEntityFromCacheNoTrackingAsync<TS,TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class;
+        Task<TDto> GetFirstEntityFromCacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class;
 
         /// <summary>
         /// 获取第一条数据，优先从缓存读取（异步，不跟踪实体）
@@ -1151,7 +1152,7 @@ namespace IDAL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>映射实体</returns>
-        Task<TDto> GetFirstEntityFromL2CacheNoTrackingAsync<TS,TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
+        Task<TDto> GetFirstEntityFromL2CacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
         /// 根据ID找实体
@@ -1207,10 +1208,6 @@ namespace IDAL
         /// <param name="isAsc">升序降序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        /// <exception cref="OverflowException">
-        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
-        /// <exception cref="ArgumentException">
-        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
         IEnumerable<T> LoadPageEntitiesFromCache<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> where, Expression<Func<T, TS>> orderby, bool isAsc, int timespan = 30);
 
 
@@ -1227,10 +1224,6 @@ namespace IDAL
         /// <param name="isAsc">升序降序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        /// <exception cref="OverflowException">
-        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
-        /// <exception cref="ArgumentException">
-        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
         IEnumerable<TDto> LoadPageEntitiesFromCache<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> where, Expression<Func<T, TS>> orderby, bool isAsc, int timespan = 30) where TDto : class;
 
         /// <summary>
@@ -1244,10 +1237,6 @@ namespace IDAL
         /// <param name="orderby">orderby Lambda条件表达式</param>
         /// <param name="isAsc">升序降序</param>
         /// <returns>还未执行的SQL语句</returns>
-        /// <exception cref="OverflowException">
-        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
-        /// <exception cref="ArgumentException">
-        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
         IEnumerable<T> LoadPageEntitiesFromL2Cache<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc);
 
         /// <summary>
@@ -1262,10 +1251,6 @@ namespace IDAL
         /// <param name="orderby">orderby Lambda条件表达式</param>
         /// <param name="isAsc">升序降序</param>
         /// <returns>还未执行的SQL语句</returns>
-        /// <exception cref="OverflowException">
-        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
-        /// <exception cref="ArgumentException">
-        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
         IEnumerable<TDto> LoadPageEntitiesFromL2Cache<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc);
 
         /// <summary>
@@ -1307,10 +1292,6 @@ namespace IDAL
         /// <param name="isAsc">升序降序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        /// <exception cref="OverflowException">
-        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
-        /// <exception cref="ArgumentException">
-        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
         IEnumerable<T> LoadPageEntitiesFromCacheNoTracking<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30);
 
         /// <summary>
@@ -1326,10 +1307,6 @@ namespace IDAL
         /// <param name="isAsc">升序降序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        /// <exception cref="OverflowException">
-        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
-        /// <exception cref="ArgumentException">
-        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
         IEnumerable<TDto> LoadPageEntitiesFromCacheNoTracking<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class;
 
         /// <summary>
@@ -1343,10 +1320,6 @@ namespace IDAL
         /// <param name="orderby">orderby Lambda条件表达式</param>
         /// <param name="isAsc">升序降序</param>
         /// <returns>还未执行的SQL语句</returns>
-        /// <exception cref="OverflowException">
-        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
-        /// <exception cref="ArgumentException">
-        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
         IEnumerable<T> LoadPageEntitiesFromL2CacheNoTracking<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
@@ -1361,10 +1334,6 @@ namespace IDAL
         /// <param name="orderby">orderby Lambda条件表达式</param>
         /// <param name="isAsc">升序降序</param>
         /// <returns>还未执行的SQL语句</returns>
-        /// <exception cref="OverflowException">
-        ///         <paramref name="value" /> is less than <see cref="F:System.TimeSpan.MinValue" /> or greater than <see cref="F:System.TimeSpan.MaxValue" />.-or-<paramref name="value" /> is <see cref="F:System.Double.PositiveInfinity" />.-or-<paramref name="value" /> is <see cref="F:System.Double.NegativeInfinity" />. </exception>
-        /// <exception cref="ArgumentException">
-        ///         <paramref name="value" /> is equal to <see cref="F:System.Double.NaN" />. </exception>
         IEnumerable<TDto> LoadPageEntitiesFromL2CacheNoTracking<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true);
 
         /// <summary>
@@ -1426,6 +1395,12 @@ namespace IDAL
         T AddEntity(T t);
 
         /// <summary>
+        /// 批量添加实体
+        /// </summary>
+        /// <param name="list">需要添加的实体</param>
+        void BulkInsert(IEnumerable<T> list);
+
+        /// <summary>
         /// 添加或更新
         /// </summary>
         /// <param name="exp">更新条件</param>
@@ -1437,6 +1412,11 @@ namespace IDAL
         /// </summary>
         /// <returns>受影响的行数</returns>
         int SaveChanges();
+
+        /// <summary>
+        /// 统一批量保存数据
+        /// </summary>
+        void BulkSaveChanges();
 
         /// <summary>
         /// 统一保存数据（异步）
@@ -1471,7 +1451,31 @@ namespace IDAL
         /// <param name="list">实体集合</param>
         /// <returns>添加成功</returns>
         IEnumerable<T> AddEntities(IList<T> list);
-	}
+
+        /// <summary>
+        /// 执行查询语句
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameters">参数</param>
+        /// <returns>泛型集合</returns>
+        DbRawSqlQuery<TS> SqlQuery<TS>(string sql, params object[] parameters);
+
+        /// <summary>
+        /// 执行查询语句
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameters">参数</param>
+        DbRawSqlQuery SqlQuery(Type t, string sql, params object[] parameters);
+
+        /// <summary>
+        /// 执行DML语句
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        void ExecuteSql(string sql, params object[] parameters);
+    }
 
 	
 	public partial interface IFunctionDal :IBaseDal<Function>{}

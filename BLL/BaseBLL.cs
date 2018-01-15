@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -57,9 +58,9 @@ namespace BLL
         /// </summary>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<T>> GetAllFromCacheNoTrackingAsync(int timespan = 20)
+        public async Task<IEnumerable<T>> GetAllFromCacheNoTrackingAsync(int timespan = 20)
         {
-            return BaseDal.GetAllFromCacheNoTrackingAsync(timespan);
+            return await BaseDal.GetAllFromCacheNoTrackingAsync(timespan);
         }
 
         /// <summary>
@@ -67,9 +68,9 @@ namespace BLL
         /// </summary>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<T>> GetAllFromCacheAsync(int timespan = 20)
+        public async Task<IEnumerable<T>> GetAllFromCacheAsync(int timespan = 20)
         {
-            return BaseDal.GetAllFromCacheAsync(timespan);
+            return await BaseDal.GetAllFromCacheAsync(timespan);
         }
 
         /// <summary>
@@ -127,9 +128,9 @@ namespace BLL
         /// <typeparam name="TDto">映射实体</typeparam>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<TDto>> GetAllFromCacheAsync<TDto>(int timespan = 20) where TDto : class
+        public async Task<IEnumerable<TDto>> GetAllFromCacheAsync<TDto>(int timespan = 20) where TDto : class
         {
-            return BaseDal.GetAllFromCacheAsync<TDto>(timespan);
+            return await BaseDal.GetAllFromCacheAsync<TDto>(timespan);
         }
 
         /// <summary>
@@ -147,9 +148,9 @@ namespace BLL
         /// </summary>
         /// <typeparam name="TDto">映射实体</typeparam>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<TDto>> GetAllFromCacheNoTrackingAsync<TDto>(int timespan = 20) where TDto : class
+        public async Task<IEnumerable<TDto>> GetAllFromCacheNoTrackingAsync<TDto>(int timespan = 20) where TDto : class
         {
-            return BaseDal.GetAllFromCacheNoTrackingAsync<TDto>(timespan);
+            return await BaseDal.GetAllFromCacheNoTrackingAsync<TDto>(timespan);
         }
 
         /// <summary>
@@ -217,9 +218,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<T>> GetAllFromCacheAsync<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20)
+        public async Task<IEnumerable<T>> GetAllFromCacheAsync<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20)
         {
-            return BaseDal.GetAllFromCacheAsync(orderby, isAsc, timespan);
+            return await BaseDal.GetAllFromCacheAsync(orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -243,9 +244,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<T>> GetAllFromCacheNoTrackingAsync<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20)
+        public async Task<IEnumerable<T>> GetAllFromCacheNoTrackingAsync<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20)
         {
-            return BaseDal.GetAllFromCacheNoTrackingAsync(orderby, isAsc, timespan);
+            return await BaseDal.GetAllFromCacheNoTrackingAsync(orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -321,9 +322,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<TDto>> GetAllFromCacheAsync<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20) where TDto : class
+        public async Task<IEnumerable<TDto>> GetAllFromCacheAsync<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20) where TDto : class
         {
-            return BaseDal.GetAllFromCacheAsync<TS, TDto>(orderby, isAsc, timespan);
+            return await BaseDal.GetAllFromCacheAsync<TS, TDto>(orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -349,9 +350,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<TDto>> GetAllFromCacheNoTrackingAsync<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20) where TDto : class
+        public async Task<IEnumerable<TDto>> GetAllFromCacheNoTrackingAsync<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20) where TDto : class
         {
-            return BaseDal.GetAllFromCacheNoTrackingAsync<TS, TDto>(orderby, isAsc, timespan);
+            return await BaseDal.GetAllFromCacheNoTrackingAsync<TS, TDto>(orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -531,9 +532,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IQueryable<T>> LoadEntitiesAsync(Expression<Func<T, bool>> @where)
+        public async Task<IQueryable<T>> LoadEntitiesAsync(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.LoadEntitiesAsync(where);
+            return await BaseDal.LoadEntitiesAsync(where);
         }
 
         /// <summary>
@@ -544,9 +545,9 @@ namespace BLL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IOrderedQueryable<T>> LoadEntitiesAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<IOrderedQueryable<T>> LoadEntitiesAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.LoadEntitiesAsync(where, orderby, isAsc);
+            return await BaseDal.LoadEntitiesAsync(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -554,9 +555,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IQueryable<TDto>> LoadEntitiesAsync<TDto>(Expression<Func<T, bool>> @where)
+        public async Task<IQueryable<TDto>> LoadEntitiesAsync<TDto>(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.LoadEntitiesAsync<TDto>(where);
+            return await BaseDal.LoadEntitiesAsync<TDto>(where);
         }
 
         /// <summary>
@@ -568,9 +569,9 @@ namespace BLL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IQueryable<TDto>> LoadEntitiesAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<IQueryable<TDto>> LoadEntitiesAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.LoadEntitiesAsync<TS, TDto>(where, orderby, isAsc);
+            return await BaseDal.LoadEntitiesAsync<TS, TDto>(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -579,9 +580,9 @@ namespace BLL
         /// <param name="where">查询条件</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<T>> LoadEntitiesFromCacheAsync(Expression<Func<T, bool>> @where, int timespan = 30)
+        public async Task<IEnumerable<T>> LoadEntitiesFromCacheAsync(Expression<Func<T, bool>> @where, int timespan = 30)
         {
-            return BaseDal.LoadEntitiesFromCacheAsync(where, timespan);
+            return await BaseDal.LoadEntitiesFromCacheAsync(where, timespan);
         }
 
         /// <summary>
@@ -593,9 +594,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<T>> LoadEntitiesFromCacheAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
+        public async Task<IEnumerable<T>> LoadEntitiesFromCacheAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
         {
-            return BaseDal.LoadEntitiesFromCacheAsync(where, orderby, isAsc, timespan);
+            return await BaseDal.LoadEntitiesFromCacheAsync(where, orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -604,9 +605,9 @@ namespace BLL
         /// <param name="where">查询条件</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<TDto>> LoadEntitiesFromCacheAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        public async Task<IEnumerable<TDto>> LoadEntitiesFromCacheAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
         {
-            return BaseDal.LoadEntitiesFromCacheAsync<TDto>(where, timespan);
+            return await BaseDal.LoadEntitiesFromCacheAsync<TDto>(where, timespan);
         }
 
         /// <summary>
@@ -619,9 +620,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<TDto>> LoadEntitiesFromCacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
+        public async Task<IEnumerable<TDto>> LoadEntitiesFromCacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
         {
-            return BaseDal.LoadEntitiesFromCacheAsync<TS, TDto>(where, orderby, isAsc, timespan);
+            return await BaseDal.LoadEntitiesFromCacheAsync<TS, TDto>(where, orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -629,9 +630,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<EFCachedQueryable<T>> LoadEntitiesFromL2CacheAsync(Expression<Func<T, bool>> @where)
+        public async Task<EFCachedQueryable<T>> LoadEntitiesFromL2CacheAsync(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.LoadEntitiesFromL2CacheAsync(where);
+            return await BaseDal.LoadEntitiesFromL2CacheAsync(where);
         }
 
         /// <summary>
@@ -642,9 +643,9 @@ namespace BLL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<EFCachedQueryable<T>> LoadEntitiesFromL2CacheAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<EFCachedQueryable<T>> LoadEntitiesFromL2CacheAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.LoadEntitiesFromL2CacheAsync(where, orderby, isAsc);
+            return await BaseDal.LoadEntitiesFromL2CacheAsync(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -652,9 +653,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<EFCachedQueryable<TDto>> LoadEntitiesFromL2CacheAsync<TDto>(Expression<Func<T, bool>> @where)
+        public async Task<EFCachedQueryable<TDto>> LoadEntitiesFromL2CacheAsync<TDto>(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.LoadEntitiesFromL2CacheAsync<TDto>(where);
+            return await BaseDal.LoadEntitiesFromL2CacheAsync<TDto>(where);
         }
 
         /// <summary>
@@ -666,9 +667,9 @@ namespace BLL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<EFCachedQueryable<TDto>> LoadEntitiesFromL2CacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<EFCachedQueryable<TDto>> LoadEntitiesFromL2CacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.LoadEntitiesFromL2CacheAsync<TS, TDto>(where, orderby, isAsc);
+            return await BaseDal.LoadEntitiesFromL2CacheAsync<TS, TDto>(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -689,7 +690,7 @@ namespace BLL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        public IQueryable<T> LoadEntitiesNoTracking<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public IOrderedQueryable<T> LoadEntitiesNoTracking<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
             return BaseDal.LoadEntitiesNoTracking(where, orderby, isAsc);
         }
@@ -821,9 +822,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体集合</returns>
-        public Task<IQueryable<T>> LoadEntitiesNoTrackingAsync(Expression<Func<T, bool>> @where)
+        public async Task<IQueryable<T>> LoadEntitiesNoTrackingAsync(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.LoadEntitiesNoTrackingAsync(where);
+            return await BaseDal.LoadEntitiesNoTrackingAsync(where);
         }
 
         /// <summary>
@@ -834,9 +835,9 @@ namespace BLL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IOrderedQueryable<T>> LoadEntitiesNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<IQueryable<T>> LoadEntitiesNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.LoadEntitiesNoTrackingAsync(where, orderby, isAsc);
+            return await BaseDal.LoadEntitiesNoTrackingAsync(@where, @orderby, isAsc);
         }
 
         /// <summary>
@@ -844,9 +845,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体集合</returns>
-        public Task<IQueryable<TDto>> LoadEntitiesNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
+        public async Task<IQueryable<TDto>> LoadEntitiesNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.LoadEntitiesNoTrackingAsync<TDto>(where);
+            return await BaseDal.LoadEntitiesNoTrackingAsync<TDto>(where);
         }
 
         /// <summary>
@@ -858,9 +859,9 @@ namespace BLL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IQueryable<TDto>> LoadEntitiesNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<IQueryable<TDto>> LoadEntitiesNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.LoadEntitiesNoTrackingAsync<TS, TDto>(where, orderby, isAsc);
+            return await BaseDal.LoadEntitiesNoTrackingAsync<TS, TDto>(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -869,9 +870,9 @@ namespace BLL
         /// <param name="where">查询条件</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>实体集合</returns>
-        public Task<IEnumerable<T>> LoadEntitiesFromCacheNoTrackingAsync(Expression<Func<T, bool>> @where, int timespan = 30)
+        public async Task<IEnumerable<T>> LoadEntitiesFromCacheNoTrackingAsync(Expression<Func<T, bool>> @where, int timespan = 30)
         {
-            return BaseDal.LoadEntitiesFromCacheNoTrackingAsync(where, timespan);
+            return await BaseDal.LoadEntitiesFromCacheNoTrackingAsync(where, timespan);
         }
 
         /// <summary>
@@ -883,9 +884,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<T>> LoadEntitiesFromCacheNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
+        public async Task<IEnumerable<T>> LoadEntitiesFromCacheNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
         {
-            return BaseDal.LoadEntitiesFromCacheNoTrackingAsync(where, orderby, isAsc, timespan);
+            return await BaseDal.LoadEntitiesFromCacheNoTrackingAsync(where, orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -894,9 +895,9 @@ namespace BLL
         /// <param name="where">查询条件</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>实体集合</returns>
-        public Task<IEnumerable<TDto>> LoadEntitiesFromCacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        public async Task<IEnumerable<TDto>> LoadEntitiesFromCacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
         {
-            return BaseDal.LoadEntitiesFromCacheNoTrackingAsync<TDto>(where, timespan);
+            return await BaseDal.LoadEntitiesFromCacheNoTrackingAsync<TDto>(where, timespan);
         }
 
         /// <summary>
@@ -909,9 +910,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<IEnumerable<TDto>> LoadEntitiesFromCacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
+        public async Task<IEnumerable<TDto>> LoadEntitiesFromCacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
         {
-            return BaseDal.LoadEntitiesFromCacheNoTrackingAsync<TS, TDto>(where, orderby, isAsc, timespan);
+            return await BaseDal.LoadEntitiesFromCacheNoTrackingAsync<TS, TDto>(where, orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -919,9 +920,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体集合</returns>
-        public Task<EFCachedQueryable<T>> LoadEntitiesFromL2CacheNoTrackingAsync(Expression<Func<T, bool>> @where)
+        public async Task<EFCachedQueryable<T>> LoadEntitiesFromL2CacheNoTrackingAsync(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.LoadEntitiesFromL2CacheNoTrackingAsync(where);
+            return await BaseDal.LoadEntitiesFromL2CacheNoTrackingAsync(where);
         }
 
         /// <summary>
@@ -932,9 +933,9 @@ namespace BLL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<EFCachedQueryable<T>> LoadEntitiesFromL2CacheNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<EFCachedQueryable<T>> LoadEntitiesFromL2CacheNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.LoadEntitiesFromL2CacheNoTrackingAsync(where, orderby, isAsc);
+            return await BaseDal.LoadEntitiesFromL2CacheNoTrackingAsync(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -942,9 +943,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体集合</returns>
-        public Task<EFCachedQueryable<TDto>> LoadEntitiesFromL2CacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
+        public async Task<EFCachedQueryable<TDto>> LoadEntitiesFromL2CacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.LoadEntitiesFromL2CacheNoTrackingAsync<TDto>(where);
+            return await BaseDal.LoadEntitiesFromL2CacheNoTrackingAsync<TDto>(where);
         }
 
         /// <summary>
@@ -956,9 +957,9 @@ namespace BLL
         /// <param name="orderby">排序方式</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>还未执行的SQL语句</returns>
-        public Task<EFCachedQueryable<TDto>> LoadEntitiesFromL2CacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<EFCachedQueryable<TDto>> LoadEntitiesFromL2CacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.LoadEntitiesFromL2CacheNoTrackingAsync<TS, TDto>(where, orderby, isAsc);
+            return await BaseDal.LoadEntitiesFromL2CacheNoTrackingAsync<TS, TDto>(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -1114,9 +1115,9 @@ namespace BLL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<T> GetFirstEntityAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.GetFirstEntityAsync(where, orderby, isAsc);
+            return await BaseDal.GetFirstEntityAsync(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -1124,9 +1125,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体</returns>
-        public Task<TDto> GetFirstEntityAsync<TDto>(Expression<Func<T, bool>> @where)
+        public async Task<TDto> GetFirstEntityAsync<TDto>(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.GetFirstEntityAsync<TDto>(where);
+            return await BaseDal.GetFirstEntityAsync<TDto>(where);
         }
 
         /// <summary>
@@ -1138,9 +1139,9 @@ namespace BLL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>映射实体</returns>
-        public Task<TDto> GetFirstEntityAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<TDto> GetFirstEntityAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.GetFirstEntityAsync<TS, TDto>(where, orderby, isAsc);
+            return await BaseDal.GetFirstEntityAsync<TS, TDto>(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -1149,9 +1150,9 @@ namespace BLL
         /// <param name="where">查询条件</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityFromCacheAsync(Expression<Func<T, bool>> @where, int timespan = 30)
+        public async Task<T> GetFirstEntityFromCacheAsync(Expression<Func<T, bool>> @where, int timespan = 30)
         {
-            return BaseDal.GetFirstEntityFromCacheAsync(where, timespan);
+            return await BaseDal.GetFirstEntityFromCacheAsync(where, timespan);
         }
 
         /// <summary>
@@ -1163,9 +1164,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityFromCacheAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
+        public async Task<T> GetFirstEntityFromCacheAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
         {
-            return BaseDal.GetFirstEntityFromCacheAsync(where, orderby, isAsc, timespan);
+            return await BaseDal.GetFirstEntityFromCacheAsync(where, orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -1174,9 +1175,9 @@ namespace BLL
         /// <param name="where">查询条件</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>实体</returns>
-        public Task<TDto> GetFirstEntityFromCacheAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        public async Task<TDto> GetFirstEntityFromCacheAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
         {
-            return BaseDal.GetFirstEntityFromCacheAsync<TDto>(where, timespan);
+            return await BaseDal.GetFirstEntityFromCacheAsync<TDto>(where, timespan);
         }
 
         /// <summary>
@@ -1189,9 +1190,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>实体</returns>
-        public Task<TDto> GetFirstEntityFromCacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
+        public async Task<TDto> GetFirstEntityFromCacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
         {
-            return BaseDal.GetFirstEntityFromCacheAsync<TS, TDto>(where, orderby, isAsc, timespan);
+            return await BaseDal.GetFirstEntityFromCacheAsync<TS, TDto>(where, orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -1199,9 +1200,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityFromL2CacheAsync(Expression<Func<T, bool>> @where)
+        public async Task<T> GetFirstEntityFromL2CacheAsync(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.GetFirstEntityFromL2CacheAsync(where);
+            return await BaseDal.GetFirstEntityFromL2CacheAsync(where);
         }
 
         /// <summary>
@@ -1212,9 +1213,9 @@ namespace BLL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityFromL2CacheAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<T> GetFirstEntityFromL2CacheAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.GetFirstEntityFromL2CacheAsync(where, orderby, isAsc);
+            return await BaseDal.GetFirstEntityFromL2CacheAsync(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -1222,9 +1223,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体</returns>
-        public Task<TDto> GetFirstEntityFromL2CacheAsync<TDto>(Expression<Func<T, bool>> @where)
+        public async Task<TDto> GetFirstEntityFromL2CacheAsync<TDto>(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.GetFirstEntityFromL2CacheAsync<TDto>(where);
+            return await BaseDal.GetFirstEntityFromL2CacheAsync<TDto>(where);
         }
 
         /// <summary>
@@ -1236,9 +1237,9 @@ namespace BLL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>实体</returns>
-        public Task<TDto> GetFirstEntityFromL2CacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<TDto> GetFirstEntityFromL2CacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.GetFirstEntityFromL2CacheAsync<TS, TDto>(where, orderby, isAsc);
+            return await BaseDal.GetFirstEntityFromL2CacheAsync<TS, TDto>(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -1246,9 +1247,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityAsync(Expression<Func<T, bool>> @where)
+        public async Task<T> GetFirstEntityAsync(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.GetFirstEntityAsync(where);
+            return await BaseDal.GetFirstEntityAsync(where);
         }
 
         /// <summary>
@@ -1401,9 +1402,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityNoTrackingAsync(Expression<Func<T, bool>> @where)
+        public async Task<T> GetFirstEntityNoTrackingAsync(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.GetFirstEntityNoTrackingAsync(where);
+            return await BaseDal.GetFirstEntityNoTrackingAsync(where);
         }
 
         /// <summary>
@@ -1414,9 +1415,9 @@ namespace BLL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<T> GetFirstEntityNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.GetFirstEntityNoTrackingAsync(where, orderby, isAsc);
+            return await BaseDal.GetFirstEntityNoTrackingAsync(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -1424,9 +1425,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体</returns>
-        public Task<TDto> GetFirstEntityNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
+        public async Task<TDto> GetFirstEntityNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.GetFirstEntityNoTrackingAsync<TDto>(where);
+            return await BaseDal.GetFirstEntityNoTrackingAsync<TDto>(where);
         }
 
         /// <summary>
@@ -1438,9 +1439,9 @@ namespace BLL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>映射实体</returns>
-        public Task<TDto> GetFirstEntityNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<TDto> GetFirstEntityNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.GetFirstEntityNoTrackingAsync<TS, TDto>(where, orderby, isAsc);
+            return await BaseDal.GetFirstEntityNoTrackingAsync<TS, TDto>(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -1449,9 +1450,9 @@ namespace BLL
         /// <param name="where">查询条件</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityFromCacheNoTrackingAsync(Expression<Func<T, bool>> @where, int timespan = 30)
+        public async Task<T> GetFirstEntityFromCacheNoTrackingAsync(Expression<Func<T, bool>> @where, int timespan = 30)
         {
-            return BaseDal.GetFirstEntityFromCacheNoTrackingAsync(where, timespan);
+            return await BaseDal.GetFirstEntityFromCacheNoTrackingAsync(where, timespan);
         }
 
         /// <summary>
@@ -1463,9 +1464,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>映射实体</returns>
-        public Task<T> GetFirstEntityFromCacheNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
+        public async Task<T> GetFirstEntityFromCacheNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
         {
-            return BaseDal.GetFirstEntityFromCacheNoTrackingAsync(where, orderby, isAsc, timespan);
+            return await BaseDal.GetFirstEntityFromCacheNoTrackingAsync(where, orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -1474,9 +1475,9 @@ namespace BLL
         /// <param name="where">查询条件</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>实体</returns>
-        public Task<TDto> GetFirstEntityFromCacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
+        public async Task<TDto> GetFirstEntityFromCacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
         {
-            return BaseDal.GetFirstEntityFromCacheNoTrackingAsync<TDto>(where, timespan);
+            return await BaseDal.GetFirstEntityFromCacheNoTrackingAsync<TDto>(where, timespan);
         }
 
         /// <summary>
@@ -1489,9 +1490,9 @@ namespace BLL
         /// <param name="isAsc">是否升序</param>
         /// <param name="timespan">缓存过期时间</param>
         /// <returns>映射实体</returns>
-        public Task<TDto> GetFirstEntityFromCacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
+        public async Task<TDto> GetFirstEntityFromCacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
         {
-            return BaseDal.GetFirstEntityFromCacheNoTrackingAsync<TS, TDto>(where, orderby, isAsc, timespan);
+            return await BaseDal.GetFirstEntityFromCacheNoTrackingAsync<TS, TDto>(where, orderby, isAsc, timespan);
         }
 
         /// <summary>
@@ -1499,9 +1500,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityFromL2CacheNoTrackingAsync(Expression<Func<T, bool>> @where)
+        public async Task<T> GetFirstEntityFromL2CacheNoTrackingAsync(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.GetFirstEntityFromL2CacheNoTrackingAsync(where);
+            return await BaseDal.GetFirstEntityFromL2CacheNoTrackingAsync(where);
         }
 
         /// <summary>
@@ -1512,9 +1513,9 @@ namespace BLL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>实体</returns>
-        public Task<T> GetFirstEntityFromL2CacheNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<T> GetFirstEntityFromL2CacheNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.GetFirstEntityFromL2CacheNoTrackingAsync(where, orderby, isAsc);
+            return await BaseDal.GetFirstEntityFromL2CacheNoTrackingAsync(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -1522,9 +1523,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>实体</returns>
-        public Task<TDto> GetFirstEntityFromL2CacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
+        public async Task<TDto> GetFirstEntityFromL2CacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.GetFirstEntityFromL2CacheNoTrackingAsync<TDto>(where);
+            return await BaseDal.GetFirstEntityFromL2CacheNoTrackingAsync<TDto>(where);
         }
 
         /// <summary>
@@ -1536,9 +1537,9 @@ namespace BLL
         /// <param name="orderby">排序字段</param>
         /// <param name="isAsc">是否升序</param>
         /// <returns>映射实体</returns>
-        public Task<TDto> GetFirstEntityFromL2CacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
+        public async Task<TDto> GetFirstEntityFromL2CacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return BaseDal.GetFirstEntityFromL2CacheNoTrackingAsync<TS, TDto>(where, orderby, isAsc);
+            return await BaseDal.GetFirstEntityFromL2CacheNoTrackingAsync<TS, TDto>(where, orderby, isAsc);
         }
 
         /// <summary>
@@ -1556,9 +1557,9 @@ namespace BLL
         /// </summary>
         /// <param name="id">实体id</param>
         /// <returns>实体</returns>
-        public Task<T> GetByIdAsync(object id)
+        public async Task<T> GetByIdAsync(object id)
         {
-            return BaseDal.GetByIdAsync(id);
+            return await BaseDal.GetByIdAsync(id);
         }
 
         /// <summary>
@@ -1790,10 +1791,10 @@ namespace BLL
         /// </summary>
         /// <param name="id">实体id</param>
         /// <returns>删除成功</returns>
-        public Task<int> DeleteByIdSavedAsync(object id)
+        public async Task<int> DeleteByIdSavedAsync(object id)
         {
             BaseDal.DeleteById(id);
-            return SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         /// <summary>
@@ -1843,9 +1844,9 @@ namespace BLL
         /// </summary>
         /// <param name="where">查询条件</param>
         /// <returns>删除成功</returns>
-        public Task<int> DeleteEntityAsync(Expression<Func<T, bool>> @where)
+        public async Task<int> DeleteEntityAsync(Expression<Func<T, bool>> @where)
         {
-            return BaseDal.DeleteEntityAsync(where);
+            return await BaseDal.DeleteEntityAsync(where);
         }
 
         /// <summary>
@@ -1864,10 +1865,10 @@ namespace BLL
         /// </summary>
         /// <param name="t">需要删除的实体</param>
         /// <returns>删除成功</returns>
-        public Task<int> DeleteEntitySavedAsync(T t)
+        public async Task<int> DeleteEntitySavedAsync(T t)
         {
             BaseDal.DeleteEntity(t);
-            return SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         /// <summary>
@@ -1896,10 +1897,10 @@ namespace BLL
         /// </summary>
         /// <param name="t">更新后的实体</param>
         /// <returns>更新成功</returns>
-        public Task<int> UpdateEntitySavedAsync(T t)
+        public async Task<int> UpdateEntitySavedAsync(T t)
         {
             BaseDal.UpdateEntity(t);
-            return SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         /// <summary>
@@ -1919,9 +1920,9 @@ namespace BLL
         /// <param name="where">查询条件</param>
         /// <param name="t">更新后的实体</param>
         /// <returns>更新成功</returns>
-        public Task<int> UpdateEntityAsync(Expression<Func<T, bool>> @where, T t)
+        public async Task<int> UpdateEntityAsync(Expression<Func<T, bool>> @where, T t)
         {
-            return BaseDal.UpdateEntityAsync(where, t);
+            return await BaseDal.UpdateEntityAsync(where, t);
         }
 
         /// <summary>
@@ -1951,10 +1952,10 @@ namespace BLL
         /// </summary>
         /// <param name="t">需要添加的实体</param>
         /// <returns>添加成功</returns>
-        public Task<int> AddEntitySavedAsync(T t)
+        public async Task<int> AddEntitySavedAsync(T t)
         {
             BaseDal.AddEntity(t);
-            return SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         /// <summary>
@@ -1983,10 +1984,10 @@ namespace BLL
         /// </summary>
         /// <param name="exp">更新条件</param>
         /// <param name="entities">实体集合</param>
-        public Task<int> AddOrUpdateSavedAsync(Expression<Func<T, object>> exp, params T[] entities)
+        public async Task<int> AddOrUpdateSavedAsync(Expression<Func<T, object>> exp, params T[] entities)
         {
             AddOrUpdate(exp, entities);
-            return SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         /// <summary>
@@ -2002,9 +2003,9 @@ namespace BLL
         /// 统一保存数据
         /// </summary>
         /// <returns>受影响的行数</returns>
-        public Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            return BaseDal.SaveChangesAsync();
+            return await BaseDal.SaveChangesAsync();
         }
 
         /// <summary>
@@ -2043,10 +2044,10 @@ namespace BLL
         /// </summary>
         /// <param name="list">实体集合</param>
         /// <returns>删除成功</returns>
-        public Task<int> DeleteEntitiesSavedAsync(IEnumerable<T> list)
+        public async Task<int> DeleteEntitiesSavedAsync(IEnumerable<T> list)
         {
             BaseDal.DeleteEntities(list);
-            return SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         /// <summary>
@@ -2075,10 +2076,10 @@ namespace BLL
         /// </summary>
         /// <param name="list">实体集合</param>
         /// <returns>更新成功</returns>
-        public Task<int> UpdateEntitiesSavedAsync(IEnumerable<T> list)
+        public async Task<int> UpdateEntitiesSavedAsync(IEnumerable<T> list)
         {
             BaseDal.UpdateEntities(list);
-            return SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         /// <summary>
@@ -2098,11 +2099,61 @@ namespace BLL
         /// </summary>
         /// <param name="list">实体集合</param>
         /// <returns>添加成功</returns>
-        public IEnumerable<T> AddEntitiesAsync(IList<T> list)
+        public async Task<IEnumerable<T>> AddEntitiesAsync(IList<T> list)
         {
             IEnumerable<T> entities = BaseDal.AddEntities(list);
-            SaveChangesAsync();
+            await SaveChangesAsync();
             return entities;
+        }
+
+        /// <summary>
+        /// 执行查询语句
+        /// </summary>
+        /// <typeparam name="TS"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameters">参数</param>
+        /// <returns>泛型集合</returns>
+        public DbRawSqlQuery<TS> SqlQuery<TS>(string sql, params object[] parameters)
+        {
+            return BaseDal.SqlQuery<TS>(sql, parameters);
+        }
+
+        /// <summary>
+        /// 执行查询语句
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parameters">参数</param>
+        public DbRawSqlQuery SqlQuery(Type t, string sql, params object[] parameters)
+        {
+            return BaseDal.SqlQuery(t, sql, parameters);
+        }
+
+        /// <summary>
+        /// 执行DML语句
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        public void ExecuteSql(string sql, params object[] parameters)
+        {
+            BaseDal.ExecuteSql(sql, parameters);
+        }
+
+        /// <summary>
+        /// 批量添加实体
+        /// </summary>
+        /// <param name="list">需要添加的实体</param>
+        public void BulkInsert(IEnumerable<T> list)
+        {
+            BaseDal.BulkInsert(list);
+        }
+
+        /// <summary>
+        /// 统一批量保存数据
+        /// </summary>
+        public void BulkSaveChanges()
+        {
+            BaseDal.BulkSaveChanges();
         }
     }
 }
