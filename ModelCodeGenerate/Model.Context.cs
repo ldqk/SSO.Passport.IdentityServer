@@ -34,5 +34,6 @@ namespace ModelCodeGenerate
         public virtual DbSet<Control> Control { get; set; }
         public virtual DbSet<ClientApp> ClientApp { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
+        public virtual DbSet<LoginRecord> LoginRecord { get; set; }
     }
 }

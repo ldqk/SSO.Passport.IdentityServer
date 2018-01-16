@@ -14,10 +14,20 @@ namespace Models.Entity
             UserInfo = new HashSet<UserInfo>();
         }
 
+        /// <summary>
+        /// ½ÇÉ«Ãû
+        /// </summary>
         [Required]
         public string RoleName { get; set; }
 
+        /// <summary>
+        /// ½ÇÉ«ÃèÊö
+        /// </summary>
         public string Description { get; set; }
+
+        public int ClientAppId { get; set; }
+
+        public virtual ClientApp ClientApp { get; set; }
 
         public virtual ICollection<UserGroupPermission> UserGroupPermission { get; set; }
 

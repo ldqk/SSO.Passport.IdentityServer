@@ -25,6 +25,7 @@ namespace ModelCodeGenerate
         public int Id { get; set; }
         public string RoleName { get; set; }
         public string Description { get; set; }
+        public int ClientAppId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserGroupPermission> UserGroupPermission { get; set; }
@@ -32,5 +33,6 @@ namespace ModelCodeGenerate
         public virtual ICollection<Permission> Permission { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserInfo> UserInfo { get; set; }
+        public virtual ClientApp ClientApp { get; set; }
     }
 }

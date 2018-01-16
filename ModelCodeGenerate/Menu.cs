@@ -26,11 +26,13 @@ namespace ModelCodeGenerate
         public string CssStyle { get; set; }
         public string IsAvailable { get; set; }
         public int ParentId { get; set; }
+        public int ClientAppId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Menu> Parent { get; set; }
         public virtual Menu Children { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Permission> Permission { get; set; }
+        public virtual ClientApp ClientApp { get; set; }
     }
 }

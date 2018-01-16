@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Models.Dto;
 using Models.Entity;
 
 namespace IBLL
@@ -19,14 +20,14 @@ namespace IBLL
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        UserInfo Login(string username, string password);
+        UserInfoOutputDto Login(string username, string password);
 
         /// <summary>
         /// 注册
         /// </summary>
         /// <param name="userInfo"></param>
         /// <returns></returns>
-        UserInfo Register(UserInfo userInfo);
+        UserInfoOutputDto Register(UserInfo userInfo);
 
         /// <summary>
         /// 检查用户名是否存在

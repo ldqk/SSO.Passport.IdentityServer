@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Masuit.Tools.Logging;
 using Z.BulkOperations;
 
 namespace SSO.Passport.IdentityServer
@@ -26,15 +27,21 @@ namespace SSO.Passport.IdentityServer
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
+
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
         {
+
         }
 
         protected void Application_Error(object sender, EventArgs e)
         {
-
+#if DEBUG
+            throw (Exception)sender;
+#else
+            Response.Redirect("/Error");
+#endif
         }
 
         protected void Session_End(object sender, EventArgs e)

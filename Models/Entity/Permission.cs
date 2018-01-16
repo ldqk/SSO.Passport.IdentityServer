@@ -15,12 +15,21 @@ namespace Models.Entity
             Role = new HashSet<Role>();
         }
 
-
+        /// <summary>
+        /// 权限名
+        /// </summary>
         [Display(Name = "权限")]
         [Required]
         public string PermissionName { get; set; }
 
+        /// <summary>
+        /// 权限描述
+        /// </summary>
         public string Description { get; set; }
+
+        public int ClientAppId { get; set; }
+
+        public virtual ClientApp ClientApp { get; set; }
 
         public virtual ICollection<UserPermission> UserPermission { get; set; }
 

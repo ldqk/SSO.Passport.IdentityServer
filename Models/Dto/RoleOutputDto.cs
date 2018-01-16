@@ -1,19 +1,21 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Models.Entity;
 
 namespace Models.Dto
 {
-    public class RoleOutputDto
+    public partial class RoleOutputDto : BaseEntity
     {
-        public RoleOutputDto()
-        {
-            Permission = new HashSet<PermissionOutputDto>();
-        }
-
-        public int Id { get; set; }
-
+        /// <summary>
+        /// 角色名
+        /// </summary>
         public string RoleName { get; set; }
 
+        /// <summary>
+        /// 角色描述
+        /// </summary>
         public string Description { get; set; }
+
+        public int ClientAppId { get; set; }
 
         public virtual ICollection<PermissionOutputDto> Permission { get; set; }
     }

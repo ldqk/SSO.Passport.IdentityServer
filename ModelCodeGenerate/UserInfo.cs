@@ -20,6 +20,7 @@ namespace ModelCodeGenerate
             this.UserPermission = new HashSet<UserPermission>();
             this.Role = new HashSet<Role>();
             this.UserGroup = new HashSet<UserGroup>();
+            this.LoginRecord = new HashSet<LoginRecord>();
         }
     
         public System.Guid Id { get; set; }
@@ -38,5 +39,7 @@ namespace ModelCodeGenerate
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserGroup> UserGroup { get; set; }
         public virtual ClientApp ClientApp { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LoginRecord> LoginRecord { get; set; }
     }
 }

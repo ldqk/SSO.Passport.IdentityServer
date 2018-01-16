@@ -1,11 +1,22 @@
+﻿using System.ComponentModel.DataAnnotations;
+using Models.Entity;
+
 namespace Models.Dto
 {
-    public class UserGroupInputDto
+    public partial class UserGroupInputDto : BaseEntity
     {
-        public int Id { get; set; }
-
+        /// <summary>
+        /// 用户名名
+        /// </summary>
+        [Required, Display(Name = "用户组")]
         public string GroupName { get; set; }
 
+        /// <summary>
+        /// 父级组
+        /// </summary>
+        [Display(Name = "父级id")]
         public int? ParentId { get; set; }
+
+        public int ClientAppId { get; set; }
     }
 }

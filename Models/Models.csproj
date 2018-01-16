@@ -69,11 +69,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\DataContext.cs" />
-    <Compile Include="Dto\FunctionInputDto.cs" />
-    <Compile Include="Dto\FunctionOutputDto.cs" />
+    <Compile Include="Dto\ClientAppInputDto.cs" />
+    <Compile Include="Dto\ClientAppOutputDto.cs" />
+    <Compile Include="Dto\ControlInputDto.cs" />
+    <Compile Include="Dto\ControlOutputDto.cs" />
+    <Compile Include="Dto\LoginRecordDto.cs" />
+    <Compile Include="Dto\MenuInputDto.cs" />
+    <Compile Include="Dto\MenuOutputDto.cs" />
+    <Compile Include="Dto\PermissionInputDto.cs" />
+    <Compile Include="Dto\PermissionOutputDto.cs" />
+    <Compile Include="Dto\RoleInputDto.cs" />
+    <Compile Include="Dto\RoleOutputDto.cs" />
+    <Compile Include="Dto\UserGroupInputDto.cs" />
+    <Compile Include="Dto\UserGroupOutputDto.cs" />
+    <Compile Include="Dto\UserGroupPermissionOutputDto.cs" />
+    <Compile Include="Dto\UserInfoInputDto.cs" />
+    <Compile Include="Dto\UserInfoOutputDto.cs" />
+    <Compile Include="Dto\UserPermissionOutputDto.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\ClientApp.cs" />
     <Compile Include="Entity\Control.cs" />
+    <Compile Include="Entity\LoginRecord.cs" />
     <Compile Include="Entity\Menu.cs" />
     <Compile Include="Entity\Permission.cs" />
     <Compile Include="Entity\Role.cs" />
@@ -82,21 +98,8 @@
     <Compile Include="Entity\UserInfo.cs" />
     <Compile Include="Entity\UserPermission.cs" />
     <Compile Include="Enum\HttpMethod.cs" />
-    <Compile Include="ViewModel\DataTableViewModel.cs" />
     <Compile Include="ViewModel\PageDataViewModel.cs" />
-    <Compile Include="Dto\PermissionInputDto.cs" />
-    <Compile Include="Dto\PermissionOutputDto.cs" />
-    <Compile Include="Dto\RoleInputDto.cs" />
-    <Compile Include="Dto\RoleOutputDto.cs" />
-    <Compile Include="Dto\UserGroupInputDto.cs" />
-    <Compile Include="Dto\UserGroupOutputDto.cs" />
-    <Compile Include="Dto\UserGroupPermissionDto.cs" />
-    <Compile Include="Dto\UserInfoInputDto.cs" />
-    <Compile Include="Dto\UserInfoOutputDto.cs" />
     <Compile Include="ViewModel\UserInfoViewModel.cs" />
-    <Compile Include="Dto\UserPermissionInputDto.cs" />
-    <Compile Include="Dto\UserPermissionOutputDto.cs" />
-    <Compile Include="Enum\FunctionType.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

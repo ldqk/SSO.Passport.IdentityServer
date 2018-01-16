@@ -8,6 +8,8 @@ namespace BLL
 	
 	public partial class ControlBll :BaseBll<Control>,IControlBll{}   
 	
+	public partial class LoginRecordBll :BaseBll<LoginRecord>,ILoginRecordBll{}   
+	
 	public partial class MenuBll :BaseBll<Menu>,IMenuBll{}   
 	
 	public partial class PermissionBll :BaseBll<Permission>,IPermissionBll{}   

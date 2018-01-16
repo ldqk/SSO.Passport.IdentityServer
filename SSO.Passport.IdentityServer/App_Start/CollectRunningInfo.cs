@@ -1,10 +1,11 @@
 ﻿using System;
+using Common;
 using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
 using Masuit.Tools.Hardware;
 using Masuit.Tools.Logging;
+using Masuit.Tools.Win32;
 using SSO.Passport.IdentityServer.Hubs;
-using static Common.CommonHelper;
 
 namespace SSO.Passport.IdentityServer
 {
@@ -20,7 +21,7 @@ namespace SSO.Passport.IdentityServer
             {
                 try
                 {
-                    double time = DateTime.Now.GetTotalMilliseconds();
+                    double time = DateTime.Now.GetTotalMilliseconds();// - 28800000;
                     float load = SystemInfo.CpuLoad;
                     double temperature = SystemInfo.GetCPUTemperature();
                     double mem = (1 - SystemInfo.MemoryAvailable.To<double>() / SystemInfo.PhysicalMemory.To<double>()) * 100;
@@ -34,26 +35,33 @@ namespace SSO.Passport.IdentityServer
                     var down = SystemInfo.GetNetData(NetData.Sent) / 1024;
                     a.receiveUpDown($"[{time},{down},{up}]");//网络上下载
 
-                    //缓存历史数据
-                    HistoryCpuLoad.Add(new object[] { time, load });
-                    HistoryCpuTemp.Add(new object[] { time, temperature });
-                    HistoryMemoryUsage.Add(new object[] { time, mem });
-                    HistoryIORead.Add(new object[] { time, read });
-                    HistoryIOWrite.Add(new object[] { time, write });
-                    HistoryNetReceive.Add(new object[] { time, up });
-                    HistoryNetSend.Add(new object[] { time, down });
-                    if (HistoryCpuLoad.Count > 80)
+                    if (mem > 90)
                     {
-                        HistoryCpuLoad.RemoveAt(0);
-                        HistoryMemoryUsage.RemoveAt(0);
-                        HistoryCpuTemp.RemoveAt(0);
+                        Windows.ClearMemorySilent();
                     }
-                    if (HistoryIORead.Count > 50)
+                    //缓存历史数据
+                    if (CommonHelper.HistoryCpuLoad.Count < 50 || (time / 10000).ToInt32() % 12 == 0)
                     {
-                        HistoryIORead.RemoveAt(0);
-                        HistoryIOWrite.RemoveAt(0);
-                        HistoryNetReceive.RemoveAt(0);
-                        HistoryNetSend.RemoveAt(0);
+                        CommonHelper.HistoryCpuLoad.Add(new object[] { time, load });
+                        CommonHelper.HistoryCpuTemp.Add(new object[] { time, temperature });
+                        CommonHelper.HistoryMemoryUsage.Add(new object[] { time, mem });
+                        CommonHelper.HistoryIORead.Add(new object[] { time, read });
+                        CommonHelper.HistoryIOWrite.Add(new object[] { time, write });
+                        CommonHelper.HistoryNetReceive.Add(new object[] { time, up });
+                        CommonHelper.HistoryNetSend.Add(new object[] { time, down });
+                        if (CommonHelper.HistoryCpuLoad.Count > 720)
+                        {
+                            CommonHelper.HistoryCpuLoad.RemoveAt(0);
+                            CommonHelper.HistoryMemoryUsage.RemoveAt(0);
+                            CommonHelper.HistoryCpuTemp.RemoveAt(0);
+                        }
+                        if (CommonHelper.HistoryIORead.Count > 720)
+                        {
+                            CommonHelper.HistoryIORead.RemoveAt(0);
+                            CommonHelper.HistoryIOWrite.RemoveAt(0);
+                            CommonHelper.HistoryNetReceive.RemoveAt(0);
+                            CommonHelper.HistoryNetSend.RemoveAt(0);
+                        }
                     }
                 }
                 catch (Exception e)

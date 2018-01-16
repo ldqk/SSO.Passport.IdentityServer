@@ -25,17 +25,17 @@ namespace Models.Migrations
             if (!context.UserInfo.Any())
             {
                 string appid = Guid.NewGuid().ToString().MDString();
-                List<ClientApp> apps = new List<ClientApp>() { new ClientApp() { AppName = "LocalSystem", AppId = appid, AppSecret = appid.SHA256() } };
+                List<ClientApp> apps = new List<ClientApp>() { new ClientApp() { AppName = "LocalSystem", AppId = appid, AppSecret = appid.MDString(DateTime.Now.GetTotalMilliseconds().ToString()) } };
                 var salt = $"{new Random().StrictNext()}{DateTime.Now.GetTotalMilliseconds()}".MDString2(Guid.NewGuid().ToString()).Base64Encrypt();
-                IList<Control> funs = new List<Control>() { new Control() { Controller = "Home", Action = "Index", HttpMethod = HttpMethod.Get, Name = "首页" }, new Control() { Controller = "User", Action = "Add", HttpMethod = HttpMethod.Post, Name = "添加用户" } };
+                IList<Control> funs = new List<Control>() { new Control() { Controller = "Home", Action = "Index", HttpMethod = HttpMethod.Get, Name = "首页", ClientApp = apps.FirstOrDefault() }, new Control() { Controller = "User", Action = "Add", HttpMethod = HttpMethod.Post, Name = "添加用户", ClientApp = apps.FirstOrDefault() } };
                 IList<Permission> ps = new List<Permission>()
                 {
-                    new Permission() {PermissionName = "首页",Controls = funs.Where(c => c.Controller.Equals("Home")).ToList()},
-                    new Permission() {PermissionName = "添加账户",Controls = funs.Where(c => c.Controller.Equals("User")).ToList()},
-                    new Permission(){PermissionName = "本地账户权限",Controls = funs}
+                    new Permission() {PermissionName = "首页",Controls = funs.Where(c => c.Controller.Equals("Home")).ToList(), ClientApp = apps.FirstOrDefault()},
+                    new Permission() {PermissionName = "添加账户",Controls = funs.Where(c => c.Controller.Equals("User")).ToList(), ClientApp = apps.FirstOrDefault()},
+                    new Permission(){PermissionName = "本地账户权限",Controls = funs, ClientApp = apps.FirstOrDefault()}
                 };
                 IList<UserInfo> userInfos = new List<UserInfo>() { new UserInfo() { Username = "admin", Password = "admin".MDString2(salt), SaltKey = salt, Email = "admin@masuit.com", PhoneNumber = "15205201520", ClientApp = apps.FirstOrDefault() } };
-                IList<Role> roles = new List<Role>() { new Role() { RoleName = "Everyone", Permission = ps, UserInfo = userInfos }, new Role() { RoleName = "Administrator", Permission = ps, UserInfo = userInfos }, new Role() { RoleName = "System", Permission = ps, UserInfo = userInfos } };
+                IList<Role> roles = new List<Role>() { new Role() { RoleName = "Everyone", Permission = ps, UserInfo = userInfos, ClientApp = apps.FirstOrDefault() }, new Role() { RoleName = "Administrator", Permission = ps, UserInfo = userInfos, ClientApp = apps.FirstOrDefault() }, new Role() { RoleName = "System", Permission = ps, UserInfo = userInfos, ClientApp = apps.FirstOrDefault() } };
                 IList<UserGroup> groups = new List<UserGroup>() { new UserGroup() { GroupName = "管理员", UserInfo = userInfos, ClientApp = apps.FirstOrDefault() }, new UserGroup() { GroupName = "超级管理员", UserInfo = userInfos, ClientApp = apps.FirstOrDefault() }, new UserGroup() { GroupName = "系统帐户", UserInfo = userInfos, ClientApp = apps.FirstOrDefault() } };
                 IList<UserPermission> ups = new List<UserPermission>() { new UserPermission() { Permission = ps.FirstOrDefault(), UserInfo = userInfos.FirstOrDefault(), HasPermission = true } };
                 IList<UserGroupPermission> ugps = new List<UserGroupPermission>() { new UserGroupPermission() { Role = roles.FirstOrDefault(), UserGroup = groups.FirstOrDefault(), HasPermission = true } };

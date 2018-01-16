@@ -31,8 +31,12 @@ namespace Models.Application
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ClientApp>().HasMany(e => e.UserGroup).WithRequired(e => e.ClientApp).HasForeignKey(g => g.ClientAppId).WillCascadeOnDelete(false);
             modelBuilder.Entity<ClientApp>().HasMany(e => e.UserInfo).WithRequired(e => e.ClientApp).WillCascadeOnDelete(true);
+            modelBuilder.Entity<ClientApp>().HasMany(e => e.UserGroup).WithRequired(e => e.ClientApp).HasForeignKey(g => g.ClientAppId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ClientApp>().HasMany(e => e.Roles).WithRequired(e => e.ClientApp).HasForeignKey(g => g.ClientAppId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ClientApp>().HasMany(e => e.Permissions).WithRequired(e => e.ClientApp).HasForeignKey(g => g.ClientAppId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ClientApp>().HasMany(e => e.Controls).WithRequired(e => e.ClientApp).HasForeignKey(g => g.ClientAppId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ClientApp>().HasMany(e => e.Menus).WithRequired(e => e.ClientApp).HasForeignKey(g => g.ClientAppId).WillCascadeOnDelete(false);
             modelBuilder.Entity<Control>().HasMany(e => e.Permission).WithMany(e => e.Controls).Map(m => m.ToTable("PermissionControls"));
             modelBuilder.Entity<Menu>().HasMany(e => e.Children).WithOptional(e => e.Parent).HasForeignKey(e => e.ParentId);
             modelBuilder.Entity<Menu>().HasMany(e => e.Permission).WithMany(e => e.Menu).Map(m => m.ToTable("PermissionMenu"));

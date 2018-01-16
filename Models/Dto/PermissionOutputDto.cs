@@ -1,20 +1,25 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Models.Entity;
 
 namespace Models.Dto
 {
-    public class PermissionOutputDto
+    public partial class PermissionOutputDto : BaseEntity
     {
-        public PermissionOutputDto()
-        {
-            Function = new HashSet<FunctionOutputDto>();
-        }
-
-        public int Id { get; set; }
-
+        /// <summary>
+        /// 权限名
+        /// </summary>
         public string PermissionName { get; set; }
 
+        /// <summary>
+        /// 权限描述
+        /// </summary>
         public string Description { get; set; }
 
-        public virtual ICollection<FunctionOutputDto> Function { get; set; }
+        public int ClientAppId { get; set; }
+
+        public virtual ICollection<ControlOutputDto> Controls { get; set; }
+
+        public virtual ICollection<MenuOutputDto> Menu { get; set; }
+
     }
 }

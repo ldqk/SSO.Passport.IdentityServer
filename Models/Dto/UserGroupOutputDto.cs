@@ -1,20 +1,23 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Models.Entity;
 
 namespace Models.Dto
 {
-    public class UserGroupOutputDto
+    public partial class UserGroupOutputDto : BaseEntity
     {
-        public UserGroupOutputDto()
-        {
-            UserGroupPermission = new HashSet<UserGroupPermissionDto>();
-        }
-
-        public int Id { get; set; }
-
+        /// <summary>
+        /// 用户组名
+        /// </summary>
         public string GroupName { get; set; }
 
+        /// <summary>
+        /// 父级组
+        /// </summary>
         public int? ParentId { get; set; }
 
-        public virtual ICollection<UserGroupPermissionDto> UserGroupPermission { get; set; }
+        public int ClientAppId { get; set; }
+
+
+        public virtual ICollection<UserGroupPermissionOutputDto> UserGroupPermission { get; set; }
     }
 }

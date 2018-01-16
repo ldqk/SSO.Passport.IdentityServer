@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using Masuit.Tools;
-using Masuit.Tools.DateTimeExt;
-using Masuit.Tools.Security;
+using Masuit.Tools.NoSQL;
 using Newtonsoft.Json;
 
 namespace SSO.Core.Client
 {
     public class LoginService
     {
+        public static RedisHelper RedisHelper { get; set; } = new RedisHelper();
         /// <summary>
         /// 根据ticket来解密获取当前用户信息
         /// </summary>
@@ -22,15 +18,20 @@ namespace SSO.Core.Client
         public static UserInfoLoginModel GetUserInfo(string ticket)
         {
             //todo 解密ticket 获取用户Id
-            string data = AuthernUtil.CallServerApi("/Api/GetUser", new Dictionary<string, string> { { "id", ticket } });
-            try
+            if (RedisHelper.KeyExists(ticket))
             {
-                return JsonConvert.DeserializeObject<UserInfoLoginModel>(data);
+                string userid = RedisHelper.GetString(ticket);
+                string data = AuthernUtil.CallServerApi("/Api/GetUser", new Dictionary<string, string> { { "id", userid } });
+                try
+                {
+                    return JsonConvert.DeserializeObject<UserInfoLoginModel>(data);
+                }
+                catch
+                {
+                    return null;
+                }
             }
-            catch (Exception e)
-            {
-                return null;
-            }
+            return null;
         }
 
         public static string Logout(string returnUrl)

@@ -17,6 +17,7 @@ namespace Models.Entity
         [Display(Name = "功能名称")]
         [Required]
         public string Name { get; set; }
+
         [Display(Name = "控制器名称")]
         [Required]
         public string Controller { get; set; }
@@ -29,8 +30,15 @@ namespace Models.Entity
         [Required]
         public HttpMethod HttpMethod { get; set; }
 
+        /// <summary>
+        /// 是否可用
+        /// </summary>
         [Required]
         public bool IsAvailable { get; set; }
+
+        public int ClientAppId { get; set; }
+
+        public virtual ClientApp ClientApp { get; set; }
 
         public virtual ICollection<Permission> Permission { get; set; }
     }

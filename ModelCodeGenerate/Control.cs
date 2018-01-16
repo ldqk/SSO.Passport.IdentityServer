@@ -26,8 +26,10 @@ namespace ModelCodeGenerate
         public string HttpMethod { get; set; }
         public string IsAvailable { get; set; }
         public int FunctionType { get; set; }
+        public int ClientAppId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Permission> Permission { get; set; }
+        public virtual ClientApp ClientApp { get; set; }
     }
 }

@@ -1,11 +1,14 @@
+﻿using System;
+using Models.Entity;
+
 namespace Models.Dto
 {
-    public class UserPermissionOutputDto
+    public partial class UserPermissionOutputDto : BaseEntity
     {
-        public int Id { get; set; }
-
         public bool HasPermission { get; set; }
 
-        public virtual PermissionOutputDto PermissionOutputDto { get; set; }
+        public Guid? UserInfoId { get; set; }
+
+        public int? PermissionId { get; set; }
     }
 }

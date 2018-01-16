@@ -1599,6 +1599,8 @@ namespace IBLL
 	
 	public partial interface IControlBll : IBaseBll<Control>{}   
 	
+	public partial interface ILoginRecordBll : IBaseBll<LoginRecord>{}   
+	
 	public partial interface IMenuBll : IBaseBll<Menu>{}   
 	
 	public partial interface IPermissionBll : IBaseBll<Permission>{}   

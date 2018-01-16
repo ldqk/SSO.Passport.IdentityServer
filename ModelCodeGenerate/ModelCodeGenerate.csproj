@@ -55,6 +55,9 @@
     <Compile Include="Control.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="LoginRecord.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Menu.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

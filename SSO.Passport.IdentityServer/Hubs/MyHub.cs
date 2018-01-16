@@ -30,7 +30,6 @@ namespace SSO.Passport.IdentityServer.Hubs
         /// <summary>
         /// 推送数据
         /// </summary>
-        /// <param name="id"></param>
         /// <param name="cb"></param>
         public static void PushData(Action<dynamic> cb)
         {

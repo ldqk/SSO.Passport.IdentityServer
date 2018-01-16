@@ -481,6 +481,27 @@
             <End Role="Permission" EntitySet="Permission" />
             <End Role="Controls" EntitySet="Control" />
           </AssociationSet>
+          <AssociationSet Name="ClientAppMenu" Association="PermissionModel.ClientAppMenu">
+            <End Role="ClientApp" EntitySet="ClientApp" />
+            <End Role="Menu" EntitySet="Menu" />
+          </AssociationSet>
+          <AssociationSet Name="ClientAppControl" Association="PermissionModel.ClientAppControl">
+            <End Role="ClientApp" EntitySet="ClientApp" />
+            <End Role="Control" EntitySet="Control" />
+          </AssociationSet>
+          <AssociationSet Name="ClientAppRole" Association="PermissionModel.ClientAppRole">
+            <End Role="ClientApp" EntitySet="ClientApp" />
+            <End Role="Role" EntitySet="Role" />
+          </AssociationSet>
+          <AssociationSet Name="ClientAppPermission" Association="PermissionModel.ClientAppPermission">
+            <End Role="ClientApp" EntitySet="ClientApp" />
+            <End Role="Permission" EntitySet="Permission" />
+          </AssociationSet>
+          <EntitySet Name="LoginRecord" EntityType="PermissionModel.LoginRecord" />
+          <AssociationSet Name="UserInfoLoginRecord" Association="PermissionModel.UserInfoLoginRecord">
+            <End Role="UserInfo" EntitySet="UserInfo" />
+            <End Role="LoginRecord" EntitySet="LoginRecord" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Permission">
           <Key>
@@ -493,6 +514,8 @@
           <NavigationProperty Name="Role" Relationship="PermissionModel.RolePermission" FromRole="Permission" ToRole="Role" />
           <NavigationProperty Name="Menu" Relationship="PermissionModel.PermissionMenu" FromRole="Permission" ToRole="Menu" />
           <NavigationProperty Name="Controls" Relationship="PermissionModel.PermissionControls" FromRole="Permission" ToRole="Controls" />
+          <NavigationProperty Name="ClientApp" Relationship="PermissionModel.ClientAppPermission" FromRole="Permission" ToRole="ClientApp" />
+          <Property Name="ClientAppId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -504,6 +527,8 @@
           <NavigationProperty Name="UserGroupPermission" Relationship="PermissionModel.FK_dbo_UserGroupPermission_dbo_Role_RoleId" FromRole="Role" ToRole="UserGroupPermission" />
           <NavigationProperty Name="Permission" Relationship="PermissionModel.RolePermission" FromRole="Role" ToRole="Permission" />
           <NavigationProperty Name="UserInfo" Relationship="PermissionModel.UserInfoRole" FromRole="Role" ToRole="UserInfo" />
+          <NavigationProperty Name="ClientApp" Relationship="PermissionModel.ClientAppRole" FromRole="Role" ToRole="ClientApp" />
+          <Property Name="ClientAppId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="UserGroup">
           <Key>
@@ -544,6 +569,7 @@
           <NavigationProperty Name="UserGroup" Relationship="PermissionModel.UserInfoUserGroup" FromRole="UserInfo" ToRole="UserGroup" />
           <NavigationProperty Name="ClientApp" Relationship="PermissionModel.ClientAppUserInfo" FromRole="UserInfo" ToRole="ClientApp" />
           <Property Name="ClientAppId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="LoginRecord" Relationship="PermissionModel.UserInfoLoginRecord" FromRole="UserInfo" ToRole="LoginRecord" />
         </EntityType>
         <EntityType Name="UserPermission">
           <Key>
@@ -627,6 +653,8 @@
           <Property Name="IsAvailable" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FunctionType" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Permission" Relationship="PermissionModel.PermissionControls" FromRole="Controls" ToRole="Permission" />
+          <NavigationProperty Name="ClientApp" Relationship="PermissionModel.ClientAppControl" FromRole="Control" ToRole="ClientApp" />
+          <Property Name="ClientAppId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="ClientApp">
           <Key>
@@ -638,6 +666,10 @@
           <Property Name="AppSecret" Type="String" Nullable="false" />
           <NavigationProperty Name="UserInfo" Relationship="PermissionModel.ClientAppUserInfo" FromRole="ClientApp" ToRole="UserInfo" />
           <NavigationProperty Name="UserGroup" Relationship="PermissionModel.ClientAppUserGroup" FromRole="ClientApp" ToRole="UserGroup" />
+          <NavigationProperty Name="Menu" Relationship="PermissionModel.ClientAppMenu" FromRole="ClientApp" ToRole="Menu" />
+          <NavigationProperty Name="Control" Relationship="PermissionModel.ClientAppControl" FromRole="ClientApp" ToRole="Control" />
+          <NavigationProperty Name="Role" Relationship="PermissionModel.ClientAppRole" FromRole="ClientApp" ToRole="Role" />
+          <NavigationProperty Name="Permission" Relationship="PermissionModel.ClientAppPermission" FromRole="ClientApp" ToRole="Permission" />
         </EntityType>
         <Association Name="ClientAppUserInfo">
           <End Type="PermissionModel.ClientApp" Role="ClientApp" Multiplicity="1" />
@@ -675,6 +707,8 @@
           <NavigationProperty Name="Children" Relationship="PermissionModel.MenuMenu" FromRole="Menu1" ToRole="Menu" />
           <Property Name="ParentId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Permission" Relationship="PermissionModel.PermissionMenu" FromRole="Menu" ToRole="Permission" />
+          <NavigationProperty Name="ClientApp" Relationship="PermissionModel.ClientAppMenu" FromRole="Menu" ToRole="ClientApp" />
+          <Property Name="ClientAppId" Type="Int32" Nullable="false" />
           </EntityType>
         <Association Name="MenuMenu">
           <End Type="PermissionModel.Menu" Multiplicity="1" Role="Menu" />
@@ -695,6 +729,74 @@
         <Association Name="PermissionControls">
           <End Type="PermissionModel.Permission" Role="Permission" Multiplicity="*" />
           <End Type="PermissionModel.Control" Role="Controls" Multiplicity="*" />
+        </Association>
+        <Association Name="ClientAppMenu">
+          <End Type="PermissionModel.ClientApp" Role="ClientApp" Multiplicity="1" />
+          <End Type="PermissionModel.Menu" Role="Menu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientApp">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Menu">
+              <PropertyRef Name="ClientAppId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ClientAppControl">
+          <End Type="PermissionModel.ClientApp" Role="ClientApp" Multiplicity="1" />
+          <End Type="PermissionModel.Control" Role="Control" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientApp">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Control">
+              <PropertyRef Name="ClientAppId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ClientAppRole">
+          <End Type="PermissionModel.ClientApp" Role="ClientApp" Multiplicity="1" />
+          <End Type="PermissionModel.Role" Role="Role" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientApp">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Role">
+              <PropertyRef Name="ClientAppId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ClientAppPermission">
+          <End Type="PermissionModel.ClientApp" Role="ClientApp" Multiplicity="1" />
+          <End Type="PermissionModel.Permission" Role="Permission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientApp">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Permission">
+              <PropertyRef Name="ClientAppId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="LoginRecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="UserInfo" Relationship="PermissionModel.UserInfoLoginRecord" FromRole="LoginRecord" ToRole="UserInfo" />
+          <Property Name="UserInfoId" Type="Guid" Nullable="false" />
+        </EntityType>
+        <Association Name="UserInfoLoginRecord">
+          <End Type="PermissionModel.UserInfo" Role="UserInfo" Multiplicity="1" />
+          <End Type="PermissionModel.LoginRecord" Role="LoginRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LoginRecord">
+              <PropertyRef Name="UserInfoId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>

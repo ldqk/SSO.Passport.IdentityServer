@@ -9,7 +9,6 @@ using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
 using Masuit.Tools.Net;
 using Masuit.Tools.Security;
-using Newtonsoft.Json;
 
 namespace SSO.Core.Client
 {

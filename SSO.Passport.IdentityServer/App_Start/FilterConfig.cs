@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using SSO.Passport.IdentityServer.Models;
 
 namespace SSO.Passport.IdentityServer
 {
@@ -11,8 +12,9 @@ namespace SSO.Passport.IdentityServer
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
-            //filters.Add(new MyActionFilterAttribute());
-            //filters.Add(new MyExceptionFilterAttribute());
+            filters.Add(new MyActionFilterAttribute());
+            filters.Add(new MyExceptionFilterAttribute());
+            //filters.Add(new WhitespaceFilterAttribute());
         }
     }
 }

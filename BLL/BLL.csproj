@@ -75,6 +75,10 @@
     <Compile Include="UserInfoBll.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{138F01FA-B23F-4ACA-93DB-D899BB244A1A}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Factory\DALFactory.csproj">
       <Project>{d927561b-5ed4-4599-8209-16f9d1f5461d}</Project>
       <Name>DALFactory</Name>

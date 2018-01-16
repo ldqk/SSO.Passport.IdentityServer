@@ -28,10 +28,20 @@ namespace Models.Entity
         [Display(Name = "class样式")]
         public string CssStyle { get; set; }
 
+        /// <summary>
+        /// 是否可用
+        /// </summary>
         [Required]
         public string IsAvailable { get; set; }
 
+        /// <summary>
+        /// 父级菜单
+        /// </summary>
         public int? ParentId { get; set; }
+
+        public int ClientAppId { get; set; }
+
+        public virtual ClientApp ClientApp { get; set; }
 
         public virtual ICollection<Menu> Children { get; set; }
 

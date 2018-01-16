@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
 using Masuit.Tools.Security;
@@ -29,21 +30,17 @@ namespace BLL
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public UserInfo Login(string username, string password)
+        public UserInfoOutputDto Login(string username, string password)
         {
             UserInfo userInfo = GetByUsername(username);
             if (userInfo != null)
             {
-                var lastLoginTime = userInfo.LastLoginTime;
-                userInfo.LastLoginTime = DateTime.Now;
-                SaveChanges();
                 string key = userInfo.SaltKey;
                 string pwd = userInfo.Password;
                 password = password.MDString2(key);
                 if (pwd.Equals(password))
                 {
-                    userInfo.LastLoginTime = lastLoginTime;
-                    return userInfo;
+                    return userInfo.Mapper<UserInfoOutputDto>();
                 }
             }
             return null;
@@ -55,7 +52,7 @@ namespace BLL
         /// <param name="userInfo"></param>
         /// <param name="gid">用户组id</param>
         /// <returns></returns>
-        public UserInfo Register(UserInfo userInfo)
+        public UserInfoOutputDto Register(UserInfo userInfo)
         {
             UserInfo exist = GetFirstEntity(u => u.Username.Equals(userInfo.Username) || u.Email.Equals(userInfo.Email) || u.PhoneNumber.Equals(userInfo.PhoneNumber));
             if (exist is null)
@@ -64,10 +61,9 @@ namespace BLL
                 var salt = $"{new Random().StrictNext()}{DateTime.Now.GetTotalMilliseconds()}".MDString2(Guid.NewGuid().ToString()).Base64Encrypt();
                 userInfo.Password = userInfo.Password.MDString2(salt);
                 userInfo.SaltKey = salt;
-                userInfo.LastLoginTime = DateTime.Now;
                 UserInfo added = AddEntity(userInfo);
                 int line = SaveChanges();
-                return line > 0 ? added : null;
+                return line > 0 ? added.Mapper<UserInfoOutputDto>() : null;
             }
             return null;
         }

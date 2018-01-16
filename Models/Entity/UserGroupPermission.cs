@@ -5,6 +5,9 @@ namespace Models.Entity
     [Table("UserGroupPermission")]
     public partial class UserGroupPermission : BaseEntity
     {
+        /// <summary>
+        /// 是否有权限
+        /// </summary>
         public bool HasPermission { get; set; }
 
         [ForeignKey("UserGroup")]

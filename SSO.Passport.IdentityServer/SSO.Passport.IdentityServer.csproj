@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -10,7 +10,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2D184674-8CCB-4D7E-9F8B-91FEC4DB0093}</ProjectGuid>
+    <ProjectGuid>{DEF59170-0713-4281-8B66-4B046B878BD4}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -26,7 +26,6 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>2.2</TypeScriptToolsVersion>
-    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
     <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -86,29 +85,35 @@
     <Reference Include="Autofac.Integration.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.Mvc5.4.0.2\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac.Integration.SignalR, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.SignalR2.4.0.0\lib\net45\Autofac.Integration.SignalR.dll</HintPath>
+    </Reference>
     <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="DelegateDecompiler, Version=1.0.0.0, Culture=neutral, PublicKeyToken=93b26a10a04705bd, processorArchitecture=MSIL">
-      <HintPath>..\packages\DelegateDecompiler.0.23.0\lib\net40-client\DelegateDecompiler.dll</HintPath>
-    </Reference>
-    <Reference Include="DelegateDecompiler.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=93b26a10a04705bd, processorArchitecture=MSIL">
-      <HintPath>..\packages\DelegateDecompiler.EntityFramework.0.23.0\lib\net45\DelegateDecompiler.EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EFSecondLevelCache, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EFSecondLevelCache.1.2.0.0\lib\net45\EFSecondLevelCache.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.Extended, Version=6.0.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.Extended.6.1.0.168\lib\net45\EntityFramework.Extended.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="FluentScheduler, Version=5.3.0.0, Culture=neutral, PublicKeyToken=b76503528a14ebd1, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentScheduler.5.3.0\lib\net40\FluentScheduler.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Autofac, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Autofac.2.3.1\lib\net45\Hangfire.Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Console, Version=1.3.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Console.1.3.10\lib\net45\Hangfire.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Core, Version=1.6.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.6.17\lib\net45\Hangfire.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Dashboard.Authorization, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Dashboard.Authorization.2.1.0\lib\net45\Hangfire.Dashboard.Authorization.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.SqlServer, Version=1.6.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.SqlServer.1.6.17\lib\net45\Hangfire.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="HtmlSanitizer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=61c49a1a9e79cc28, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlSanitizer.4.0.183\lib\net45\HtmlSanitizer.dll</HintPath>
@@ -132,6 +137,9 @@
     <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin.Cors, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Cors.3.1.0\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
@@ -141,9 +149,6 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Reflection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Reflection.1.1.0.0\lib\Mono.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -155,10 +160,19 @@
       <HintPath>..\packages\StackExchange.Redis.1.2.6\lib\net45\StackExchange.Redis.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.3\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -187,6 +201,8 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -196,323 +212,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\global\css\AdminLTE.css" />
-    <Content Include="Content\global\css\AdminLTE.min.css">
-      <DependentUpon>AdminLTE.css</DependentUpon>
-    </Content>
-    <Content Include="Content\global\css\alt\AdminLTE-bootstrap-social.css" />
-    <Content Include="Content\global\css\alt\AdminLTE-bootstrap-social.min.css" />
-    <Content Include="Content\global\css\alt\AdminLTE-fullcalendar.css" />
-    <Content Include="Content\global\css\alt\AdminLTE-fullcalendar.min.css" />
-    <Content Include="Content\global\css\alt\AdminLTE-select2.css" />
-    <Content Include="Content\global\css\alt\AdminLTE-select2.min.css" />
-    <Content Include="Content\global\css\alt\AdminLTE-without-plugins.css" />
-    <Content Include="Content\global\css\alt\AdminLTE-without-plugins.min.css" />
-    <Content Include="Content\global\css\skins\skin-black-light.css" />
-    <Content Include="Content\global\css\skins\skin-black-light.min.css" />
-    <Content Include="Content\global\css\skins\skin-black.css" />
-    <Content Include="Content\global\css\skins\skin-black.min.css" />
-    <Content Include="Content\global\css\skins\skin-blue-light.css" />
-    <Content Include="Content\global\css\skins\skin-blue-light.min.css" />
-    <Content Include="Content\global\css\skins\skin-blue.css" />
-    <Content Include="Content\global\css\skins\skin-blue.min.css" />
-    <Content Include="Content\global\css\skins\skin-green-light.css" />
-    <Content Include="Content\global\css\skins\skin-green-light.min.css" />
-    <Content Include="Content\global\css\skins\skin-green.css" />
-    <Content Include="Content\global\css\skins\skin-green.min.css" />
-    <Content Include="Content\global\css\skins\skin-purple-light.css" />
-    <Content Include="Content\global\css\skins\skin-purple-light.min.css" />
-    <Content Include="Content\global\css\skins\skin-purple.css" />
-    <Content Include="Content\global\css\skins\skin-purple.min.css" />
-    <Content Include="Content\global\css\skins\skin-red-light.css" />
-    <Content Include="Content\global\css\skins\skin-red-light.min.css" />
-    <Content Include="Content\global\css\skins\skin-red.css" />
-    <Content Include="Content\global\css\skins\skin-red.min.css" />
-    <Content Include="Content\global\css\skins\skin-yellow-light.css" />
-    <Content Include="Content\global\css\skins\skin-yellow-light.min.css" />
-    <Content Include="Content\global\css\skins\skin-yellow.css" />
-    <Content Include="Content\global\css\skins\skin-yellow.min.css" />
-    <Content Include="Content\global\css\skins\_all-skins.css" />
-    <Content Include="Content\global\css\skins\_all-skins.min.css">
-      <DependentUpon>_all-skins.css</DependentUpon>
-    </Content>
-    <Content Include="Content\global\img\avatar.png" />
-    <Content Include="Content\global\img\avatar04.png" />
-    <Content Include="Content\global\img\avatar2.png" />
-    <Content Include="Content\global\img\avatar3.png" />
-    <Content Include="Content\global\img\avatar5.png" />
-    <Content Include="Content\global\img\boxed-bg.jpg" />
-    <Content Include="Content\global\img\boxed-bg.png" />
-    <Content Include="Content\global\img\credit\american-express.png" />
-    <Content Include="Content\global\img\credit\cirrus.png" />
-    <Content Include="Content\global\img\credit\mastercard.png" />
-    <Content Include="Content\global\img\credit\mestro.png" />
-    <Content Include="Content\global\img\credit\paypal.png" />
-    <Content Include="Content\global\img\credit\paypal2.png" />
-    <Content Include="Content\global\img\credit\visa.png" />
-    <Content Include="Content\global\img\default-50x50.gif" />
-    <Content Include="Content\global\img\icons.png" />
-    <Content Include="Content\global\img\photo1.png" />
-    <Content Include="Content\global\img\photo2.png" />
-    <Content Include="Content\global\img\photo3.jpg" />
-    <Content Include="Content\global\img\photo4.jpg" />
-    <Content Include="Content\global\img\user1-128x128.jpg" />
-    <Content Include="Content\global\img\user2-160x160.jpg" />
-    <Content Include="Content\global\img\user3-128x128.jpg" />
-    <Content Include="Content\global\img\user4-128x128.jpg" />
-    <Content Include="Content\global\img\user5-128x128.jpg" />
-    <Content Include="Content\global\img\user6-128x128.jpg" />
-    <Content Include="Content\global\img\user7-128x128.jpg" />
-    <Content Include="Content\global\img\user8-128x128.jpg" />
-    <Content Include="Content\global\js\app.js" />
-    <Content Include="Content\global\js\app.min.js">
-      <DependentUpon>app.js</DependentUpon>
-    </Content>
-    <Content Include="Content\global\js\demo.js" />
-    <Content Include="Content\global\js\pages\dashboard.js" />
-    <Content Include="Content\global\js\pages\dashboard2.js" />
-    <Content Include="Content\global\plugins\datatables\dataTables.bootstrap.css" />
-    <Content Include="Content\global\plugins\datatables\dataTables.bootstrap.js" />
-    <Content Include="Content\global\plugins\datatables\dataTables.bootstrap.min.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\css\dataTables.autoFill.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\css\dataTables.autoFill.min.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\examples\columns.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\examples\complete-callback.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\examples\fill-both.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\examples\fill-horizontal.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\examples\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\examples\scrolling.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\examples\simple.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\examples\step-callback.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\images\filler.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\js\dataTables.autoFill.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\js\dataTables.autoFill.min.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\AutoFill\Readme.txt" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\css\dataTables.colReorder.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\css\dataTables.colReorder.min.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\alt_insert.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\colvis.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\col_filter.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\fixedcolumns.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\fixedheader.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\jqueryui.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\new_init.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\predefined.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\realtime.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\reset.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\scrolling.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\server_side.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\simple.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\examples\state_save.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\images\insert.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\js\dataTables.colReorder.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\js\dataTables.colReorder.min.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\License.txt" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\css\dataTables.colVis.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\css\dataTables.colvis.jqueryui.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\css\dataTables.colVis.min.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\button_order.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\exclude_columns.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\group_columns.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\jqueryui.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\mouseover.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\new_init.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\restore.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\simple.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\text.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\title_callback.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\two_tables.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\examples\two_tables_identical.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\js\dataTables.colVis.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\js\dataTables.colVis.min.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\License.txt" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\css\dataTables.fixedColumns.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\css\dataTables.fixedColumns.min.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\bootstrap.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\colvis.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\col_filter.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\css_size.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\index_column.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\left_right_columns.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\right_column.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\rowspan.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\server-side-processing.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\simple.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\size_fixed.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\size_fluid.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\examples\two_columns.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\js\dataTables.fixedColumns.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\js\dataTables.fixedColumns.min.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\License.txt" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\css\dataTables.fixedHeader.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\css\dataTables.fixedHeader.min.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\examples\header_footer.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\examples\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\examples\simple.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\examples\top_left_right.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\examples\two_tables.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\examples\zIndexes.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\js\dataTables.fixedHeader.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\js\dataTables.fixedHeader.min.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedHeader\Readme.txt" />
-    <Content Include="Content\global\plugins\datatables\extensions\KeyTable\css\dataTables.keyTable.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\KeyTable\css\dataTables.keyTable.min.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\KeyTable\examples\events.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\KeyTable\examples\html.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\KeyTable\examples\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\KeyTable\examples\scrolling.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\KeyTable\examples\simple.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\KeyTable\js\dataTables.keyTable.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\KeyTable\js\dataTables.keyTable.min.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\KeyTable\Readme.txt" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\css\dataTables.responsive.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\child-rows\column-control.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\child-rows\custom-renderer.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\child-rows\disable-child-rows.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\child-rows\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\child-rows\right-column.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\child-rows\whole-row-control.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\display-control\auto.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\display-control\classes.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\display-control\complexHeader.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\display-control\fixedHeader.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\display-control\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\display-control\init-classes.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\initialisation\ajax.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\initialisation\className.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\initialisation\default.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\initialisation\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\initialisation\new.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\initialisation\option.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\styling\bootstrap.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\styling\compact.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\styling\foundation.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\styling\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\examples\styling\scrolling.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\js\dataTables.responsive.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\js\dataTables.responsive.min.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\License.txt" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\css\dataTables.scroller.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\css\dataTables.scroller.min.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\examples\api_scrolling.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\examples\data\2500.txt" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\examples\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\examples\large_js_source.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\examples\server-side_processing.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\examples\simple.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\examples\state_saving.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\images\loading-background.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\js\dataTables.scroller.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\js\dataTables.scroller.min.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\Readme.txt" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\css\dataTables.tableTools.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\css\dataTables.tableTools.min.css" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\ajax.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\alter_buttons.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\bootstrap.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\button_text.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\collection.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\defaults.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\index.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\jqueryui.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\multiple_tables.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\multi_instance.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\new_init.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\pdf_message.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\plug-in.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\select_column.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\select_multi.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\select_os.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\select_single.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\simple.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\examples\swf_path.html" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\collection.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\collection_hover.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\copy.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\copy_hover.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\csv.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\csv_hover.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\pdf.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\pdf_hover.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\print.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\print_hover.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\xls.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\xls_hover.png" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\js\dataTables.tableTools.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\js\dataTables.tableTools.min.js" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\swf\copy_csv_xls.swf" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\swf\copy_csv_xls_pdf.swf" />
-    <Content Include="Content\global\plugins\datatables\images\sort_asc.png" />
-    <Content Include="Content\global\plugins\datatables\images\sort_asc_disabled.png" />
-    <Content Include="Content\global\plugins\datatables\images\sort_both.png" />
-    <Content Include="Content\global\plugins\datatables\images\sort_desc.png" />
-    <Content Include="Content\global\plugins\datatables\images\sort_desc_disabled.png" />
-    <Content Include="Content\global\plugins\datatables\jquery.dataTables.css" />
-    <Content Include="Content\global\plugins\datatables\jquery.dataTables.js" />
-    <Content Include="Content\global\plugins\datatables\jquery.dataTables.min.css" />
-    <Content Include="Content\global\plugins\datatables\jquery.dataTables.min.js" />
-    <Content Include="Content\global\plugins\datatables\jquery.dataTables_themeroller.css" />
-    <Content Include="Content\global\plugins\datepicker\bootstrap-datepicker.js" />
-    <Content Include="Content\global\plugins\datepicker\datepicker3.css" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.ar.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.az.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.bg.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.ca.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.cs.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.cy.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.da.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.de.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.el.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.es.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.et.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.fa.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.fi.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.fr.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.gl.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.he.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.hr.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.hu.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.id.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.is.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.it.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.ja.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.ka.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.kk.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.kr.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.lt.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.lv.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.mk.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.ms.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.nb.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.nl-BE.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.nl.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.no.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.pl.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.pt-BR.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.pt.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.ro.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.rs-latin.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.rs.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.ru.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.sk.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.sl.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.sq.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.sv.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.sw.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.th.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.tr.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.ua.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.vi.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.zh-CN.js" />
-    <Content Include="Content\global\plugins\datepicker\locales\bootstrap-datepicker.zh-TW.js" />
-    <Content Include="Content\iconfont.css" />
-    <Content Include="Content\iconfont.min.css">
-      <DependentUpon>iconfont.css</DependentUpon>
-    </Content>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\images\1.jpg" />
     <Content Include="Content\images\2.jpg" />
     <Content Include="Content\images\3.jpg" />
@@ -527,25 +230,21 @@
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\jquery-labelauty.css" />
     <Content Include="Content\login\style.css" />
-    <Content Include="Content\login\style.min.css">
-      <DependentUpon>style.css</DependentUpon>
-    </Content>
-    <None Include="bundleconfig.json" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColReorder\Readme.md" />
-    <Content Include="Content\global\plugins\datatables\extensions\ColVis\Readme.md" />
-    <Content Include="Content\global\plugins\datatables\extensions\FixedColumns\Readme.md" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\css\dataTables.responsive.scss" />
-    <Content Include="Content\global\plugins\datatables\extensions\Responsive\Readme.md" />
-    <Content Include="Content\global\plugins\datatables\extensions\Scroller\examples\data\ssp.php" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\psd\collection.psd" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\psd\copy document.psd" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\psd\file_types.psd" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\images\psd\printer.psd" />
-    <Content Include="Content\global\plugins\datatables\extensions\TableTools\Readme.md" />
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Content\login\style.min.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\jquery-2.2.4.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
+    <Content Include="Scripts\jquery-2.2.4.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
     <Content Include="Scripts\jquery-3.2.1.min.js" />
     <Content Include="Scripts\jquery-3.2.1.slim.js" />
@@ -563,30 +262,10 @@
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Passport\Login.cshtml" />
-    <Content Include="Views\Passport\PassportCenter.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Error\ServiceUnavailable.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\User\Add.cshtml" />
-    <Content Include="Views\User\Edit.cshtml" />
-    <Content Include="Views\User\ChangePassword.cshtml" />
-    <Content Include="Views\UserGroup\Index.cshtml" />
-    <Content Include="Views\UserGroup\Get.cshtml" />
-    <Content Include="Views\User\Group.cshtml" />
-    <Content Include="Views\User\Role.cshtml" />
-    <Content Include="Views\User\Permission.cshtml" />
-    <Content Include="Views\UserGroup\User.cshtml" />
-    <Content Include="Views\UserGroup\Role.cshtml" />
-    <Content Include="Views\Role\Index.cshtml" />
-    <Content Include="Views\Role\Get.cshtml" />
-    <Content Include="Views\User\Get.cshtml" />
-    <Content Include="Views\Permission\Get.cshtml" />
-    <Content Include="Views\Role\UserGroup.cshtml" />
-    <Content Include="Views\Role\Permission.cshtml" />
-    <Content Include="Views\Permission\Index.cshtml" />
-    <Content Include="Views\Permission\User.cshtml" />
-    <Content Include="Views\Permission\Role.cshtml" />
-    <Content Include="Views\Permission\Function.cshtml" />
+    <Content Include="Views\Passport\Login.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -595,7 +274,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -605,23 +283,22 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\CollectRunningInfo.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\HangfireConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StartupConfig.cs" />
-    <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PassportController.cs" />
-    <Compile Include="Controllers\PermissionController.cs" />
-    <Compile Include="Controllers\RoleController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\UserGroupController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\MyHub.cs" />
+    <Compile Include="Models\AuthorityAttribute.cs" />
+    <Compile Include="Models\Hangfire\HangfireBackJob.cs" />
+    <Compile Include="Models\Hangfire\IHangfireBackJob.cs" />
+    <Compile Include="Models\MyActionFilterAttribute.cs" />
     <Compile Include="Models\MyExceptionFilterAttribute.cs" />
-    <Compile Include="Models\SessionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -637,7 +314,7 @@
       <Name>BLL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{138F01FA-B23F-4ACA-93DB-D899BB244A1A}</Project>
+      <Project>{138f01fa-b23f-4aca-93db-d899bb244a1a}</Project>
       <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\DAL\DAL.csproj">
@@ -649,7 +326,7 @@
       <Name>DALFactory</Name>
     </ProjectReference>
     <ProjectReference Include="..\IBLL\IBLL.csproj">
-      <Project>{939493B4-A47C-43E2-99E3-92459CD0EB1E}</Project>
+      <Project>{939493b4-a47c-43e2-99e3-92459cd0eb1e}</Project>
       <Name>IBLL</Name>
     </ProjectReference>
     <ProjectReference Include="..\IDAL\IDAL.csproj">
@@ -657,12 +334,8 @@
       <Name>IDAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
-      <Project>{F64BA0EF-9DCD-4A5C-8758-BE688A3DD8CC}</Project>
+      <Project>{f64ba0ef-9dcd-4a5c-8758-be688a3dd8cc}</Project>
       <Name>Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SSO.Core\SSO.Core.csproj">
-      <Project>{C4F95646-E348-4413-9F5D-219F8D8CDCD0}</Project>
-      <Name>SSO.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
@@ -673,13 +346,20 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>56075</DevelopmentServerPort>
+          <DevelopmentServerPort>46719</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:56075/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
@@ -691,15 +371,4 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
-  </Target>
 </Project>

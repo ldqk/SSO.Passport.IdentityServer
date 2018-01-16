@@ -1482,6 +1482,8 @@ namespace IDAL
 	
 	public partial interface IControlDal :IBaseDal<Control>{}
 	
+	public partial interface ILoginRecordDal :IBaseDal<LoginRecord>{}
+	
 	public partial interface IMenuDal :IBaseDal<Menu>{}
 	
 	public partial interface IPermissionDal :IBaseDal<Permission>{}

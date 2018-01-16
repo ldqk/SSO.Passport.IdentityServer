@@ -2,8 +2,16 @@
 
 namespace Common
 {
-    public class CommonHelper
+    public static class CommonHelper
     {
+        /// <summary>
+        /// 类型映射
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static T Mapper<T>(this object source) where T : class => AutoMapper.Mapper.Map<T>(source);
+
         #region 性能历史数据
 
         public static List<object[]> HistoryCpuLoad { get; set; } = new List<object[]>();

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using Masuit.Tools;
+using Masuit.Tools.NoSQL;
+using Masuit.Tools.Security;
 using SSO.Core.Client;
 
 namespace SSO.Core.Server
 {
     public class PassportService
     {
+        public static RedisHelper RedisHelper { get; set; } = new RedisHelper();
         /// <summary>
         /// 验证令牌
         /// </summary>
@@ -18,7 +21,9 @@ namespace SSO.Core.Server
         public string CreateTicket(string userId)
         {
             //加密userinfo
-            return userId;
+            string ticket = Guid.NewGuid().ToString().MDString();
+            RedisHelper.SetString(ticket, userId, TimeSpan.FromMinutes(20));
+            return ticket;
         }
 
         public string GetReturnUrl(string userId, string token, string returnUrl)
