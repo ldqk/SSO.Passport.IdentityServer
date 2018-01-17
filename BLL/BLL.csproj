@@ -68,6 +68,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Blls.tt</DependentUpon>
     </Compile>
+    <Compile Include="MenuBll.cs" />
     <Compile Include="PermissionBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleBll.cs" />

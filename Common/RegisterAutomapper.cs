@@ -37,7 +37,7 @@ namespace Common
 
                 m.CreateMap<UserPermission, UserPermissionOutputDto>();
 
-                m.CreateMap<UserGroupPermission, UserGroupPermissionOutputDto>();
+                m.CreateMap<UserGroupRole, UserGroupRoleOutputDto>();
             });
         }
     }

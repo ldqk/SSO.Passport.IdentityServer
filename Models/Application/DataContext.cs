@@ -23,7 +23,7 @@ namespace Models.Application
         public virtual DbSet<Permission> Permission { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }
-        public virtual DbSet<UserGroupPermission> UserGroupPermission { get; set; }
+        public virtual DbSet<UserGroupRole> UserGroupPermission { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<UserPermission> UserPermission { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
@@ -54,7 +54,7 @@ namespace Models.Application
             //modelBuilder.Entity<UserGroup>().HasRequired(e => e.ClientApp).WithMany(a => a.UserGroup).WillCascadeOnDelete(true);
         }
 
-        //ÖØÐ´ SaveChanges
+        //ï¿½ï¿½Ð´ SaveChanges
         public int SaveChanges(bool invalidateCacheDependencies = true)
         {
             return SaveAllChanges(invalidateCacheDependencies);
@@ -71,7 +71,7 @@ namespace Models.Application
             return result;
         }
 
-        //ÐÞ¸Ä¡¢É¾³ý¡¢Ìí¼ÓÊý¾ÝÊ±»º´æÊ§Ð§
+        //ï¿½Þ¸Ä¡ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ê§Ð§
         private string[] GetChangedEntityNames()
         {
             return ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted).Select(x => GetObjectType(x.Entity.GetType()).FullName).Distinct().ToArray();

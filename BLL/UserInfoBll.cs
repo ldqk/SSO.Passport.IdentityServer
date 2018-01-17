@@ -8,7 +8,6 @@ using Masuit.Tools.Security;
 using Masuit.Tools.Win32;
 using Models.Dto;
 using Models.Entity;
-using Models.Enum;
 
 namespace BLL
 {
@@ -50,7 +49,6 @@ namespace BLL
         /// 注册
         /// </summary>
         /// <param name="userInfo"></param>
-        /// <param name="gid">用户组id</param>
         /// <returns></returns>
         public UserInfoOutputDto Register(UserInfo userInfo)
         {
@@ -110,7 +108,7 @@ namespace BLL
                 //2.0 用户-用户组-角色-权限，权限的优先级其次
                 user.UserGroup?.ForEach(g => g.UserGroupPermission.ForEach(ugp =>
                 {
-                    if (ugp.HasPermission)
+                    if (ugp.HasRole)
                     {
                         ugp.Role.Permission.ForEach(p => list.AddRange(p.Controls.Where(c => c.IsAvailable)));
                     }
@@ -135,7 +133,7 @@ namespace BLL
             }
             return list.Where(c => c.IsAvailable).Distinct(new FunctionComparision()).ToList();
         }
-        
+
         /// <summary>
         /// 修改密码
         /// </summary>

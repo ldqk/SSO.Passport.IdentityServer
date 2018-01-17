@@ -725,7 +725,7 @@
           <EntitySet Name="Permission" EntityType="PermissionModel.Permission" />
           <EntitySet Name="Role" EntityType="PermissionModel.Role" />
           <EntitySet Name="UserGroup" EntityType="PermissionModel.UserGroup" />
-          <EntitySet Name="UserGroupPermission" EntityType="PermissionModel.UserGroupPermission" />
+          <EntitySet Name="UserGroupRole" EntityType="PermissionModel.UserGroupRole" />
           <EntitySet Name="UserInfo" EntityType="PermissionModel.UserInfo" />
           <EntitySet Name="UserPermission" EntityType="PermissionModel.UserPermission" />
           <AssociationSet Name="FK_dbo_Control_dbo_ClientApp_ClientAppId" Association="PermissionModel.FK_dbo_Control_dbo_ClientApp_ClientAppId">
@@ -758,7 +758,7 @@
           </AssociationSet>
           <AssociationSet Name="FK_dbo_UserGroupPermission_dbo_Role_RoleId" Association="PermissionModel.FK_dbo_UserGroupPermission_dbo_Role_RoleId">
             <End Role="Role" EntitySet="Role" />
-            <End Role="UserGroupPermission" EntitySet="UserGroupPermission" />
+            <End Role="UserGroupPermission" EntitySet="UserGroupRole" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_UserGroup_dbo_UserGroup_ParentId" Association="PermissionModel.FK_dbo_UserGroup_dbo_UserGroup_ParentId">
             <End Role="UserGroup" EntitySet="UserGroup" />
@@ -766,7 +766,7 @@
           </AssociationSet>
           <AssociationSet Name="FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId" Association="PermissionModel.FK_dbo_UserGroupPermission_dbo_UserGroup_UserGroupId">
             <End Role="UserGroup" EntitySet="UserGroup" />
-            <End Role="UserGroupPermission" EntitySet="UserGroupPermission" />
+            <End Role="UserGroupPermission" EntitySet="UserGroupRole" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_UserPermission_dbo_UserInfo_UserInfoId" Association="PermissionModel.FK_dbo_UserPermission_dbo_UserInfo_UserInfoId">
             <End Role="UserInfo" EntitySet="UserInfo" />
@@ -914,12 +914,12 @@
           <NavigationProperty Name="ClientApp" Relationship="PermissionModel.UserGroupClientApp" FromRole="UserGroup" ToRole="ClientApp" />
           <NavigationProperty Name="UserInfo" Relationship="PermissionModel.UserInfoUserGroup" FromRole="UserGroup" ToRole="UserInfo" />
         </EntityType>
-        <EntityType Name="UserGroupPermission">
+        <EntityType Name="UserGroupRole">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="HasPermission" Type="Boolean" Nullable="false" />
+          <Property Name="HasRole" Type="Boolean" Nullable="false" />
           <Property Name="UserGroupId" Type="Int32" Nullable="false" />
           <Property Name="RoleId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Role" Relationship="PermissionModel.FK_dbo_UserGroupPermission_dbo_Role_RoleId" FromRole="UserGroupPermission" ToRole="Role" />
@@ -1046,7 +1046,7 @@
           <End Type="PermissionModel.Role" Role="Role" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="PermissionModel.UserGroupPermission" Role="UserGroupPermission" Multiplicity="*" />
+          <End Type="PermissionModel.UserGroupRole" Role="UserGroupPermission" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Role">
               <PropertyRef Name="Id" />
@@ -1072,7 +1072,7 @@
           <End Type="PermissionModel.UserGroup" Role="UserGroup" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="PermissionModel.UserGroupPermission" Role="UserGroupPermission" Multiplicity="*" />
+          <End Type="PermissionModel.UserGroupRole" Role="UserGroupPermission" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="UserGroup">
               <PropertyRef Name="Id" />
@@ -1219,12 +1219,12 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="UserGroupPermission">
-            <EntityTypeMapping TypeName="PermissionModel.UserGroupPermission">
+          <EntitySetMapping Name="UserGroupRole">
+            <EntityTypeMapping TypeName="PermissionModel.UserGroupRole">
               <MappingFragment StoreEntitySet="UserGroupPermission">
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="UserGroupId" ColumnName="UserGroupId" />
-                <ScalarProperty Name="HasPermission" ColumnName="HasPermission" />
+                <ScalarProperty Name="HasRole" ColumnName="HasPermission" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

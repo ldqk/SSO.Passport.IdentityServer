@@ -12,7 +12,7 @@
         <EntityTypeShape EntityType="PermissionModel.Permission" Width="1.5" PointX="9.5" PointY="7.75" />
         <EntityTypeShape EntityType="PermissionModel.Role" Width="1.5" PointX="9" PointY="12.625" />
         <EntityTypeShape EntityType="PermissionModel.UserGroup" Width="1.5" PointX="3" PointY="13.125" />
-        <EntityTypeShape EntityType="PermissionModel.UserGroupPermission" Width="1.5" PointX="5.875" PointY="13" />
+        <EntityTypeShape EntityType="PermissionModel.UserGroupRole" Width="1.5" PointX="5.875" PointY="13" />
         <EntityTypeShape EntityType="PermissionModel.UserInfo" Width="1.5" PointX="3" PointY="8.125" />
         <EntityTypeShape EntityType="PermissionModel.UserPermission" Width="1.5" PointX="5.875" PointY="8.25" />
         <AssociationConnector Association="PermissionModel.FK_dbo_Control_dbo_ClientApp_ClientAppId" />

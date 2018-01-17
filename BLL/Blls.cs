@@ -18,7 +18,7 @@ namespace BLL
 	
 	public partial class UserGroupBll :BaseBll<UserGroup>,IUserGroupBll{}   
 	
-	public partial class UserGroupPermissionBll :BaseBll<UserGroupPermission>,IUserGroupPermissionBll{}   
+	public partial class UserGroupRoleBll :BaseBll<UserGroupRole>,IUserGroupRoleBll{}   
 	
 	public partial class UserInfoBll :BaseBll<UserInfo>,IUserInfoBll{}   
 	

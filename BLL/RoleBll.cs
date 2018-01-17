@@ -1,4 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
+using Masuit.Tools.Net;
+using Models.Application;
+using Models.Dto;
 using Models.Entity;
 
 namespace BLL
@@ -42,11 +47,35 @@ namespace BLL
         /// <returns></returns>
         public IEnumerable<UserGroup> GetUserGroupList(string name)
         {
-            ICollection<UserGroupPermission> ps = GetRoleByName(name).UserGroupPermission;
-            foreach (UserGroupPermission g in ps)
+            ICollection<UserGroupRole> ps = GetRoleByName(name).UserGroupPermission;
+            foreach (UserGroupRole g in ps)
             {
                 yield return g.UserGroup;
             }
+        }
+        /// <summary>
+        /// 通过存储过程获得自己以及自己所有的子元素集合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public DbRawSqlQuery<RoleOutputDto> GetSelfAndChildrenByParentId(int id)
+        {
+            return WebExtension.GetDbContext<DataContext>().Database.SqlQuery<RoleOutputDto>("exec sp_getChildrenRoleByParentId " + id);
+        }
+
+        /// <summary>
+        /// 根据无级子级找顶级父级评论id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int GetParentIdById(int id)
+        {
+            DbRawSqlQuery<int> raw = WebExtension.GetDbContext<DataContext>().Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + id);
+            if (raw.Any())
+            {
+                return raw.FirstOrDefault();
+            }
+            return 0;
         }
     }
 }

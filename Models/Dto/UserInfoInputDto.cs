@@ -26,13 +26,12 @@ namespace Models.Dto
         /// <summary>
         /// 手机号码
         /// </summary>
-        [StringLength(11)]
-        [Display(Name = "手机号码"), Required(ErrorMessage = "手机号码不能为空！")]
+        [Display(Name = "手机号码")]
         public string PhoneNumber { get; set; }
         /// <summary>
         /// Email
         /// </summary>
-        [Display(Name = "电子邮箱"), Required(ErrorMessage = "邮箱地址不能为空！")]
+        [Display(Name = "电子邮箱")]
         public string Email { get; set; }
 
         /// <summary>

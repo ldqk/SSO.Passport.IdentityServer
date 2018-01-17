@@ -9,7 +9,7 @@ namespace Models.Entity
     {
         public Role()
         {
-            UserGroupPermission = new HashSet<UserGroupPermission>();
+            UserGroupPermission = new HashSet<UserGroupRole>();
             Permission = new HashSet<Permission>();
             UserInfo = new HashSet<UserInfo>();
         }
@@ -35,7 +35,7 @@ namespace Models.Entity
 
         public virtual ICollection<ClientApp> ClientApp { get; set; }
 
-        public virtual ICollection<UserGroupPermission> UserGroupPermission { get; set; }
+        public virtual ICollection<UserGroupRole> UserGroupPermission { get; set; }
 
         public virtual ICollection<Permission> Permission { get; set; }
 

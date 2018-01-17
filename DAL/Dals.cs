@@ -11,7 +11,7 @@ namespace DAL
 	public partial class PermissionDal :BaseDal<Permission>,IPermissionDal{}
 	public partial class RoleDal :BaseDal<Role>,IRoleDal{}
 	public partial class UserGroupDal :BaseDal<UserGroup>,IUserGroupDal{}
-	public partial class UserGroupPermissionDal :BaseDal<UserGroupPermission>,IUserGroupPermissionDal{}
+	public partial class UserGroupRoleDal :BaseDal<UserGroupRole>,IUserGroupRoleDal{}
 	public partial class UserInfoDal :BaseDal<UserInfo>,IUserInfoDal{}
 	public partial class UserPermissionDal :BaseDal<UserPermission>,IUserPermissionDal{}
 }

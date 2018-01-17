@@ -12,10 +12,10 @@ namespace ModelCodeGenerate
     using System;
     using System.Collections.Generic;
     
-    public partial class UserGroupPermission
+    public partial class UserGroupRole
     {
         public int Id { get; set; }
-        public bool HasPermission { get; set; }
+        public bool HasRole { get; set; }
         public int UserGroupId { get; set; }
         public int RoleId { get; set; }
     

@@ -82,7 +82,7 @@
     <Compile Include="Dto\RoleOutputDto.cs" />
     <Compile Include="Dto\UserGroupInputDto.cs" />
     <Compile Include="Dto\UserGroupOutputDto.cs" />
-    <Compile Include="Dto\UserGroupPermissionOutputDto.cs" />
+    <Compile Include="Dto\UserGroupRoleOutputDto.cs" />
     <Compile Include="Dto\UserInfoInputDto.cs" />
     <Compile Include="Dto\UserInfoOutputDto.cs" />
     <Compile Include="Dto\UserPermissionOutputDto.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="Entity\Permission.cs" />
     <Compile Include="Entity\Role.cs" />
     <Compile Include="Entity\UserGroup.cs" />
-    <Compile Include="Entity\UserGroupPermission.cs" />
+    <Compile Include="Entity\UserGroupRole.cs" />
     <Compile Include="Entity\UserInfo.cs" />
     <Compile Include="Entity\UserPermission.cs" />
     <Compile Include="Enum\HttpMethod.cs" />

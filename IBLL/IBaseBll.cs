@@ -1609,7 +1609,7 @@ namespace IBLL
 	
 	public partial interface IUserGroupBll : IBaseBll<UserGroup>{}   
 	
-	public partial interface IUserGroupPermissionBll : IBaseBll<UserGroupPermission>{}   
+	public partial interface IUserGroupRoleBll : IBaseBll<UserGroupRole>{}   
 	
 	public partial interface IUserInfoBll : IBaseBll<UserInfo>{}   
 	

@@ -18,7 +18,7 @@ namespace ModelCodeGenerate
         public Role()
         {
             this.Role1 = new HashSet<Role>();
-            this.UserGroupPermission = new HashSet<UserGroupPermission>();
+            this.UserGroupPermission = new HashSet<UserGroupRole>();
             this.ClientApp = new HashSet<ClientApp>();
             this.Permission = new HashSet<Permission>();
             this.UserInfo = new HashSet<UserInfo>();
@@ -33,7 +33,7 @@ namespace ModelCodeGenerate
         public virtual ICollection<Role> Role1 { get; set; }
         public virtual Role Role2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserGroupPermission> UserGroupPermission { get; set; }
+        public virtual ICollection<UserGroupRole> UserGroupPermission { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ClientApp> ClientApp { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

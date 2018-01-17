@@ -32,7 +32,7 @@ namespace ModelCodeGenerate
         public virtual DbSet<Permission> Permission { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }
-        public virtual DbSet<UserGroupPermission> UserGroupPermission { get; set; }
+        public virtual DbSet<UserGroupRole> UserGroupRole { get; set; }
         public virtual DbSet<UserInfo> UserInfo { get; set; }
         public virtual DbSet<UserPermission> UserPermission { get; set; }
     }

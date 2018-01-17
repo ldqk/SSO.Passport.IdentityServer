@@ -86,7 +86,7 @@
     <Compile Include="UserGroup.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="UserGroupPermission.cs">
+    <Compile Include="UserGroupRole.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="UserInfo.cs">

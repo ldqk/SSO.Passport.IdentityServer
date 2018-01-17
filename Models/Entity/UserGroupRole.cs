@@ -2,13 +2,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Entity
 {
-    [Table("UserGroupPermission")]
-    public partial class UserGroupPermission : BaseEntity
+    [Table("UserGroupRole")]
+    public partial class UserGroupRole : BaseEntity
     {
         /// <summary>
         /// 是否有权限
         /// </summary>
-        public bool HasPermission { get; set; }
+        public bool HasRole { get; set; }
 
         [ForeignKey("UserGroup")]
         public int UserGroupId { get; set; }

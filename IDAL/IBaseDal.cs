@@ -1492,7 +1492,7 @@ namespace IDAL
 	
 	public partial interface IUserGroupDal :IBaseDal<UserGroup>{}
 	
-	public partial interface IUserGroupPermissionDal :IBaseDal<UserGroupPermission>{}
+	public partial interface IUserGroupRoleDal :IBaseDal<UserGroupRole>{}
 	
 	public partial interface IUserInfoDal :IBaseDal<UserInfo>{}
 	

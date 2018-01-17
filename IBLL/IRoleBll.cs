@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using Models.Dto;
 using Models.Entity;
 
 namespace IBLL
@@ -32,5 +34,18 @@ namespace IBLL
         /// <param name="name"></param>
         /// <returns></returns>
         IEnumerable<UserGroup> GetUserGroupList(string name);
+        /// <summary>
+        /// 通过存储过程获得自己以及自己所有的子元素集合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        DbRawSqlQuery<RoleOutputDto> GetSelfAndChildrenByParentId(int id);
+
+        /// <summary>
+        /// 根据无级子级找顶级父级评论id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        int GetParentIdById(int id);
     }
 }
