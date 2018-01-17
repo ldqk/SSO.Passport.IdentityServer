@@ -27,9 +27,15 @@ namespace Models.Entity
         /// </summary>
         public string Description { get; set; }
 
-        public int ClientAppId { get; set; }
 
-        public virtual ClientApp ClientApp { get; set; }
+        [Display(Name = "¸¸¼¶id")]
+        public int? ParentId { get; set; }
+
+        public virtual ICollection<Permission> Children { get; set; }
+
+        public virtual Permission Parent { get; set; }
+
+        public virtual ICollection<ClientApp> ClientApp { get; set; }
 
         public virtual ICollection<UserPermission> UserPermission { get; set; }
 

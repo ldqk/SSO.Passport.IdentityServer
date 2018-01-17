@@ -1,49 +1,36 @@
 ﻿using System;
-using System.Configuration;
+using System.Text;
 using System.Web.Mvc;
 using Autofac;
-using Common;
 using IBLL;
-using Masuit.Tools.Net;
 using Masuit.Tools.NoSQL;
-using Masuit.Tools.Security;
 using Models.Dto;
-using SSO.Passport.IdentityServer.Models;
+using Models.ViewModel;
+using Newtonsoft.Json;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
-    [Authority]
     public class BaseController : Controller
     {
-        public IUserInfoBll UserInfoBll { get; set; } = AutofacConfig.Container.Resolve<IUserInfoBll>();
-        public static RedisHelper RedisHelper { get; set; } = new RedisHelper();
+        protected IUserInfoBll UserInfoBll { get; set; } = AutofacConfig.Container.Resolve<IUserInfoBll>();
+        protected IClientAppBll ClientAppBll { get; set; } = AutofacConfig.Container.Resolve<IClientAppBll>();
+        protected IRoleBll RoleBll { get; set; } = AutofacConfig.Container.Resolve<IRoleBll>();
+        protected IPermissionBll PermissionBll { get; set; } = AutofacConfig.Container.Resolve<IPermissionBll>();
+        protected IMenuBll MenuBll { get; set; } = AutofacConfig.Container.Resolve<IMenuBll>();
+        protected IUserGroupBll UserGroupBll { get; set; } = AutofacConfig.Container.Resolve<IUserGroupBll>();
+        protected IControlBll ControlBll { get; set; } = AutofacConfig.Container.Resolve<IControlBll>();
+        protected static RedisHelper RedisHelper { get; set; } = new RedisHelper();
         public UserInfoOutputDto CurrentUser { get; set; }
 
-        /// <summary>在调用操作方法前调用。</summary>
-        /// <param name="filterContext">有关当前请求和操作的信息。</param>
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        protected ActionResult ResultData(object data, bool isTrue = true, string message = "", bool isLogin = true)
         {
-            UserInfoOutputDto user = filterContext.HttpContext.Session.GetByCookieRedis<UserInfoOutputDto>();
+            return Content(JsonConvert.SerializeObject(new { IsLogin = isLogin, Success = isTrue, Message = message, Data = data }, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Ignore }), "application/json", Encoding.UTF8);
+        }
 
-            if (user == null && Request.Cookies.Count > 2)
-            {
-                //走网页登陆通道
-                string name = CookieHelper.GetCookieValue("username");
-                string pwd = CookieHelper.GetCookieValue("password")?.DesDecrypt(ConfigurationManager.AppSettings["BaiduAK"]);
-                var userInfo = UserInfoBll.Login(name, pwd);
-                if (userInfo != null)
-                {
-                    CookieHelper.SetCookie("username", name, DateTime.Now.AddDays(7));
-                    CookieHelper.SetCookie("password", CookieHelper.GetCookieValue("password"), DateTime.Now.AddDays(7));
-                    Session.SetByRedis(userInfo);
-                    CurrentUser = userInfo;
-                }
-            }
-#if DEBUG
-            user = AutofacConfig.Container.Resolve<IUserInfoBll>().GetByUsername("admin").Mapper<UserInfoOutputDto>();
-            Session.SetByRedis(user);
-            CurrentUser = user;
-#endif
+        protected ActionResult PageResult(object data, int size, int total)
+        {
+            int pageCount = (int)Math.Ceiling(total * 1.0 / size);
+            return Content(JsonConvert.SerializeObject(new PageDataModel(data, pageCount, total), new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Ignore }), "application/json", Encoding.UTF8);
         }
     }
 }

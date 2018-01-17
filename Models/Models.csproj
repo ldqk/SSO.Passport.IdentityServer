@@ -98,6 +98,7 @@
     <Compile Include="Entity\UserInfo.cs" />
     <Compile Include="Entity\UserPermission.cs" />
     <Compile Include="Enum\HttpMethod.cs" />
+    <Compile Include="ViewModel\PageDataModel.cs" />
     <Compile Include="ViewModel\PageDataViewModel.cs" />
     <Compile Include="ViewModel\UserInfoViewModel.cs" />
     <Compile Include="Migrations\Configuration.cs" />

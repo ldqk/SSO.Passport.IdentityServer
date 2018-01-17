@@ -63,10 +63,7 @@ namespace Models.Entity
         [DefaultValue(false)]
         public bool IsMaster { get; set; }
 
-        public int ClientAppId { get; set; }
-
-        [ForeignKey("ClientAppId")]
-        public virtual ClientApp ClientApp { get; set; }
+        public virtual ICollection<ClientApp> ClientApp { get; set; }
 
         public virtual ICollection<UserPermission> UserPermission { get; set; }
 

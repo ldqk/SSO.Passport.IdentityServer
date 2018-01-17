@@ -17,7 +17,9 @@ namespace ModelCodeGenerate
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Role()
         {
+            this.Role1 = new HashSet<Role>();
             this.UserGroupPermission = new HashSet<UserGroupPermission>();
+            this.ClientApp = new HashSet<ClientApp>();
             this.Permission = new HashSet<Permission>();
             this.UserInfo = new HashSet<UserInfo>();
         }
@@ -25,14 +27,18 @@ namespace ModelCodeGenerate
         public int Id { get; set; }
         public string RoleName { get; set; }
         public string Description { get; set; }
-        public int ClientAppId { get; set; }
+        public Nullable<int> ParentId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Role> Role1 { get; set; }
+        public virtual Role Role2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserGroupPermission> UserGroupPermission { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ClientApp> ClientApp { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Permission> Permission { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserInfo> UserInfo { get; set; }
-        public virtual ClientApp ClientApp { get; set; }
     }
 }

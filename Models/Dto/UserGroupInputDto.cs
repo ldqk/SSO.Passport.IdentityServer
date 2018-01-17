@@ -16,7 +16,5 @@ namespace Models.Dto
         /// </summary>
         [Display(Name = "父级id")]
         public int? ParentId { get; set; }
-
-        public int ClientAppId { get; set; }
     }
 }

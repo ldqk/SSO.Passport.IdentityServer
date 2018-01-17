@@ -11,5 +11,12 @@ namespace SSO.Passport.IdentityServer.Controllers
         {
             return View();
         }
+
+        [Route("filemanager")]
+        public ActionResult FileManager()
+        {
+
+            return View();
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace Models.Dto
         /// </summary>
         public string Description { get; set; }
 
-        public int ClientAppId { get; set; }
+        public int? ParentId { get; set; }
 
         public virtual ICollection<ControlOutputDto> Controls { get; set; }
 

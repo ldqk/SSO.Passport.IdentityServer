@@ -1,0 +1,47 @@
+﻿<div class="sidebar-inner c-overflow">    
+    <div class="profile-menu">
+        <a href="" toggle-submenu>
+            <div class="profile-pic">
+                <img ng-src="{{user.Avatar}}">
+            </div>
+
+            <div class="profile-info">
+                {{user.NickName}}
+                <i class="zmdi zmdi-caret-down"></i>
+            </div>
+        </a>
+
+        <ul class="main-menu">
+            <li>
+                <a ng-click="changeUsername()"><i class="zmdi zmdi-account"></i>修改用户名</a>
+            </li>
+            <li>
+                <a ng-click="changeNickname()"><i class="zmdi zmdi-account"></i>修改昵称</a>
+            </li>
+            <li>
+                <a ng-click="changePassword()"><i class="zmdi zmdi-input-antenna"></i>修改密码</a>
+            </li>
+            <li>
+                <a ng-click="changeAvatar()"><i class="zmdi zmdi-settings"></i>修改头像</a>
+            </li>
+            <li>
+                <a ng-click="logout()"><i class="zmdi zmdi-time-restore"></i>注销登录</a>
+            </li>
+            <li>
+                <a ng-href="#/loginrecord"><i class="zmdi zmdi-cast-connected zmdi-hc-fw"></i>登陆记录</a>
+            </li>
+        </ul>
+    </div>
+
+    <ul class="main-menu">
+        <li data-ui-sref-active="active">
+            <a data-ui-sref="dashboard" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-home"></i>控制面板</a>
+        </li>
+        <li data-ui-sref-active="active">
+            <a data-ui-sref-active="active" data-ui-sref="filemanager" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-archive"></i>文件管理器</a>
+        </li>
+        <li data-ui-sref-active="active">
+            <a data-ui-sref-active="active" data-ui-sref="taskcenter" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-view-list"></i>后台任务监控</a>
+        </li>
+    </ul>
+</div>

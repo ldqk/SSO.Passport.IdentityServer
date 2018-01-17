@@ -38,6 +38,9 @@ namespace SSO.Passport.IdentityServer
         public RedisHelper RedisHelper { get; set; } = new RedisHelper();
         public bool Authorize(DashboardContext context)
         {
+#if DEBUG
+            return true;
+#endif
             UserInfoOutputDto user = HttpContext.Current.Session.GetByCookieRedis<UserInfoOutputDto>() ?? new UserInfoOutputDto();
             return user.IsMaster;
         }

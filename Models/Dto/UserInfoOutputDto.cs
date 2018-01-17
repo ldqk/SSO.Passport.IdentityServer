@@ -41,7 +41,9 @@ namespace Models.Dto
         /// 是否是内置管理员
         /// </summary>
         public bool IsMaster { get; set; }
-        public int ClientAppId { get; set; }
+
+        public virtual ICollection<ClientAppOutputDto> ClientApp { get; set; }
+
 
         public virtual ICollection<UserPermissionOutputDto> UserPermission { get; set; }
 

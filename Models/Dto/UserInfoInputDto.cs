@@ -46,6 +46,5 @@ namespace Models.Dto
         /// </summary>
         [DefaultValue(false)]
         public bool IsMaster { get; set; }
-        public int ClientAppId { get; set; }
     }
 }

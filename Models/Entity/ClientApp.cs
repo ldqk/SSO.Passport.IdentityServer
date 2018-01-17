@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,6 +16,7 @@ namespace Models.Entity
             Menus = new HashSet<Menu>();
             Permissions = new HashSet<Permission>();
             Roles = new HashSet<Role>();
+            Available = true;
         }
 
         /// <summary>
@@ -34,6 +36,12 @@ namespace Models.Entity
         /// </summary>
         [Required]
         public string AppSecret { get; set; }
+
+        /// <summary>
+        ///  «∑Òø…”√
+        /// </summary>
+        [DefaultValue(true)]
+        public bool Available { get; set; }
 
         public virtual ICollection<UserGroup> UserGroup { get; set; }
         public virtual ICollection<Control> Controls { get; set; }

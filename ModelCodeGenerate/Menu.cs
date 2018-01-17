@@ -17,22 +17,26 @@ namespace ModelCodeGenerate
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Menu()
         {
-            this.Parent = new HashSet<Menu>();
+            this.Menu1 = new HashSet<Menu>();
             this.Permission = new HashSet<Permission>();
         }
     
         public int Id { get; set; }
+        public string Name { get; set; }
+        public string Url { get; set; }
         public string IconUrl { get; set; }
         public string CssStyle { get; set; }
         public string IsAvailable { get; set; }
-        public int ParentId { get; set; }
+        public Nullable<int> ParentId { get; set; }
         public int ClientAppId { get; set; }
+        public string Route { get; set; }
+        public string RouteName { get; set; }
     
+        public virtual ClientApp ClientApp { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Menu> Parent { get; set; }
-        public virtual Menu Children { get; set; }
+        public virtual ICollection<Menu> Menu1 { get; set; }
+        public virtual Menu Menu2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Permission> Permission { get; set; }
-        public virtual ClientApp ClientApp { get; set; }
     }
 }

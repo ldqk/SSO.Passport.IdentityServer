@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Common
 {
@@ -21,6 +22,7 @@ namespace Common
         public static List<object[]> HistoryIOWrite { get; set; } = new List<object[]>();
         public static List<object[]> HistoryNetSend { get; set; } = new List<object[]>();
         public static List<object[]> HistoryNetReceive { get; set; } = new List<object[]>();
+        public static DateTime StartupTime { get; set; } = DateTime.Now;
 
         #endregion
     }

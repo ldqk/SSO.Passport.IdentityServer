@@ -1,0 +1,20 @@
+[
+  {
+    "outputFileName": "Content/common/loading.min.css",
+    "inputFiles": [
+      "Content/common/loading.css"
+    ]
+  },
+  {
+    "outputFileName": "ng-views/app/template.min.js",
+    "inputFiles": [
+      "ng-views/app/template.js"
+    ]
+  },
+  {
+    "outputFileName": "ng-views/template/loading.min.html",
+    "inputFiles": [
+      "ng-views/template/loading.html"
+    ]
+  }
+]

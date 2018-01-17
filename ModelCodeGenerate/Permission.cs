@@ -17,25 +17,31 @@ namespace ModelCodeGenerate
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Permission()
         {
+            this.Permission1 = new HashSet<Permission>();
             this.UserPermission = new HashSet<UserPermission>();
-            this.Role = new HashSet<Role>();
+            this.ClientApp = new HashSet<ClientApp>();
+            this.Control = new HashSet<Control>();
             this.Menu = new HashSet<Menu>();
-            this.Controls = new HashSet<Control>();
+            this.Role = new HashSet<Role>();
         }
     
         public int Id { get; set; }
         public string PermissionName { get; set; }
         public string Description { get; set; }
-        public int ClientAppId { get; set; }
+        public Nullable<int> ParentId { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Permission> Permission1 { get; set; }
+        public virtual Permission Permission2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserPermission> UserPermission { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Role> Role { get; set; }
+        public virtual ICollection<ClientApp> ClientApp { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Control> Control { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Menu> Menu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Control> Controls { get; set; }
-        public virtual ClientApp ClientApp { get; set; }
+        public virtual ICollection<Role> Role { get; set; }
     }
 }

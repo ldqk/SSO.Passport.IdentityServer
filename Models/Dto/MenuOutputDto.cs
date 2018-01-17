@@ -10,9 +10,19 @@ namespace Models.Dto
         public string Name { get; set; }
 
         /// <summary>
-        /// 菜单地址
+        /// 菜单URL
         /// </summary>
         public string Url { get; set; }
+
+        /// <summary>
+        /// 前端路由，为angular、vue等提供
+        /// </summary>
+        public string Route { get; set; }
+
+        /// <summary>
+        /// 前端路由名，为angular、vue等提供
+        /// </summary>
+        public string RouteName { get; set; }
 
         /// <summary>
         /// 菜单图标地址

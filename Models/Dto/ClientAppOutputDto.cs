@@ -20,6 +20,10 @@ namespace Models.Dto
         /// 客户端子系统密钥
         /// </summary>
         public string AppSecret { get; set; }
+        /// <summary>
+        /// 是否可用
+        /// </summary>
+        public bool Available { get; set; }
 
         public virtual ICollection<UserGroupOutputDto> UserGroup { get; set; }
         public virtual ICollection<ControlOutputDto> Controls { get; set; }

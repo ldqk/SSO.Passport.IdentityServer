@@ -8,7 +8,6 @@ namespace Models.Dto
         /// <summary>
         /// 权限名
         /// </summary>
-        [Display(Name = "权限")]
         [Required]
         public string PermissionName { get; set; }
         /// <summary>
@@ -16,7 +15,7 @@ namespace Models.Dto
         /// </summary>
         public string Description { get; set; }
 
-        public int ClientAppId { get; set; }
+        public int? ParentId { get; set; }
 
     }
 }

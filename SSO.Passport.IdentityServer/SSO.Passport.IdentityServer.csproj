@@ -49,6 +49,8 @@
     <TypeScriptSourceMap>True</TypeScriptSourceMap>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
+    <DocumentationFile>bin\SSO.Passport.IdentityServer.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -70,6 +72,8 @@
     <TypeScriptSourceMap>True</TypeScriptSourceMap>
     <TypeScriptMapRoot />
     <TypeScriptSourceRoot />
+    <DocumentationFile>bin\SSO.Passport.IdentityServer.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AngleSharp, Version=0.9.9.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
@@ -159,6 +163,9 @@
     <Reference Include="StackExchange.Redis, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.1.2.6\lib\net45\StackExchange.Redis.dll</HintPath>
     </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -167,6 +174,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
@@ -176,6 +187,15 @@
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.3\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
@@ -203,6 +223,9 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -212,10 +235,137 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\fileupload\filestyle.css" />
+    <Content Include="Assets\fileupload\filestyle.min.css" />
+    <Content Include="Assets\jedate\jedate.css" />
+    <Content Include="Assets\jedate\jedate.min.css" />
+    <Content Include="Assets\jedate\jquery.jedate.js" />
+    <Content Include="Assets\jedate\jquery.jedate.min.js" />
+    <Content Include="Assets\layui\css\layui.css" />
+    <Content Include="Assets\layui\css\layui.min.css" />
+    <Content Include="Assets\layui\css\layui.mobile.css" />
+    <Content Include="Assets\layui\css\modules\code.css" />
+    <Content Include="Assets\layui\css\modules\laydate\default\laydate.css" />
+    <Content Include="Assets\layui\css\modules\laydate\icon.png" />
+    <Content Include="Assets\layui\css\modules\laydate\laydate.css" />
+    <Content Include="Assets\layui\css\modules\layer\default\icon-ext.png" />
+    <Content Include="Assets\layui\css\modules\layer\default\icon.png" />
+    <Content Include="Assets\layui\css\modules\layer\default\layer.css" />
+    <Content Include="Assets\layui\css\modules\layer\default\loading-0.gif" />
+    <Content Include="Assets\layui\css\modules\layer\default\loading-1.gif" />
+    <Content Include="Assets\layui\css\modules\layer\default\loading-2.gif" />
+    <Content Include="Assets\layui\demo.html" />
+    <Content Include="Assets\layui\font\iconfont.svg" />
+    <Content Include="Assets\layui\images\face\0.gif" />
+    <Content Include="Assets\layui\images\face\1.gif" />
+    <Content Include="Assets\layui\images\face\10.gif" />
+    <Content Include="Assets\layui\images\face\11.gif" />
+    <Content Include="Assets\layui\images\face\12.gif" />
+    <Content Include="Assets\layui\images\face\13.gif" />
+    <Content Include="Assets\layui\images\face\14.gif" />
+    <Content Include="Assets\layui\images\face\15.gif" />
+    <Content Include="Assets\layui\images\face\16.gif" />
+    <Content Include="Assets\layui\images\face\17.gif" />
+    <Content Include="Assets\layui\images\face\18.gif" />
+    <Content Include="Assets\layui\images\face\19.gif" />
+    <Content Include="Assets\layui\images\face\2.gif" />
+    <Content Include="Assets\layui\images\face\20.gif" />
+    <Content Include="Assets\layui\images\face\21.gif" />
+    <Content Include="Assets\layui\images\face\22.gif" />
+    <Content Include="Assets\layui\images\face\23.gif" />
+    <Content Include="Assets\layui\images\face\24.gif" />
+    <Content Include="Assets\layui\images\face\25.gif" />
+    <Content Include="Assets\layui\images\face\26.gif" />
+    <Content Include="Assets\layui\images\face\27.gif" />
+    <Content Include="Assets\layui\images\face\28.gif" />
+    <Content Include="Assets\layui\images\face\29.gif" />
+    <Content Include="Assets\layui\images\face\3.gif" />
+    <Content Include="Assets\layui\images\face\30.gif" />
+    <Content Include="Assets\layui\images\face\31.gif" />
+    <Content Include="Assets\layui\images\face\32.gif" />
+    <Content Include="Assets\layui\images\face\33.gif" />
+    <Content Include="Assets\layui\images\face\34.gif" />
+    <Content Include="Assets\layui\images\face\35.gif" />
+    <Content Include="Assets\layui\images\face\36.gif" />
+    <Content Include="Assets\layui\images\face\37.gif" />
+    <Content Include="Assets\layui\images\face\38.gif" />
+    <Content Include="Assets\layui\images\face\39.gif" />
+    <Content Include="Assets\layui\images\face\4.gif" />
+    <Content Include="Assets\layui\images\face\40.gif" />
+    <Content Include="Assets\layui\images\face\41.gif" />
+    <Content Include="Assets\layui\images\face\42.gif" />
+    <Content Include="Assets\layui\images\face\43.gif" />
+    <Content Include="Assets\layui\images\face\44.gif" />
+    <Content Include="Assets\layui\images\face\45.gif" />
+    <Content Include="Assets\layui\images\face\46.gif" />
+    <Content Include="Assets\layui\images\face\47.gif" />
+    <Content Include="Assets\layui\images\face\48.gif" />
+    <Content Include="Assets\layui\images\face\49.gif" />
+    <Content Include="Assets\layui\images\face\5.gif" />
+    <Content Include="Assets\layui\images\face\50.gif" />
+    <Content Include="Assets\layui\images\face\51.gif" />
+    <Content Include="Assets\layui\images\face\52.gif" />
+    <Content Include="Assets\layui\images\face\53.gif" />
+    <Content Include="Assets\layui\images\face\54.gif" />
+    <Content Include="Assets\layui\images\face\55.gif" />
+    <Content Include="Assets\layui\images\face\56.gif" />
+    <Content Include="Assets\layui\images\face\57.gif" />
+    <Content Include="Assets\layui\images\face\58.gif" />
+    <Content Include="Assets\layui\images\face\59.gif" />
+    <Content Include="Assets\layui\images\face\6.gif" />
+    <Content Include="Assets\layui\images\face\60.gif" />
+    <Content Include="Assets\layui\images\face\61.gif" />
+    <Content Include="Assets\layui\images\face\62.gif" />
+    <Content Include="Assets\layui\images\face\63.gif" />
+    <Content Include="Assets\layui\images\face\64.gif" />
+    <Content Include="Assets\layui\images\face\65.gif" />
+    <Content Include="Assets\layui\images\face\66.gif" />
+    <Content Include="Assets\layui\images\face\67.gif" />
+    <Content Include="Assets\layui\images\face\68.gif" />
+    <Content Include="Assets\layui\images\face\69.gif" />
+    <Content Include="Assets\layui\images\face\7.gif" />
+    <Content Include="Assets\layui\images\face\70.gif" />
+    <Content Include="Assets\layui\images\face\71.gif" />
+    <Content Include="Assets\layui\images\face\8.gif" />
+    <Content Include="Assets\layui\images\face\9.gif" />
+    <Content Include="Assets\layui\layui.all.js" />
+    <Content Include="Assets\layui\layui.js" />
+    <Content Include="Assets\layui\layui.min.js" />
+    <Content Include="Assets\layui\lay\dest\layui.all.js" />
+    <Content Include="Assets\layui\lay\lib\jquery.js" />
+    <Content Include="Assets\layui\lay\modules\carousel.js" />
+    <Content Include="Assets\layui\lay\modules\code.js" />
+    <Content Include="Assets\layui\lay\modules\element.js" />
+    <Content Include="Assets\layui\lay\modules\flow.js" />
+    <Content Include="Assets\layui\lay\modules\form.js" />
+    <Content Include="Assets\layui\lay\modules\jquery.js" />
+    <Content Include="Assets\layui\lay\modules\laydate.js" />
+    <Content Include="Assets\layui\lay\modules\layedit.js" />
+    <Content Include="Assets\layui\lay\modules\layer.js" />
+    <Content Include="Assets\layui\lay\modules\laypage.js" />
+    <Content Include="Assets\layui\lay\modules\laytpl.js" />
+    <Content Include="Assets\layui\lay\modules\mobile.js" />
+    <Content Include="Assets\layui\lay\modules\table.js" />
+    <Content Include="Assets\layui\lay\modules\tree.js" />
+    <Content Include="Assets\layui\lay\modules\upload.js" />
+    <Content Include="Assets\layui\lay\modules\util.js" />
+    <Content Include="Assets\select3\bundle.css" />
+    <Content Include="Assets\select3\bundle.min.css" />
+    <Content Include="Assets\select3\select3-full.js" />
+    <Content Include="Assets\select3\select3-full.min.js" />
+    <Content Include="Assets\select3\select3.css" />
+    <Content Include="Assets\select3\stylesheet.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\common\images\bg0.png" />
+    <Content Include="Content\common\images\bg1.png" />
+    <Content Include="Content\common\images\hx.png" />
+    <Content Include="Content\common\loading.css" />
+    <Content Include="Content\common\loading.min.css">
+      <DependentUpon>loading.css</DependentUpon>
+    </Content>
     <Content Include="Content\images\1.jpg" />
     <Content Include="Content\images\2.jpg" />
     <Content Include="Content\images\3.jpg" />
@@ -231,6 +381,9 @@
     <Content Include="Content\jquery-labelauty.css" />
     <Content Include="Content\login\style.css" />
     <Content Include="Content\login\style.min.css" />
+    <Content Include="Content\microtip.min.css" />
+    <Content Include="Content\ng-table.min.css" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -240,9 +393,201 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="fonts\icomoon.css" />
+    <Content Include="fonts\icomoon.min.css" />
+    <Content Include="fonts\icomoon.svg" />
+    <Content Include="fonts\iconSelector.js" />
+    <Content Include="fonts\iconSelector.min.js" />
+    <Content Include="fonts\map2.html" />
     <Content Include="Global.asax" />
+    <Content Include="ng-views\app\app.config.js" />
+    <Content Include="ng-views\app\form.js" />
+    <Content Include="ng-views\app\route.config.js" />
+    <Content Include="ng-views\app\template.js" />
+    <Content Include="ng-views\app\template.min.js">
+      <DependentUpon>template.js</DependentUpon>
+    </Content>
+    <Content Include="ng-views\controllers\dashboard.js" />
+    <Content Include="ng-views\controllers\main.js" />
+    <Content Include="ng-views\controllers\system.js" />
+    <Content Include="ng-views\css\app.css" />
+    <Content Include="ng-views\css\app.min.css" />
+    <Content Include="ng-views\filemanager\css\animations.css" />
+    <Content Include="ng-views\filemanager\css\dialogs.css" />
+    <Content Include="ng-views\filemanager\css\main.css" />
+    <Content Include="ng-views\filemanager\js\app.js" />
+    <Content Include="ng-views\filemanager\js\controllers\main.js" />
+    <Content Include="ng-views\filemanager\js\controllers\selector-controller.js" />
+    <Content Include="ng-views\filemanager\js\directives\directives.js" />
+    <Content Include="ng-views\filemanager\js\entities\chmod.js" />
+    <Content Include="ng-views\filemanager\js\entities\item.js" />
+    <Content Include="ng-views\filemanager\js\filters\filters.js" />
+    <Content Include="ng-views\filemanager\js\providers\config.js" />
+    <Content Include="ng-views\filemanager\js\providers\translations.js" />
+    <Content Include="ng-views\filemanager\js\services\apihandler.js" />
+    <Content Include="ng-views\filemanager\js\services\apimiddleware.js" />
+    <Content Include="ng-views\filemanager\js\services\filenavigator.js" />
+    <Content Include="ng-views\filemanager\templates\current-folder-breadcrumb.html" />
+    <Content Include="ng-views\filemanager\templates\item-context-menu.html" />
+    <Content Include="ng-views\filemanager\templates\main-icons.html" />
+    <Content Include="ng-views\filemanager\templates\main-table-modal.html" />
+    <Content Include="ng-views\filemanager\templates\main-table.html" />
+    <Content Include="ng-views\filemanager\templates\main.html" />
+    <Content Include="ng-views\filemanager\templates\modals.html" />
+    <Content Include="ng-views\filemanager\templates\navbar.html" />
+    <Content Include="ng-views\filemanager\templates\sidebar.html" />
+    <Content Include="ng-views\filemanager\templates\spinner.html" />
+    <Content Include="ng-views\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Bold-webfont.svg" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Light-webfont.svg" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Medium-webfont.svg" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Regular-webfont.svg" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Thin-webfont.svg" />
+    <Content Include="ng-views\fonts\shadowsintolight\shadowsintolight-webfont.svg" />
+    <Content Include="ng-views\fonts\weather-icons\weather-icons.svg" />
+    <Content Include="ng-views\img\cal-header.jpg" />
+    <Content Include="ng-views\img\headers\1.png" />
+    <Content Include="ng-views\img\headers\10.png" />
+    <Content Include="ng-views\img\headers\11.png" />
+    <Content Include="ng-views\img\headers\12.png" />
+    <Content Include="ng-views\img\headers\2.png" />
+    <Content Include="ng-views\img\headers\3.png" />
+    <Content Include="ng-views\img\headers\4.png" />
+    <Content Include="ng-views\img\headers\5.png" />
+    <Content Include="ng-views\img\headers\6.png" />
+    <Content Include="ng-views\img\headers\7.png" />
+    <Content Include="ng-views\img\headers\8.png" />
+    <Content Include="ng-views\img\headers\9.png" />
+    <Content Include="ng-views\img\headers\sm\1.png" />
+    <Content Include="ng-views\img\headers\sm\2.png" />
+    <Content Include="ng-views\img\headers\sm\3.png" />
+    <Content Include="ng-views\img\headers\sm\4.png" />
+    <Content Include="ng-views\img\headers\sm\5.png" />
+    <Content Include="ng-views\img\headers\sm\6.png" />
+    <Content Include="ng-views\img\headers\sm\7.png" />
+    <Content Include="ng-views\img\headers\sm\8.png" />
+    <Content Include="ng-views\img\headers\sm\9.png" />
+    <Content Include="ng-views\img\headers\square\1.png" />
+    <Content Include="ng-views\img\headers\square\2.png" />
+    <Content Include="ng-views\img\headers\square\3.png" />
+    <Content Include="ng-views\img\headers\square\4.png" />
+    <Content Include="ng-views\img\headers\square\5.png" />
+    <Content Include="ng-views\img\headers\square\6.png" />
+    <Content Include="ng-views\img\headers\square\7.png" />
+    <Content Include="ng-views\img\headers\square\8.png" />
+    <Content Include="ng-views\img\headers\square\9.png" />
+    <Content Include="ng-views\img\icons\ellipsis%402x.png" />
+    <Content Include="ng-views\img\icons\ellipsis.png" />
+    <Content Include="ng-views\img\icons\fullscreen%402x.png" />
+    <Content Include="ng-views\img\icons\fullscreen.png" />
+    <Content Include="ng-views\img\icons\menu%402x.png" />
+    <Content Include="ng-views\img\icons\menu-2%402x.png" />
+    <Content Include="ng-views\img\icons\menu-2.png" />
+    <Content Include="ng-views\img\icons\menu.png" />
+    <Content Include="ng-views\img\icons\message%402x.png" />
+    <Content Include="ng-views\img\icons\message.png" />
+    <Content Include="ng-views\img\icons\notification%402x.png" />
+    <Content Include="ng-views\img\icons\notification.png" />
+    <Content Include="ng-views\img\icons\pause%402x.png" />
+    <Content Include="ng-views\img\icons\pause.png" />
+    <Content Include="ng-views\img\icons\play%402x.png" />
+    <Content Include="ng-views\img\icons\play.png" />
+    <Content Include="ng-views\img\icons\search%402x.png" />
+    <Content Include="ng-views\img\icons\search-2%402x.png" />
+    <Content Include="ng-views\img\icons\search-2.png" />
+    <Content Include="ng-views\img\icons\search.png" />
+    <Content Include="ng-views\img\icons\speaker%402x.png" />
+    <Content Include="ng-views\img\icons\speaker-2%402x.png" />
+    <Content Include="ng-views\img\icons\speaker-2.png" />
+    <Content Include="ng-views\img\icons\speaker.png" />
+    <Content Include="ng-views\img\icons\task%402x.png" />
+    <Content Include="ng-views\img\icons\task.png" />
+    <Content Include="ng-views\img\icons\weather\0%402x.png" />
+    <Content Include="ng-views\img\icons\weather\0.png" />
+    <Content Include="ng-views\img\icons\weather\1%402x.png" />
+    <Content Include="ng-views\img\icons\weather\1.png" />
+    <Content Include="ng-views\img\icons\weather\18%402x.png" />
+    <Content Include="ng-views\img\icons\weather\18.png" />
+    <Content Include="ng-views\img\icons\weather\19%402x.png" />
+    <Content Include="ng-views\img\icons\weather\19.png" />
+    <Content Include="ng-views\img\icons\weather\2%402x.png" />
+    <Content Include="ng-views\img\icons\weather\2.png" />
+    <Content Include="ng-views\img\icons\weather\24%402x.png" />
+    <Content Include="ng-views\img\icons\weather\24.png" />
+    <Content Include="ng-views\img\icons\weather\26%402x.png" />
+    <Content Include="ng-views\img\icons\weather\26.png" />
+    <Content Include="ng-views\img\icons\weather\27%402x.png" />
+    <Content Include="ng-views\img\icons\weather\27.png" />
+    <Content Include="ng-views\img\icons\weather\28%402x.png" />
+    <Content Include="ng-views\img\icons\weather\28.png" />
+    <Content Include="ng-views\img\icons\weather\3%402x.png" />
+    <Content Include="ng-views\img\icons\weather\3.png" />
+    <Content Include="ng-views\img\icons\weather\31%402x.png" />
+    <Content Include="ng-views\img\icons\weather\31.png" />
+    <Content Include="ng-views\img\icons\weather\32%402x.png" />
+    <Content Include="ng-views\img\icons\weather\32.png" />
+    <Content Include="ng-views\img\icons\weather\5%402x.png" />
+    <Content Include="ng-views\img\icons\weather\5.png" />
+    <Content Include="ng-views\img\icons\weather\9%402x.png" />
+    <Content Include="ng-views\img\icons\weather\9.png" />
+    <Content Include="ng-views\img\notifications.png" />
+    <Content Include="ng-views\img\profile-menu.png" />
+    <Content Include="ng-views\img\select%402x.png" />
+    <Content Include="ng-views\img\select.png" />
+    <Content Include="ng-views\img\thumbs-up.png" />
+    <Content Include="ng-views\template\header.html" />
+    <Content Include="ng-views\template\loading.html" />
+    <Content Include="ng-views\template\loading.min.html">
+      <DependentUpon>loading.html</DependentUpon>
+    </Content>
+    <Content Include="ng-views\template\sidebar-left.html" />
+    <Content Include="ng-views\views\dashboard.html" />
+    <Content Include="ng-views\views\system\file.html" />
+    <Content Include="ng-views\views\system\log.html" />
+    <Content Include="ng-views\views\system\task.html" />
+    <Content Include="Scripts\angular.js" />
+    <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\boost.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="ng-views\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="ng-views\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="ng-views\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="ng-views\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Bold-webfont.eot" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Bold-webfont.ttf" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Bold-webfont.woff" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Light-webfont.eot" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Light-webfont.ttf" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Light-webfont.woff" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Medium-webfont.eot" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Medium-webfont.ttf" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Medium-webfont.woff" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Regular-webfont.eot" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Regular-webfont.ttf" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Regular-webfont.woff" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Thin-webfont.eot" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Thin-webfont.ttf" />
+    <Content Include="ng-views\fonts\roboto\Roboto-Thin-webfont.woff" />
+    <Content Include="ng-views\fonts\shadowsintolight\shadowsintolight-webfont.eot" />
+    <Content Include="ng-views\fonts\shadowsintolight\shadowsintolight-webfont.ttf" />
+    <Content Include="ng-views\fonts\shadowsintolight\shadowsintolight-webfont.woff" />
+    <Content Include="ng-views\fonts\shadowsintolight\shadowsintolight-webfont.woff2" />
+    <Content Include="ng-views\fonts\weather-icons\weather-icons.eot" />
+    <Content Include="ng-views\fonts\weather-icons\weather-icons.ttf" />
+    <Content Include="ng-views\fonts\weather-icons\weather-icons.woff" />
+    <Content Include="Assets\layui\font\iconfont.eot" />
+    <Content Include="Assets\layui\font\iconfont.ttf" />
+    <Content Include="Assets\layui\font\iconfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\icomoon.eot" />
+    <Content Include="fonts\icomoon.ttf" />
+    <Content Include="fonts\icomoon.woff" />
+    <None Include="bundleconfig.json" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.4.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
@@ -256,8 +601,20 @@
     <Content Include="Scripts\jquery.placeholder.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.2.js" />
     <Content Include="Scripts\jquery.signalR-2.2.2.min.js" />
+    <Content Include="Scripts\layer\layer.js" />
+    <Content Include="Scripts\layer\mobile\layer.js" />
+    <Content Include="Scripts\layer\mobile\need\layer.css" />
+    <Content Include="Scripts\layer\theme\default\icon-ext.png" />
+    <Content Include="Scripts\layer\theme\default\icon.png" />
+    <Content Include="Scripts\layer\theme\default\layer.css" />
+    <Content Include="Scripts\layer\theme\default\loading-0.gif" />
+    <Content Include="Scripts\layer\theme\default\loading-1.gif" />
+    <Content Include="Scripts\layer\theme\default\loading-2.gif" />
+    <Content Include="Scripts\ng-file-upload.min.js" />
+    <Content Include="Scripts\ng-table.min.js" />
     <Content Include="Scripts\supersized-init.js" />
     <Content Include="Scripts\supersized.3.2.7.min.js" />
+    <Content Include="Scripts\tm.pagination.js" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
@@ -266,6 +623,7 @@
     <Content Include="Views\Error\ServiceUnavailable.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Passport\Login.cshtml" />
+    <Content Include="Views\Home\FileManager.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -286,15 +644,27 @@
     <Compile Include="App_Start\HangfireConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StartupConfig.cs" />
+    <Compile Include="App_Start\SwaggerConfig.cs" />
+    <Compile Include="Controllers\AccessController.cs" />
+    <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\PassportController.cs" />
+    <Compile Include="Controllers\PermissionController.cs" />
+    <Compile Include="Controllers\PublicController.cs" />
+    <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\SystemController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\MyHub.cs" />
-    <Compile Include="Models\AuthorityAttribute.cs" />
+    <Compile Include="Models\FileList.cs" />
+    <Compile Include="Models\FileRequest.cs" />
     <Compile Include="Models\Hangfire\HangfireBackJob.cs" />
     <Compile Include="Models\Hangfire\IHangfireBackJob.cs" />
     <Compile Include="Models\MyActionFilterAttribute.cs" />
@@ -307,6 +677,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Access\" />
+    <Folder Include="Views\App\" />
+    <Folder Include="Views\Group\" />
+    <Folder Include="Views\Menu\" />
+    <Folder Include="Views\Permission\" />
+    <Folder Include="Views\Public\" />
+    <Folder Include="Views\Role\" />
+    <Folder Include="Views\System\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj">

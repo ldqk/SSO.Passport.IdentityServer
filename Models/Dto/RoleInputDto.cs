@@ -15,7 +15,6 @@ namespace Models.Dto
         /// 角色描述
         /// </summary>
         public string Description { get; set; }
-
-        public int ClientAppId { get; set; }
+        public int? ParentId { get; set; }
     }
 }

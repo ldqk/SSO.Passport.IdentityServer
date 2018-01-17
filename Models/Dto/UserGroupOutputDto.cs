@@ -15,9 +15,6 @@ namespace Models.Dto
         /// </summary>
         public int? ParentId { get; set; }
 
-        public int ClientAppId { get; set; }
-
-
         public virtual ICollection<UserGroupPermissionOutputDto> UserGroupPermission { get; set; }
     }
 }

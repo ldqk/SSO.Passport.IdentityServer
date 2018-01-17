@@ -21,15 +21,15 @@ namespace ModelCodeGenerate
         }
     
         public int Id { get; set; }
+        public string Name { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
-        public string HttpMethod { get; set; }
-        public string IsAvailable { get; set; }
-        public int FunctionType { get; set; }
+        public int HttpMethod { get; set; }
+        public bool IsAvailable { get; set; }
         public int ClientAppId { get; set; }
     
+        public virtual ClientApp ClientApp { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Permission> Permission { get; set; }
-        public virtual ClientApp ClientApp { get; set; }
     }
 }

@@ -16,8 +16,8 @@ namespace ModelCodeGenerate
     {
         public int Id { get; set; }
         public bool HasPermission { get; set; }
-        public Nullable<System.Guid> UserInfoId { get; set; }
-        public Nullable<int> PermissionId { get; set; }
+        public System.Guid UserInfoId { get; set; }
+        public int PermissionId { get; set; }
     
         public virtual Permission Permission { get; set; }
         public virtual UserInfo UserInfo { get; set; }

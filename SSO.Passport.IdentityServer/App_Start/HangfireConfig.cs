@@ -37,12 +37,12 @@ namespace SSO.Passport.IdentityServer
 
             #endregion
             RecurringJob.AddOrUpdate(() => Windows.ClearMemorySilent(), Cron.Hourly);
-            RecurringJob.AddOrUpdate(() => EverydayJob(), Cron.Daily, TimeZoneInfo.Local);
+            RecurringJob.AddOrUpdate(() => RemoveSuccessJob(), Cron.Daily, TimeZoneInfo.Local);
         }
 
         public static BackgroundJobServer Server { get; set; }
         
-        public static void EverydayJob()
+        public static void RemoveSuccessJob()
         {
             DataContext db = new DataContext();
             db.Database.ExecuteSqlCommand($@"DELETE FROM [HangFire].[Job] WHERE StateName='Succeeded' or StateName='Deleted';

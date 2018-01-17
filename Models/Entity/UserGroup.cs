@@ -19,10 +19,10 @@ namespace Models.Entity
         [Display(Name = "¸¸¼¶id")]
         public int? ParentId { get; set; }
 
-        //[ForeignKey("ClientAppId")]
-        public int ClientAppId { get; set; }
+        public virtual ICollection<UserGroup> Children { get; set; }
 
-        public virtual ClientApp ClientApp { get; set; }
+        public virtual UserGroup Parent { get; set; }
+        public virtual ICollection<ClientApp> ClientApp { get; set; }
 
         public virtual ICollection<UserGroupPermission> UserGroupPermission { get; set; }
 

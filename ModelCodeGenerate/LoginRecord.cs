@@ -15,6 +15,10 @@ namespace ModelCodeGenerate
     public partial class LoginRecord
     {
         public int Id { get; set; }
+        public string IP { get; set; }
+        public System.DateTime LoginTime { get; set; }
+        public string Province { get; set; }
+        public string PhysicAddress { get; set; }
         public System.Guid UserInfoId { get; set; }
     
         public virtual UserInfo UserInfo { get; set; }
