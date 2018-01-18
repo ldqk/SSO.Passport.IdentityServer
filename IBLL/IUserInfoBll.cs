@@ -80,5 +80,20 @@ namespace IBLL
         /// <returns></returns>
         bool ResetPassword(string name, string newPwd = "123456");
 
+        /// <summary>
+        /// 获取操作权限
+        /// </summary>
+        /// <param name="appid"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        List<ControlOutputDto> GetAccessControls(string appid, Guid id);
+
+        /// <summary>
+        /// 获取菜单权限
+        /// </summary>
+        /// <param name="appid"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        List<MenuOutputDto> GetMenus(string appid, Guid id);
     }
 }

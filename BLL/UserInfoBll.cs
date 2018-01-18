@@ -6,6 +6,7 @@ using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
 using Masuit.Tools.Security;
 using Masuit.Tools.Win32;
+using Models.Application;
 using Models.Dto;
 using Models.Entity;
 
@@ -131,7 +132,7 @@ namespace BLL
                     }
                 });
             }
-            return list.Where(c => c.IsAvailable).Distinct(new FunctionComparision()).ToList();
+            return list.Where(c => c.IsAvailable).Distinct(new AccessControlComparision()).ToList();
         }
 
         /// <summary>
@@ -201,24 +202,224 @@ namespace BLL
             }
             return false;
         }
-    }
 
-    public class FunctionComparision : IEqualityComparer<Control>
-    {
-        /// <summary>Determines whether the specified objects are equal.</summary>
-        /// <returns>true if the specified objects are equal; otherwise, false.</returns>
-        /// <param name="x">The first object of type <paramref name="T" /> to compare.</param>
-        /// <param name="y">The second object of type <paramref name="T" /> to compare.</param>
-        public bool Equals(Control x, Control y)
+        /// <summary>
+        /// 获取操作权限
+        /// </summary>
+        /// <param name="appid"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public List<ControlOutputDto> GetAccessControls(string appid, Guid id)
         {
-            return x.Controller.Equals(y.Controller) && x.Action.Equals(y.Action);
+            DataContext context = BaseDal.GetDataContext();
+            ClientApp app = context.ClientApp.FirstOrDefault(a => a.AppId.Equals(appid));//获取客户端子系统应用
+            UserInfo user = GetById(id);//获取用户
+            List<Control> list = new List<Control>();
+            if (app != null && user != null)
+            {
+                //1.0 用户-角色-权限-功能 主线，权限的优先级最低
+                user.Role.ForEach(r =>
+                {
+                    int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + r.Id).ToArray();//拿到所有上级角色
+                    foreach (int i in rids)
+                    {
+                        Role role = context.Role.FirstOrDefault(o => o.Id == i);
+                        role?.Permission.ForEach(p =>
+                        {
+                            int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray();//拿到所有上级权限
+                            foreach (int s in pids)
+                            {
+                                Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
+                                list.AddRange(permission.Controls.Where(c => c.IsAvailable));
+                            }
+                        });
+                    }
+                });
+
+                //2.0 用户-用户组-角色-权限，权限的优先级其次
+                user.UserGroup.ForEach(g =>
+                {
+                    //2.1 拿到所有上级用户组
+                    int[] gids = context.Database.SqlQuery<int>("exec sp_getParentGroupIdByChildId " + g.Id).ToArray();//拿到所有上级用户组
+                    foreach (int i in gids)
+                    {
+                        UserGroup group = context.UserGroup.FirstOrDefault(u => u.Id == i);
+                        List<int> noRoleIds = @group.UserGroupPermission.Where(x => !x.HasRole).Select(x => x.Id).ToList();//没有角色的id集合
+                        group?.UserGroupPermission.ForEach(ugp =>
+                        {
+                            if (ugp.HasRole)
+                            {
+                                //角色可用，取并集
+                                //2.2 拿到所有上级角色，并排除掉角色不可用的角色id
+                                int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + ugp.Role.Id).Except(noRoleIds).ToArray();//拿到所有上级角色，并排除掉角色不可用的角色id
+                                foreach (int r in rids)
+                                {
+                                    Role role = context.Role.FirstOrDefault(o => o.Id == r);
+                                    role?.Permission.ForEach(p =>
+                                    {
+                                        //2.3 拿到所有上级权限
+                                        int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray();//拿到所有上级权限
+                                        foreach (int s in pids)
+                                        {
+                                            Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
+                                            list.AddRange(permission.Controls.Where(c => c.IsAvailable));
+                                        }
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                //角色不可用，取差集
+                                ugp.Role.Permission.ForEach(p => list = list.Except(p.Controls).Where(c => c.IsAvailable).ToList());
+                            }
+                        });
+                    }
+                });
+
+                //3.0 用户-权限-功能 临时权限，权限的优先级最高
+                List<int> noPermissionIds = user.UserPermission.Where(p => !p.HasPermission).Select(p => p.Id).ToList();//没有权限的id集合
+                user.UserPermission?.ForEach(p =>
+                {
+                    if (p.HasPermission)
+                    {
+                        //临时权限可用，取并集
+                        //3.1 拿到所有上级权限，并排除掉没有权限的角色id
+                        int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).Except(noPermissionIds).ToArray();//拿到所有上级权限，并排除掉没有权限的角色id
+                        foreach (int i in pids)
+                        {
+                            Permission permission = context.Permission.FirstOrDefault(x => x.Id == i);
+                            list.AddRange(permission.Controls.Where(c => c.IsAvailable));
+                        }
+                    }
+                    else
+                    {
+                        //临时权限不可用，取差集
+                        list = list.Except(p.Permission.Controls.Where(c => c.IsAvailable)).ToList();
+                    }
+                });
+            }
+            return list.Where(c => c.IsAvailable && c.ClientAppId == app.Id).Distinct(new AccessControlComparision()).ToList().Mapper<List<ControlOutputDto>>();
         }
 
-        /// <summary>Returns a hash code for the specified object.</summary>
-        /// <returns>A hash code for the specified object.</returns>
-        /// <param name="obj">The <see cref="T:System.Object" /> for which a hash code is to be returned.</param>
-        /// <exception cref="T:System.ArgumentNullException">The type of <paramref name="obj" /> is a reference type and <paramref name="obj" /> is null.</exception>
+        /// <summary>
+        /// 获取菜单权限
+        /// </summary>
+        /// <param name="appid"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public List<MenuOutputDto> GetMenus(string appid, Guid id)
+        {
+            DataContext context = BaseDal.GetDataContext();
+            ClientApp app = context.ClientApp.FirstOrDefault(a => a.AppId.Equals(appid));//获取客户端子系统应用
+            UserInfo user = GetById(id);//获取用户
+            List<Menu> list = new List<Menu>();
+            if (app != null && user != null)
+            {
+                //1.0 用户-角色-权限-功能 主线，权限的优先级最低
+                user.Role.ForEach(r =>
+                {
+                    int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + r.Id).ToArray();//拿到所有上级角色
+                    foreach (int i in rids)
+                    {
+                        Role role = context.Role.FirstOrDefault(o => o.Id == i);
+                        role?.Permission.ForEach(p =>
+                        {
+                            int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray();//拿到所有上级权限
+                            foreach (int s in pids)
+                            {
+                                Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
+                                list.AddRange(permission.Menu.Where(c => c.IsAvailable));
+                            }
+                        });
+                    }
+                });
+
+                //2.0 用户-用户组-角色-权限，权限的优先级其次
+                user.UserGroup.ForEach(g =>
+                {
+                    //2.1 拿到所有上级用户组
+                    int[] gids = context.Database.SqlQuery<int>("exec sp_getParentGroupIdByChildId " + g.Id).ToArray();//拿到所有上级用户组
+                    foreach (int i in gids)
+                    {
+                        UserGroup group = context.UserGroup.FirstOrDefault(u => u.Id == i);
+                        List<int> noRoleIds = @group.UserGroupPermission.Where(x => !x.HasRole).Select(x => x.Id).ToList();//没有角色的id集合
+                        group?.UserGroupPermission.ForEach(ugp =>
+                        {
+                            if (ugp.HasRole)
+                            {
+                                //角色可用，取并集
+                                //2.2 拿到所有上级角色，并排除掉角色不可用的角色id
+                                int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + ugp.Role.Id).Except(noRoleIds).ToArray();//拿到所有上级角色，并排除掉角色不可用的角色id
+                                foreach (int r in rids)
+                                {
+                                    Role role = context.Role.FirstOrDefault(o => o.Id == r);
+                                    role?.Permission.ForEach(p =>
+                                    {
+                                        //2.3 拿到所有上级权限
+                                        int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray();//拿到所有上级权限
+                                        foreach (int s in pids)
+                                        {
+                                            Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
+                                            list.AddRange(permission.Menu.Where(c => c.IsAvailable));
+                                        }
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                //角色不可用，取差集
+                                ugp.Role.Permission.ForEach(p => list = list.Except(p.Menu).Where(c => c.IsAvailable).ToList());
+                            }
+                        });
+                    }
+                });
+
+                //3.0 用户-权限-功能 临时权限，权限的优先级最高
+                List<int> noPermissionIds = user.UserPermission.Where(p => !p.HasPermission).Select(p => p.Id).ToList();//没有权限的id集合
+                user.UserPermission?.ForEach(p =>
+                {
+                    if (p.HasPermission)
+                    {
+                        //临时权限可用，取并集
+                        //3.1 拿到所有上级权限，并排除掉没有权限的角色id
+                        int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).Except(noPermissionIds).ToArray();//拿到所有上级权限，并排除掉没有权限的角色id
+                        foreach (int i in pids)
+                        {
+                            Permission permission = context.Permission.FirstOrDefault(x => x.Id == i);
+                            list.AddRange(permission.Menu.Where(c => c.IsAvailable));
+                        }
+                    }
+                    else
+                    {
+                        //临时权限不可用，取差集
+                        list = list.Except(p.Permission.Menu.Where(c => c.IsAvailable)).ToList();
+                    }
+                });
+            }
+            return list.Where(c => c.IsAvailable && c.ClientAppId == app.Id).Distinct(new MenuComparision()).ToList().Mapper<List<MenuOutputDto>>();
+        }
+    }
+
+    public class AccessControlComparision : IEqualityComparer<Control>
+    {
+        public bool Equals(Control x, Control y)
+        {
+            return x.ClientAppId.Equals(y.ClientAppId) && x.Controller.Equals(y.Controller) && x.Action.Equals(y.Action);
+        }
+
         public int GetHashCode(Control obj)
+        {
+            return 0;
+        }
+    }
+    public class MenuComparision : IEqualityComparer<Menu>
+    {
+        public bool Equals(Menu x, Menu y)
+        {
+            return x.ClientAppId.Equals(y.ClientAppId) && x.Name.Equals(y.Name);
+        }
+
+        public int GetHashCode(Menu obj)
         {
             return 0;
         }

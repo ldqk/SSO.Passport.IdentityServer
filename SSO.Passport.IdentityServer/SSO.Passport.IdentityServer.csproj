@@ -615,10 +615,8 @@
     <Content Include="Scripts\supersized-init.js" />
     <Content Include="Scripts\supersized.3.2.7.min.js" />
     <Content Include="Scripts\tm.pagination.js" />
-    <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Error\ServiceUnavailable.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -678,15 +676,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Access\" />
-    <Folder Include="Views\App\" />
-    <Folder Include="Views\Group\" />
-    <Folder Include="Views\Menu\" />
-    <Folder Include="Views\Permission\" />
-    <Folder Include="Views\Public\" />
-    <Folder Include="Views\Role\" />
-    <Folder Include="Views\System\" />
-    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj">

@@ -7,16 +7,24 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using EFSecondLevelCache;
+using Models.Application;
 using Models.Entity;
 namespace IDAL
 {   
 	public interface IBaseDal<T> where T : class, new()
     {
         /// <summary>
+        /// 获取数据上下文实例
+        /// </summary>
+        /// <returns></returns>
+        DataContext GetDataContext();
+
+        /// <summary>
         /// 获取所有实体
         /// </summary>
         /// <returns>还未执行的SQL语句</returns>
         IQueryable<T> GetAll();
+
         /// <summary>
         /// 获取所有实体（不跟踪）
         /// </summary>

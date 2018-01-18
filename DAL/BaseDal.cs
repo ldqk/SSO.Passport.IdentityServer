@@ -20,7 +20,14 @@ namespace DAL
     public class BaseDal<T> : IBaseDal<T> where T : class, new()
     {
         private DataContext db = WebExtension.GetDbContext<DataContext>();
-
+        /// <summary>
+        /// 获取数据上下文实例
+        /// </summary>
+        /// <returns></returns>
+        public DataContext GetDataContext()
+        {
+            return db;
+        }
         /// <summary>
         /// 获取所有实体
         /// </summary>
