@@ -25,6 +25,8 @@ namespace Models.Entity
         [Required]
         public string AppName { get; set; }
 
+        public string Description { get; set; }
+
         /// <summary>
         /// 客户端子系统唯一标识
         /// </summary>

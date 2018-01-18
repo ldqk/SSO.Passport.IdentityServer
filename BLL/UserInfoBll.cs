@@ -29,7 +29,7 @@ namespace BLL
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public UserInfoOutputDto Login(string username, string password)
+        public UserInfoDto Login(string username, string password)
         {
             UserInfo userInfo = GetByUsername(username);
             if (userInfo != null)
@@ -39,7 +39,7 @@ namespace BLL
                 password = password.MDString2(key);
                 if (pwd.Equals(password))
                 {
-                    return userInfo.Mapper<UserInfoOutputDto>();
+                    return userInfo.Mapper<UserInfoDto>();
                 }
             }
             return null;
@@ -50,7 +50,7 @@ namespace BLL
         /// </summary>
         /// <param name="userInfo"></param>
         /// <returns></returns>
-        public UserInfoOutputDto Register(UserInfo userInfo)
+        public UserInfoDto Register(UserInfo userInfo)
         {
             UserInfo exist = GetFirstEntity(u => u.Username.Equals(userInfo.Username) || u.Email.Equals(userInfo.Email) || u.PhoneNumber.Equals(userInfo.PhoneNumber));
             if (exist is null)
@@ -61,7 +61,7 @@ namespace BLL
                 userInfo.SaltKey = salt;
                 UserInfo added = AddEntity(userInfo);
                 int line = SaveChanges();
-                return line > 0 ? added.Mapper<UserInfoOutputDto>() : null;
+                return line > 0 ? added.Mapper<UserInfoDto>() : null;
             }
             return null;
         }

@@ -21,12 +21,6 @@ namespace Models.Dto
         [Display(Name = "HTTP请求方式")]
         [Required]
         public HttpMethod HttpMethod { get; set; }
-
-        /// <summary>
-        /// 是否可用
-        /// </summary>
-        [Required]
-        public bool IsAvailable { get; set; }
         public int ClientAppId { get; set; }
 
     }

@@ -1,0 +1,22 @@
+﻿@model IList<Tuple<string, string>>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>API调用列表</title>
+</head>
+<body>
+    <div>
+        <h1>API调用列表</h1>
+        @foreach (Tuple<string, string> tuple in Model)
+        {
+            <p>@(Request.Url.Scheme + "://" + Request.Url.Authority + "/" + tuple.Item1 + "/" + tuple.Item2)</p>
+        }
+    </div>
+</body>
+</html>

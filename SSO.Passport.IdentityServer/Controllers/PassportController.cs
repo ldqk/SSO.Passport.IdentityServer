@@ -4,7 +4,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
-using AutoMapper;
 using Common;
 using IBLL;
 using Masuit.Tools;
@@ -47,7 +46,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 CookieHelper.SetCookie("refer", from);
             }
 
-            if (Session.GetByCookieRedis<UserInfoOutputDto>() != null)
+            if (Session.GetByCookieRedis<UserInfoDto>() != null)
             {
                 if (string.IsNullOrEmpty(from))
                 {
@@ -165,9 +164,9 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult GetUserInfo()
         {
-            UserInfoOutputDto user = Session.GetByCookieRedis<UserInfoOutputDto>();
+            UserInfoDto user = Session.GetByCookieRedis<UserInfoDto>();
 #if DEBUG
-            user = UserInfoBll.GetByUsername("masuit").Mapper<UserInfoOutputDto>();
+            user = UserInfoBll.GetByUsername("masuit").Mapper<UserInfoDto>();
 #endif
             return ResultData(user);
         }
@@ -234,7 +233,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                                             ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
             if (regex.Match(pwd).Success)
             {
-                UserInfoOutputDto user = UserInfoBll.Register(new UserInfo() { Username = name, Password = pwd });
+                UserInfoDto user = UserInfoBll.Register(new UserInfo() { Username = name, Password = pwd });
                 if (user != null)
                 {
                     return ResultData(user);
@@ -244,54 +243,5 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, false, "密码强度值不够，密码必须包含数字，必须包含小写或大写字母，必须包含至少一个特殊符号，至少6个字符，最多30个字符！");
         }
 
-        /// <summary>
-        /// 修改用户名
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="username"></param>
-        /// <returns></returns>
-        public ActionResult ChangeUsername(int id, string username)
-        {
-            UserInfo userInfo = UserInfoBll.GetById(id);
-            if (!username.Equals(userInfo.Username) && UserInfoBll.UsernameExist(username))
-            {
-                return ResultData(null, false, $"用户名{username}已经存在，请尝试更换其他用户名！");
-            }
-            userInfo.Username = username;
-            bool b = UserInfoBll.UpdateEntitySaved(userInfo);
-            return ResultData(Mapper.Map<UserInfoOutputDto>(userInfo), b, b ? $"用户名修改成功，新用户名为{username}。" : "用户名修改失败！");
-        }
-
-        /// <summary>
-        /// 修改密码
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="old"></param>
-        /// <param name="pwd"></param>
-        /// <param name="confirm"></param>
-        /// <returns></returns>
-        public ActionResult ChangePassword(Guid id, string old, string pwd, string confirm)
-        {
-            if (pwd.Length <= 6)
-            {
-                return ResultData(null, false, "密码过短，至少需要6个字符！");
-            }
-
-            if (!pwd.Equals(confirm))
-            {
-                return ResultData(null, false, "两次输入的密码不一致！");
-            }
-            var regex = new Regex(@"(?=.*[0-9])                     #必须包含数字
-                                            (?=.*[a-zA-Z])                  #必须包含小写或大写字母
-                                            (?=([\x21-\x7e]+)[^a-zA-Z0-9])  #必须包含特殊符号
-                                            .{6,30}                         #至少6个字符，最多30个字符
-                                            ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
-            if (regex.Match(pwd).Success)
-            {
-                bool b = UserInfoBll.ChangePassword(id, old, pwd);
-                return ResultData(null, b, b ? $"密码修改成功，新密码为：{pwd}！" : "密码修改失败，可能是原密码不正确！");
-            }
-            return ResultData(null, false, "密码强度值不够，密码必须包含数字，必须包含小写或大写字母，必须包含至少一个特殊符号，至少6个字符，最多30个字符！");
-        }
     }
 }

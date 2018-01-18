@@ -37,7 +37,7 @@ namespace Models.Dto
         /// <summary>
         /// 是否可用
         /// </summary>
-        public string IsAvailable { get; set; }
+        public bool IsAvailable { get; set; }
 
         /// <summary>
         /// 上级菜单

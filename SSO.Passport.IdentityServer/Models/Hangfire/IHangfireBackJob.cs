@@ -4,6 +4,6 @@ namespace SSO.Passport.IdentityServer.Models.Hangfire
 {
     public interface IHangfireBackJob
     {
-        void LoginRecord(UserInfoOutputDto userInfo, string ip);
+        void LoginRecord(UserInfoDto userInfo, string ip);
     }
 }

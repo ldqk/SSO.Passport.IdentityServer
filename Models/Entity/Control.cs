@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Models.Enum;
@@ -11,6 +12,7 @@ namespace Models.Entity
         public Control()
         {
             Permission = new HashSet<Permission>();
+            IsAvailable = true;
         }
 
 
@@ -33,7 +35,7 @@ namespace Models.Entity
         /// <summary>
         ///  «∑Òø…”√
         /// </summary>
-        [Required]
+        [Required, DefaultValue(true)]
         public bool IsAvailable { get; set; }
 
         public int ClientAppId { get; set; }

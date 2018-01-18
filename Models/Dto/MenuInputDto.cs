@@ -18,7 +18,7 @@ namespace Models.Dto
         /// 菜单URL
         /// </summary>
         [Display(Name = "菜单Url")]
-        [Required, DefaultValue("/")]
+        [DefaultValue("/")]
         public string Url { get; set; }
 
         /// <summary>
@@ -44,12 +44,6 @@ namespace Models.Dto
         /// </summary>
         [Display(Name = "class样式")]
         public string CssStyle { get; set; }
-
-        /// <summary>
-        /// 是否可用
-        /// </summary>
-        [Required]
-        public string IsAvailable { get; set; }
 
         /// <summary>
         /// 父级菜单

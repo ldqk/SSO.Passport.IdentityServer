@@ -12,6 +12,7 @@ namespace Models.Entity
         {
             Children = new HashSet<Menu>();
             Permission = new HashSet<Permission>();
+            IsAvailable = true;
         }
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace Models.Entity
         /// 菜单URL
         /// </summary>
         [Display(Name = "菜单Url")]
-        [Required, DefaultValue("/")]
+        [DefaultValue("/")]
         public string Url { get; set; }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace Models.Entity
         /// 是否可用
         /// </summary>
         [Required]
-        public string IsAvailable { get; set; }
+        public bool IsAvailable { get; set; }
 
         /// <summary>
         /// 父级菜单

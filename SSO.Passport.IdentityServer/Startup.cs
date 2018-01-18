@@ -41,7 +41,7 @@ namespace SSO.Passport.IdentityServer
 #if DEBUG
             return true;
 #endif
-            UserInfoOutputDto user = HttpContext.Current.Session.GetByCookieRedis<UserInfoOutputDto>() ?? new UserInfoOutputDto();
+            UserInfoDto user = HttpContext.Current.Session.GetByCookieRedis<UserInfoDto>() ?? new UserInfoDto();
             return user.IsMaster;
         }
     }

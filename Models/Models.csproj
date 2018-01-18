@@ -83,8 +83,7 @@
     <Compile Include="Dto\UserGroupInputDto.cs" />
     <Compile Include="Dto\UserGroupOutputDto.cs" />
     <Compile Include="Dto\UserGroupRoleOutputDto.cs" />
-    <Compile Include="Dto\UserInfoInputDto.cs" />
-    <Compile Include="Dto\UserInfoOutputDto.cs" />
+    <Compile Include="Dto\UserInfoDto.cs" />
     <Compile Include="Dto\UserPermissionOutputDto.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\ClientApp.cs" />

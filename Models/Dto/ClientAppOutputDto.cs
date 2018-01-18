@@ -31,6 +31,6 @@ namespace Models.Dto
         public virtual ICollection<PermissionOutputDto> Permissions { get; set; }
         public virtual ICollection<RoleOutputDto> Roles { get; set; }
 
-        public virtual ICollection<UserInfoOutputDto> UserInfo { get; set; }
+        public virtual ICollection<UserInfoDto> UserInfo { get; set; }
     }
 }

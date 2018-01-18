@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Models.Dto
 {
-    public partial class UserInfoOutputDto
+    public partial class UserInfoDto
     {
         public Guid Id { get; set; }
 
@@ -11,16 +11,6 @@ namespace Models.Dto
         /// 用户名
         /// </summary>
         public string Username { get; set; }
-
-        /// <summary>
-        /// 密码
-        /// </summary>
-        public string Password { get; set; }
-
-        /// <summary>
-        /// 密码加密盐
-        /// </summary>
-        public string SaltKey { get; set; }
 
         /// <summary>
         /// 手机号码
@@ -33,17 +23,29 @@ namespace Models.Dto
         public string Email { get; set; }
 
         /// <summary>
-        /// 是否是预置账户
+        /// 锁定状态
         /// </summary>
-        public bool IsPreset { get; set; }
+        public bool Locked { get; set; }
+
+        /// <summary>
+        /// 注册时间
+        /// </summary>
+        public DateTime RegisterTime { get; set; }
+
+        /// <summary>
+        /// 最后登录时间
+        /// </summary>
+        public DateTime LastLoginTime { get; set; }
+
+        /// <summary>
+        /// AccessKey
+        /// </summary>
+        public string AccessKey { get; set; }
 
         /// <summary>
         /// 是否是内置管理员
         /// </summary>
         public bool IsMaster { get; set; }
-
-        public virtual ICollection<ClientAppOutputDto> ClientApp { get; set; }
-
 
         public virtual ICollection<UserPermissionOutputDto> UserPermission { get; set; }
 

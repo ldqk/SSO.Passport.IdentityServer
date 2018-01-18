@@ -20,14 +20,14 @@ namespace IBLL
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        UserInfoOutputDto Login(string username, string password);
+        UserInfoDto Login(string username, string password);
 
         /// <summary>
         /// 注册
         /// </summary>
         /// <param name="userInfo"></param>
         /// <returns></returns>
-        UserInfoOutputDto Register(UserInfo userInfo);
+        UserInfoDto Register(UserInfo userInfo);
 
         /// <summary>
         /// 检查用户名是否存在

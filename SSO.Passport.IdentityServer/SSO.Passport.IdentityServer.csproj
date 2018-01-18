@@ -624,6 +624,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Passport\Login.cshtml" />
     <Content Include="Views\Home\FileManager.cshtml" />
+    <Content Include="Views\Home\Apis.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -2,7 +2,9 @@
 
 namespace Models.ViewModel
 {
-
+    /// <summary>
+    /// 分页数据返回模型
+    /// </summary>
     public class PageDataModel
     {
         public PageDataModel(object data, int pageCount, int totalCount)
@@ -18,6 +20,9 @@ namespace Models.ViewModel
 
     }
 
+    /// <summary>
+    /// Response返回模型
+    /// </summary>
     public class ResponseModel
     {
         public bool Success { get; set; }

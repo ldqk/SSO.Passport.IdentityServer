@@ -14,7 +14,7 @@ namespace SSO.Passport.IdentityServer.Models.Hangfire
         {
             UserInfoBll = userInfoBll;
         }
-        public void LoginRecord(UserInfoOutputDto userInfo, string ip)
+        public void LoginRecord(UserInfoDto userInfo, string ip)
         {
             PhysicsAddress address = ip.GetPhysicsAddressInfo();
             LoginRecord record = new LoginRecord() { IP = ip, LoginTime = DateTime.Now, PhysicAddress = address.AddressResult.FormattedAddress, Province = address.AddressResult.AddressComponent.Province };

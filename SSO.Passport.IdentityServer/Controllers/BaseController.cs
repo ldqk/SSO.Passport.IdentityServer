@@ -20,7 +20,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         protected IUserGroupBll UserGroupBll { get; set; } = AutofacConfig.Container.Resolve<IUserGroupBll>();
         protected IControlBll ControlBll { get; set; } = AutofacConfig.Container.Resolve<IControlBll>();
         protected static RedisHelper RedisHelper { get; set; } = new RedisHelper();
-        public UserInfoOutputDto CurrentUser { get; set; }
+        public UserInfoDto CurrentUser { get; set; }
 
         protected ActionResult ResultData(object data, bool isTrue = true, string message = "", bool isLogin = true)
         {

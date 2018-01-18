@@ -264,16 +264,24 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveRoles(int id, string rids)
         {
-            var @group = UserGroupBll.GetById(id);
-            if (group is null)
-            {
-                return ResultData(null, false, "用户组不存在");
-            }
-
             bool b = UserGroupRoleBll.DeleteEntitySaved(r => rids.Contains(r.Id.ToString()) && r.UserGroupId.Equals(id)) > 0;
             return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
         }
 
+        /// <summary>
+        /// 切换角色是否可用
+        /// </summary>
+        /// <param name="id">用户组id</param>
+        /// <param name="rid">角色id</param>
+        /// <param name="state">是否可用</param>
+        /// <returns></returns>
+        public ActionResult ToggleState(int id, int rid, bool state)
+        {
+            UserGroupRole role = UserGroupRoleBll.GetFirstEntity(u => u.UserGroupId.Equals(id) && u.RoleId.Equals(rid));
+            role.HasRole = state;
+            bool b = UserGroupRoleBll.UpdateEntitySaved(role);
+            return ResultData(null, b, b ? "用户组状态切换成功！" : "用户组状态切换失败！");
+        }
         #endregion
     }
 }

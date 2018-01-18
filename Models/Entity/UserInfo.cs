@@ -15,6 +15,8 @@ namespace Models.Entity
             UserPermission = new HashSet<UserPermission>();
             Role = new HashSet<Role>();
             UserGroup = new HashSet<UserGroup>();
+            RegisterTime = DateTime.Now;
+            LastLoginTime = RegisterTime;
         }
 
         [Key]
@@ -61,6 +63,27 @@ namespace Models.Entity
         /// </summary>
         [DefaultValue(false)]
         public bool IsMaster { get; set; }
+
+        /// <summary>
+        /// 锁定状态
+        /// </summary>
+        [DefaultValue(false)]
+        public bool Locked { get; set; }
+
+        /// <summary>
+        /// 注册时间
+        /// </summary>
+        public DateTime RegisterTime { get; set; }
+
+        /// <summary>
+        /// 最后登录时间
+        /// </summary>
+        public DateTime LastLoginTime { get; set; }
+
+        /// <summary>
+        /// AccessKey
+        /// </summary>
+        public string AccessKey { get; set; }
 
         public virtual ICollection<ClientApp> ClientApp { get; set; }
 

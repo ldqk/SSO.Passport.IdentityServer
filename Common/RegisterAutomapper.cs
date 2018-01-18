@@ -26,9 +26,8 @@ namespace Common
                 m.CreateMap<Role, RoleOutputDto>();
                 m.CreateMap<RoleInputDto, Role>();
 
-                m.CreateMap<UserInfo, UserInfoOutputDto>();
+                m.CreateMap<UserInfo, UserInfoDto>();
                 m.CreateMap<UserInfo, UserInfoViewModel>();
-                m.CreateMap<UserInfoInputDto, UserInfo>();
 
                 m.CreateMap<UserGroup, UserGroupOutputDto>();
                 m.CreateMap<UserGroupInputDto, UserGroup>();
