@@ -2,6 +2,7 @@
 	window.hub = {
 		disconnect: function() {}
 	};
+	var _self=this;
 	$scope.post = {};
 	Waves.init();
 	iziToast.settings({
@@ -198,12 +199,6 @@
 		$(".loading2").hide();
 		$(".loading3").hide();
 	}
-	$http.post("/passport/getuserinfo", null).then(function(res) {
-		if (res.data.Success) {
-			$scope.user = res.data.Data;
-		}
-	});
-
 	$scope.request = function(url, data, success, error) {
 		$scope.loading();
 		$http.post(url, data, {
@@ -269,41 +264,6 @@
 			if (result) {
 				$scope.user.Username = result;
 				$scope.request("/user/changeUsername", {
-					id: $scope.user.Id,
-					username:result
-				}, function (data) {
-					swal({
-						type: 'success',
-						html: data.Message
-					});
-				});
-			}
-		}).catch(swal.noop);
-	}
-	$scope.changeNickname= function() {
-		swal({
-			title: '请输入新的昵称',
-			input: 'text',
-			inputPlaceholder: '请输入昵称',
-			showCloseButton: true,
-			showCancelButton: true,
-			confirmButtonColor: "#DD6B55",
-			confirmButtonText: "确定",
-			cancelButtonText: "取消",
-			inputValue: $scope.user.NickName,
-			inputValidator: function (value) {
-				return new Promise(function (resolve, reject) {
-					if (value) {
-						resolve();
-					} else {
-						reject('昵称不能为空');
-					}
-				});
-			}
-		}).then(function (result) {
-			if (result) {
-				$scope.user.NickName = result;
-				$scope.request("/user/changeNickname", {
 					id: $scope.user.Id,
 					username:result
 				}, function (data) {
@@ -464,6 +424,21 @@
 			);
 		}).catch(swal.noop);
 	}
+	$http.post("/passport/getuser").then(function(res) {
+		var data=res.data;
+		sessionStorage.setItem("user",data.user);
+		sessionStorage.setItem("acl",data.acl);
+		sessionStorage.setItem("menus",data.menus);
+		$scope.Menus=transData(data.menus,"Id","ParentId","children");
+		$scope.user=data.user;
+		console.log($scope.Menus);
+	}, function() {
+		window.notie.alert({
+				type: 3,
+				text: '服务请求失败！',
+				time: 4
+			});
+	});
 }]);
 
 function getFile(obj, inputName) {
@@ -473,18 +448,18 @@ function getFile(obj, inputName) {
 }
 /**
  * 将带pid/ParentId的json数据转换成带children树形json
- * @param {any} a 源数据
- * @param {any} idStr  id字段
- * @param {any} pidStr  pid字段
- * @param {any} chindrenStr  children字段
+ * @param {any} source 源数据
+ * @param {any} idName  id字段
+ * @param {any} pidName  pid字段
+ * @param {any} chindrenName  children字段
  */
-function transData(a, idStr, pidStr, chindrenStr) {
-	var r = [], hash = {}, id = idStr, pid = pidStr, children = chindrenStr, i = 0, j = 0, len = a.length;
+function transData(source, idName, pidName, chindrenName) {
+	var r = [], hash = {}, idName = idName, pid = pidName, children = chindrenName, i = 0, j = 0, len = source.length;
 	for (; i < len; i++) {
-		hash[a[i][id]] = a[i];
+		hash[source[i][idName]] = source[i];
 	}
 	for (; j < len; j++) {
-		var aVal = a[j], hashVP = hash[aVal[pid]];
+		var aVal = source[j], hashVP = hash[aVal[pid]];
 		if (hashVP) {
 			!hashVP[children] && (hashVP[children] = []);
 			aVal[children] = [];

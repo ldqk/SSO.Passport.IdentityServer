@@ -46,6 +46,11 @@ namespace Models.Dto
         public string CssStyle { get; set; }
 
         /// <summary>
+        /// 排序号
+        /// </summary>
+        public int Sort { get; set; }
+
+        /// <summary>
         /// 父级菜单
         /// </summary>
         public int? ParentId { get; set; }

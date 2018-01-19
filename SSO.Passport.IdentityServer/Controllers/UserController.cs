@@ -107,6 +107,19 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(user);
         }
 
+        /// <summary>
+        /// 修改用户头像
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public ActionResult ChangeAvatar(Guid id, string path)
+        {
+            UserInfo userInfo = UserInfoBll.GetById(id);
+            userInfo.Avatar = path;
+            bool b = UserInfoBll.UpdateEntitySaved(userInfo);
+            return ResultData(Mapper.Map<UserInfoDto>(userInfo), b, b ? $"头像修改成功。" : "头像修改失败！");
+        }
         #region 权限配置
 
         /// <summary>

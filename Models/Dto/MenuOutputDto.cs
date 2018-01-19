@@ -35,6 +35,11 @@ namespace Models.Dto
         public string CssStyle { get; set; }
 
         /// <summary>
+        /// 排序号
+        /// </summary>
+        public int Sort { get; set; }
+
+        /// <summary>
         /// 是否可用
         /// </summary>
         public bool IsAvailable { get; set; }

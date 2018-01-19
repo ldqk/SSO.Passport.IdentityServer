@@ -71,6 +71,12 @@ namespace Models.Entity
         public bool Locked { get; set; }
 
         /// <summary>
+        /// 用户头像
+        /// </summary>
+        public string Avatar { get; set; }
+
+
+        /// <summary>
         /// 注册时间
         /// </summary>
         public DateTime RegisterTime { get; set; }

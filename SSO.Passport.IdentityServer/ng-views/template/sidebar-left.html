@@ -16,9 +16,6 @@
                 <a ng-click="changeUsername()"><i class="zmdi zmdi-account"></i>修改用户名</a>
             </li>
             <li>
-                <a ng-click="changeNickname()"><i class="zmdi zmdi-account"></i>修改昵称</a>
-            </li>
-            <li>
                 <a ng-click="changePassword()"><i class="zmdi zmdi-input-antenna"></i>修改密码</a>
             </li>
             <li>
@@ -34,14 +31,11 @@
     </div>
 
     <ul class="main-menu">
-        <li data-ui-sref-active="active">
-            <a data-ui-sref="dashboard" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-home"></i>控制面板</a>
-        </li>
-        <li data-ui-sref-active="active">
-            <a data-ui-sref-active="active" data-ui-sref="filemanager" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-archive"></i>文件管理器</a>
-        </li>
-        <li data-ui-sref-active="active">
-            <a data-ui-sref-active="active" data-ui-sref="taskcenter" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi zmdi-view-list"></i>后台任务监控</a>
+        <li ng-class="{'sub-menu':item.children.length>0}" data-ui-sref-active="active" ng-repeat="item in Menus">
+            <a toggle-submenu data-ui-sref="{{item.Route}}" data-ng-click="mactrl.sidebarStat($event)"><i class="zmdi {{item.CssStyle}}"></i>{{item.Name}}</a>
+            <ul ng-if="item.children">
+                <li ng-repeat="c in item.children"><a data-ui-sref-active="active" data-ui-sref="{{c.Route}}" data-ng-click="mactrl.sidebarStat($event)">{{c.Name}}</a></li>
+            </ul>
         </li>
     </ul>
 </div>

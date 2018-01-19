@@ -396,7 +396,7 @@ namespace BLL
                         list = list.Except(p.Permission.Menu.Where(c => c.IsAvailable)).ToList();
                     }
                 });
-                return list.Where(c => c.IsAvailable && c.ClientAppId == app.Id).Distinct(new MenuComparision()).ToList().Mapper<List<MenuOutputDto>>();
+                return list.Where(c => c.IsAvailable && c.ClientAppId == app.Id).OrderBy(m => m.Sort).Distinct(new MenuComparision()).ToList().Mapper<List<MenuOutputDto>>();
             }
             return new List<MenuOutputDto>();
         }

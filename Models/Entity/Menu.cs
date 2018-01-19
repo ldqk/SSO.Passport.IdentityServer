@@ -60,6 +60,11 @@ namespace Models.Entity
         public bool IsAvailable { get; set; }
 
         /// <summary>
+        /// ≈≈–Ú∫≈
+        /// </summary>
+        public int Sort { get; set; }
+
+        /// <summary>
         /// ∏∏º∂≤Àµ•
         /// </summary>
         public int? ParentId { get; set; }

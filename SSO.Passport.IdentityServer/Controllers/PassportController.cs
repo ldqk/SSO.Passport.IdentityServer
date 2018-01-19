@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -216,6 +218,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 return ResultData(null, false, "邮箱格式不正确！");
             }
+
             if (pwd.Length <= 6)
             {
                 return ResultData(null, false, "密码过短，至少需要6个字符！");
@@ -238,10 +241,40 @@ namespace SSO.Passport.IdentityServer.Controllers
                 {
                     return ResultData(user);
                 }
+
                 return ResultData(null, false, "用户注册失败！");
             }
+
             return ResultData(null, false, "密码强度值不够，密码必须包含数字，必须包含小写或大写字母，必须包含至少一个特殊符号，至少6个字符，最多30个字符！");
         }
 
+        /// <summary>
+        /// 获取用户信息、访问控制权限、菜单
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult GetUser()
+        {
+            UserInfoDto user = Session.GetByCookieRedis<UserInfoDto>();
+            string appid = ConfigurationManager.AppSettings["AppId"];
+            List<ControlOutputDto> acl = UserInfoBll.GetAccessControls(appid, user.Id);
+            List<MenuOutputDto> menus = UserInfoBll.GetMenus(appid, user.Id);
+            return Json(new { user, acl, menus });
+        }
+
+        /// <summary>
+        /// 获取登陆记录
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public ActionResult LoginRecord(string token, int page = 1, int size = 10)
+        {
+            UserInfoDto user = Session.GetByCookieRedis<UserInfoDto>();
+            List<LoginRecordDto> list = LoginRecordBll.LoadPageEntitiesNoTracking<DateTime, LoginRecordDto>(page, size, out int total, r => r.UserInfoId.Equals(user.Id), r => r.LoginTime, false).ToList();
+            int pages = (int)Math.Ceiling(total * 1.0 / size);
+            return ResultData(new { list, pages });
+        }
     }
 }

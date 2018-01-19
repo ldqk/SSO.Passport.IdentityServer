@@ -44,6 +44,15 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",
 					return $ocLazyLoad.load([cpath + "/system.js"]);
 				}]
 			}
+		}).state("swagger", {
+			url: "/system/swagger",
+			templateUrl: vpath + "/system/swagger.html",
+			controller: "swagger",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/system.js"]);
+				}]
+			}
 		}).state("loginrecord", {
 			url: "/loginrecord",
 			templateUrl: vpath + "/loginrecord.html",

@@ -45,5 +45,10 @@ namespace Models.Dto
         /// 是否是内置管理员
         /// </summary>
         public bool IsMaster { get; set; }
+
+        /// <summary>
+        /// 用户头像
+        /// </summary>
+        public string Avatar { get; set; }
     }
 }

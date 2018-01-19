@@ -2,7 +2,9 @@
 using System.Text;
 using System.Web.Mvc;
 using Autofac;
+using Common;
 using IBLL;
+using Masuit.Tools.Net;
 using Masuit.Tools.NoSQL;
 using Models.Dto;
 using Models.ViewModel;
@@ -31,6 +33,17 @@ namespace SSO.Passport.IdentityServer.Controllers
         {
             int pageCount = (int)Math.Ceiling(total * 1.0 / size);
             return Content(JsonConvert.SerializeObject(new PageDataModel(data, pageCount, total), new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Ignore }), "application/json", Encoding.UTF8);
+        }
+
+        /// <summary>在调用操作方法前调用。</summary>
+        /// <param name="filterContext">有关当前请求和操作的信息。</param>
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+#if DEBUG
+            var user = UserInfoBll.GetByUsername("admin").Mapper<UserInfoDto>();
+            CurrentUser = user;
+            Session.SetByRedis(user);
+#endif
         }
     }
 }

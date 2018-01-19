@@ -16,5 +16,11 @@
     "inputFiles": [
       "ng-views/template/loading.html"
     ]
+  },
+  {
+    "outputFileName": "ng-views/css/app.min.css",
+    "inputFiles": [
+      "ng-views/css/app.css"
+    ]
   }
 ]
