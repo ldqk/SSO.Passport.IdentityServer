@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Masuit.Tools.Logging;
 using Z.BulkOperations;
 
 namespace SSO.Passport.IdentityServer
@@ -14,6 +14,7 @@ namespace SSO.Passport.IdentityServer
         {
             LicenseManager.AddLicense("67;100-MASUIT", "809739091397182EC1ECEA8770EB4218");
             AreaRegistration.RegisterAllAreas();
+            GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

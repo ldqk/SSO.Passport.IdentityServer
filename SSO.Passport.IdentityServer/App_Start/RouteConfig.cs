@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Web.Http;
+using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace SSO.Passport.IdentityServer
@@ -15,10 +16,20 @@ namespace SSO.Passport.IdentityServer
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
-            routes.MapRoute(
-                name: "page2",
-                url: "{controller}/{action}/{page}/{size}/{orderby}",
-                defaults: new { controller = "Home", action = "Post", page = UrlParameter.Optional, size = UrlParameter.Optional, orderby = UrlParameter.Optional }
+        }
+    }
+    public static class WebApiConfig
+    {
+        public static void Register(HttpConfiguration config)
+        {
+            // Web API 配置和服务
+
+            // Web API 路由
+            config.MapHttpAttributeRoutes();
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
             );
         }
     }

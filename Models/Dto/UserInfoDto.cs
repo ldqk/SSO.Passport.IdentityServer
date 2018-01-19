@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Models.Dto
 {
@@ -46,12 +45,5 @@ namespace Models.Dto
         /// 是否是内置管理员
         /// </summary>
         public bool IsMaster { get; set; }
-
-        public virtual ICollection<UserPermissionOutputDto> UserPermission { get; set; }
-
-        public virtual ICollection<RoleOutputDto> Role { get; set; }
-
-        public virtual ICollection<UserGroupOutputDto> UserGroup { get; set; }
-        public virtual ICollection<LoginRecordDto> LoginRecords { get; set; }
     }
 }

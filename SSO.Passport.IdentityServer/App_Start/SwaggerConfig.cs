@@ -1,7 +1,9 @@
+using System;
+using System.IO;
 using System.Web.Http;
-using WebActivatorEx;
 using SSO.Passport.IdentityServer;
 using Swashbuckle.Application;
+using WebActivatorEx;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -61,7 +63,7 @@ namespace SSO.Passport.IdentityServer
                         //c.BasicAuth("basic")
                         //    .Description("Basic HTTP Authentication");
                         //
-						// NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                         //c.ApiKey("apiKey")
                         //    .Description("API Key Authentication")
                         //    .Name("apiKey")
@@ -79,14 +81,14 @@ namespace SSO.Passport.IdentityServer
                         //    });
 
                         // Set this flag to omit descriptions for any actions decorated with the Obsolete attribute
-                        //c.IgnoreObsoleteActions();
+                        c.IgnoreObsoleteActions();
 
                         // Each operation be assigned one or more tags which are then used by consumers for various reasons.
                         // For example, the swagger-ui groups operations according to the first tag of each operation.
                         // By default, this will be controller name but you can use the "GroupActionsBy" option to
                         // override with any value.
                         //
-                        //c.GroupActionsBy(apiDesc => apiDesc.HttpMethod.ToString());
+                        c.GroupActionsBy(apiDesc => apiDesc.HttpMethod.ToString());
 
                         // You can also specify a custom sort order for groups (as defined by "GroupActionsBy") to dictate
                         // the order in which operations are listed. For example, if the default grouping is in place
@@ -102,7 +104,10 @@ namespace SSO.Passport.IdentityServer
                         // more Xml comment files.
                         //
                         //c.IncludeXmlComments(GetXmlCommentsPath());
+                        //c.IncludeXmlComments(xmlPath);
 
+                        c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "SSO.Passport.IdentityServer.xml"));
+                        c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "Models.xml"));
                         // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                         // exposed in your API. However, there may be occasions when more control of the output is needed.
                         // This is supported through the "MapType" and "SchemaFilter" options:

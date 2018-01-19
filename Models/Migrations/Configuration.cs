@@ -103,10 +103,7 @@ namespace Models.Migrations
                 context.UserPermission.AddOrUpdate(p => new { p.PermissionId, p.UserInfoId }, ups.ToArray());
                 context.UserGroupPermission.AddOrUpdate(p => new { p.RoleId, p.UserGroupId }, ugps.ToArray());
                 context.SaveChanges();
-                context.Database.ExecuteSqlCommand(@"IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_getChildrenMenuByParentId]') AND type IN ('P', 'PC', 'RF', 'X'))
-	                                                                    DROP PROCEDURE[dbo].[sp_getChildrenMenuByParentId]
-                                                                    GO
-                                                                    Create PROC [dbo].[sp_getChildrenMenuByParentId](@ParentId int)
+                context.Database.ExecuteSqlCommand(@"Create PROC [dbo].[sp_getChildrenMenuByParentId](@ParentId int)
                                                                     AS
                                                                     BEGIN    
                                                                         WITH Tree
@@ -117,10 +114,7 @@ namespace Models.Migrations
                                                                             SELECT * FROM Tree   
                                                                     END
                                                                     ");
-                context.Database.ExecuteSqlCommand(@"IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_getParentMenuIdByChildId]') AND type IN ('P', 'PC', 'RF', 'X'))
-	                                                                    DROP PROCEDURE[dbo].[sp_getParentMenuIdByChildId]
-                                                                    GO
-                                                                    Create PROCEDURE [dbo].[sp_getParentMenuIdByChildId]
+                context.Database.ExecuteSqlCommand(@"Create PROCEDURE [dbo].[sp_getParentMenuIdByChildId]
                                                                           @cid AS int =1 
                                                                         AS
                                                                         BEGIN
@@ -132,10 +126,7 @@ namespace Models.Migrations
                                                                          SELECT top 1 Id FROM Tree  ORDER BY Id
                                                                         END
                                                                     ");
-                context.Database.ExecuteSqlCommand(@"IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_getChildrenGroupByParentId]') AND type IN ('P', 'PC', 'RF', 'X'))
-	                                                                    DROP PROCEDURE[dbo].[sp_getChildrenGroupByParentId]
-                                                                    GO
-                                                                    Create PROC [dbo].[sp_getChildrenGroupByParentId](@ParentId int)
+                context.Database.ExecuteSqlCommand(@"Create PROC [dbo].[sp_getChildrenGroupByParentId](@ParentId int)
                                                                     AS
                                                                     BEGIN    
                                                                         WITH Tree
@@ -146,10 +137,7 @@ namespace Models.Migrations
                                                                             SELECT * FROM Tree   
                                                                     END
                                                                     ");
-                context.Database.ExecuteSqlCommand(@"IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_getParentGroupIdByChildId]') AND type IN ('P', 'PC', 'RF', 'X'))
-	                                                                    DROP PROCEDURE[dbo].[sp_getParentGroupIdByChildId]
-                                                                    GO
-                                                                    Create PROCEDURE [dbo].[sp_getParentGroupIdByChildId]
+                context.Database.ExecuteSqlCommand(@"Create PROCEDURE [dbo].[sp_getParentGroupIdByChildId]
                                                                           @cid AS int =1 
                                                                         AS
                                                                         BEGIN
@@ -161,10 +149,7 @@ namespace Models.Migrations
                                                                          SELECT top 1 Id FROM Tree  ORDER BY Id
                                                                         END
                                                                     ");
-                context.Database.ExecuteSqlCommand(@"IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_getChildrenRoleByParentId]') AND type IN ('P', 'PC', 'RF', 'X'))
-	                                                                    DROP PROCEDURE[dbo].[sp_getChildrenRoleByParentId]
-                                                                    GO
-                                                                    Create PROC [dbo].[sp_getChildrenRoleByParentId](@ParentId int)
+                context.Database.ExecuteSqlCommand(@"Create PROC [dbo].[sp_getChildrenRoleByParentId](@ParentId int)
                                                                     AS
                                                                     BEGIN    
                                                                         WITH Tree
@@ -175,10 +160,7 @@ namespace Models.Migrations
                                                                             SELECT * FROM Tree   
                                                                     END
                                                                     ");
-                context.Database.ExecuteSqlCommand(@"IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_getParentRoleIdByChildId]') AND type IN ('P', 'PC', 'RF', 'X'))
-	                                                                    DROP PROCEDURE[dbo].[sp_getParentRoleIdByChildId]
-                                                                    GO
-                                                                    Create PROCEDURE [dbo].[sp_getParentRoleIdByChildId]
+                context.Database.ExecuteSqlCommand(@"Create PROCEDURE [dbo].[sp_getParentRoleIdByChildId]
                                                                           @cid AS int =1 
                                                                         AS
                                                                         BEGIN
@@ -190,10 +172,7 @@ namespace Models.Migrations
                                                                          SELECT top 1 Id FROM Tree  ORDER BY Id
                                                                         END
                                                                     ");
-                context.Database.ExecuteSqlCommand(@"IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_getChildrenPermissionByParentId]') AND type IN ('P', 'PC', 'RF', 'X'))
-	                                                                    DROP PROCEDURE[dbo].[sp_getChildrenPermissionByParentId]
-                                                                    GO
-                                                                    Create PROC [dbo].[sp_getChildrenPermissionByParentId](@ParentId int)
+                context.Database.ExecuteSqlCommand(@"Create PROC [dbo].[sp_getChildrenPermissionByParentId](@ParentId int)
                                                                     AS
                                                                     BEGIN    
                                                                         WITH Tree
@@ -204,10 +183,7 @@ namespace Models.Migrations
                                                                             SELECT * FROM Tree   
                                                                     END
                                                                     ");
-                context.Database.ExecuteSqlCommand(@"IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_getParentPermissionIdByChildId]') AND type IN ('P', 'PC', 'RF', 'X'))
-	                                                                    DROP PROCEDURE[dbo].[sp_getParentPermissionIdByChildId]
-                                                                    GO
-                                                                    Create PROCEDURE [dbo].[sp_getParentPermissionIdByChildId]
+                context.Database.ExecuteSqlCommand(@"Create PROCEDURE [dbo].[sp_getParentPermissionIdByChildId]
                                                                           @cid AS int =1 
                                                                         AS
                                                                         BEGIN

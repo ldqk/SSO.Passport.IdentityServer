@@ -26,7 +26,7 @@ namespace DAL
         /// <returns></returns>
         public DataContext GetDataContext()
         {
-            return db;
+            return WebExtension.GetDbContext<DataContext>();
         }
         /// <summary>
         /// 获取所有实体
