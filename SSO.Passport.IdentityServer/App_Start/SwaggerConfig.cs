@@ -88,7 +88,7 @@ namespace SSO.Passport.IdentityServer
                         // By default, this will be controller name but you can use the "GroupActionsBy" option to
                         // override with any value.
                         //
-                        c.GroupActionsBy(apiDesc => apiDesc.HttpMethod.ToString());
+                        //c.GroupActionsBy(apiDesc => apiDesc.HttpMethod.ToString());
 
                         // You can also specify a custom sort order for groups (as defined by "GroupActionsBy") to dictate
                         // the order in which operations are listed. For example, if the default grouping is in place
