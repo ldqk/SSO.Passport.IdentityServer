@@ -1,3 +1,3 @@
-﻿myApp.controller('menu', ["$timeout", "$state", "$scope", "$http", function ($timeout, $state, $scope, $http) {
+﻿myApp.controller('menu', ["$timeout", "$state","NgTableParams", "$scope", "$http", function ($timeout, $state,NgTableParams, $scope, $http) {
 
-}
+}]);

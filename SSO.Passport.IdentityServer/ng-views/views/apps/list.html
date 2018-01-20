@@ -1,0 +1,82 @@
+﻿<div>
+    <button class="btn btn-primary waves-effect" ng-click="add()"><span class="glyphicon glyphicon-plus"></span></button>
+    <div class="form-inline pull-right">
+        <button class="btn btn-info waves-effect" ng-click="list.GetPageData(paginationConf.currentPage, paginationConf.itemsPerPage);">
+            <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        <div class="input-group">
+            <span class="input-group-addon">全局搜索：</span>
+            <div class="fg-line">
+                <input type="text" class="form-control" ng-change="search(kw)" ng-model="kw" placeholder="全局搜索" />
+            </div>
+        </div>
+    </div>
+    <table ng-table="list.tableParams" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+        <colgroup>
+            <col width="10%" />
+            <col width="15%" />
+            <col width="15%" />
+            <col width="5%" />
+            <col width="5%" />
+            <col width="35%" />
+            <col width="15%" />
+        </colgroup>
+        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row">
+            <td title="'客户端子系统名字'" filter="{AppName: 'text'}" sortable="'AppName'">
+                {{row.AppName}}
+            </td>
+            <td title="'客户端子系统唯一标识'" filter="{AppId: 'text'}">
+                {{row.AppId}}
+            </td>
+            <td title="'客户端子系统密钥'" filter="{AppSecret: 'number'}">
+                {{row.AppSecret}}
+            </td>
+            <td title="'可用'">
+                <label class="el-switch">
+                    <input type="checkbox" name="switch" ng-model="row.Available" ng-disabled="row.Preset">
+                    <span class="el-switch-style" ng-click="toggle(row)"></span>
+                </label>
+            </td>
+            <td title="'预置'">
+                <label class="el-checkbox">
+                    <input type="checkbox" name="check" ng-model="row.Preset" disabled="disabled">
+                    <span class="el-checkbox-style"></span>
+                </label>
+            </td>
+            <td title="'权限配置'">
+                <div class="btn-group">
+                    <button class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)">
+                        配置用户
+                    </button>
+                    <button class="btn btn-info btn-sm waves-effect" ng-click="list.del(row)">
+                        配置用户组
+                    </button>
+                    <button class="btn btn-primary btn-sm waves-effect" ng-click="list.del(row)">
+                        配置角色
+                    </button>
+                    <button class="btn btn-success btn-sm waves-effect" ng-click="list.del(row)">
+                        配置权限
+                    </button>
+                    <button class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)">
+                        管理访问控制
+                    </button>
+                    <button class="btn btn-info btn-sm waves-effect" ng-click="list.del(row)">
+                        管理菜单
+                    </button>
+                </div>
+            </td>
+            <td title="'操作管理'">
+                <div class="btn-group">
+                    <button class="btn btn-info btn-sm waves-effect" ng-click="list.edit(row)" ng-if="!row.Preset">
+                        <i class="icon-pencil"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)" ng-if="!row.Preset">
+                        <i class="icon-cross"></i>
+                    </button>
+                </div>
+                <span ng-if="row.Preset">预置应用不可更改</span>
+            </td>
+        </tr>
+    </table>
+    <tm-pagination conf="paginationConf"></tm-pagination>
+</div>

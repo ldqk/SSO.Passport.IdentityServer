@@ -1,0 +1,55 @@
+﻿<div>
+    <div class="form-inline pull-right">
+        <button class="btn btn-info waves-effect" ng-click="list.GetPageData(paginationConf.currentPage, paginationConf.itemsPerPage);">
+            <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        <div class="input-group">
+            <span class="input-group-addon">全局搜索：</span>
+            <div class="fg-line">
+                <input type="text" class="form-control" ng-change="search(kw)" ng-model="kw" placeholder="全局搜索" />
+            </div>
+        </div>
+    </div>
+    <table ng-table="list.tableParams" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row">
+            <td title="'客户端子系统名字'" filter="{AppName: 'text'}" sortable="'AppName'">
+                {{row.AppName}}
+            </td>
+            <td title="'客户端子系统唯一标识'" filter="{AppId: 'text'}" sortable="'AppId'">
+                {{row.AppId}}
+            </td>
+            <td title="'客户端子系统密钥'" filter="{AppSecret: 'number'}" sortable="'AppSecret'">
+                {{row.AppSecret}}
+            </td>
+            <td title="'是否可用'" filter="{Available: 'text'}" sortable="'Available'">
+                {{row.Available}}
+            </td>
+            <td title="'预置应用'" filter="{Preset: 'text'}" sortable="'Preset'">
+                {{row.Preset}}
+            </td>
+            <td title="'操作'" style="width: 155px;">
+                <div class="btn-group">
+                    <button class="btn btn-default btn-sm waves-effect" ng-click="list.pass(row)" ng-if="row.Status=='审核中'">
+                        <i class="icon-checkmark"></i>
+                    </button>
+                    <a class="btn btn-success btn-sm waves-effect" ng-href="#/post/edit?id={{row.Id}}">
+                        <i class="icon-pencil"></i>
+                    </a>
+                    <button class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)" ng-if="row.Status!='已删除'">
+                        <i class="icon-bin"></i>
+                    </button>
+                    <a class="btn btn-danger btn-sm waves-effect" ng-click="list.truncate(row)" ng-if="row.Status=='已删除'">
+                        <i class="icon-cross"></i>
+                    </a>
+                    <a class="btn btn-info btn-sm waves-effect" ng-click="list.restore(row)" ng-if="row.Status=='已删除'">
+                        <i class="icon-undo2"></i>
+                    </a>
+                    <a class="btn  btn-sm waves-effect" ng-class="{true:'btn-success',false:'btn-primary'}[row.IsFixedTop]" ng-click="list.fixtop(row.Id)">
+                        <i class="icon-pushpin" ng-class="{true:'text-danger'}[row.IsFixedTop]"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <tm-pagination conf="paginationConf"></tm-pagination>
+</div>

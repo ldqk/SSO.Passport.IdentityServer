@@ -10856,10 +10856,10 @@ a.lv-footer:hover {
 .table > tfoot > tr.danger > td {
   border: 0;
 }
-.table > tbody > tr:last-child > td,
+/*.table > tbody > tr:last-child > td,
 .table > tfoot > tr:last-child > td {
   padding-bottom: 20px;
-}
+}*/
 .table-striped td,
 .table-striped th {
   border: 0 !important;

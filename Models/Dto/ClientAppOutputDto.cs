@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Models.Entity;
+﻿using Models.Entity;
 
 namespace Models.Dto
 {
@@ -25,12 +24,9 @@ namespace Models.Dto
         /// </summary>
         public bool Available { get; set; }
 
-        public virtual ICollection<UserGroupOutputDto> UserGroup { get; set; }
-        public virtual ICollection<ControlOutputDto> Controls { get; set; }
-        public virtual ICollection<MenuOutputDto> Menus { get; set; }
-        public virtual ICollection<PermissionOutputDto> Permissions { get; set; }
-        public virtual ICollection<RoleOutputDto> Roles { get; set; }
-
-        public virtual ICollection<UserInfoDto> UserInfo { get; set; }
+        /// <summary>
+        /// 是否是预置
+        /// </summary>
+        public bool Preset { get; set; }
     }
 }

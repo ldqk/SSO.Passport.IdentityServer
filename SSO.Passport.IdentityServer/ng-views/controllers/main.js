@@ -199,25 +199,14 @@
 		$(".loading2").hide();
 		$(".loading3").hide();
 	}
-	$scope.request = function(url, data, success, error) {
+	$scope.request = function(url, data, success) {
 		$scope.loading();
 		$http.post(url, data, {
 			'Content-Type': 'application/x-www-form-urlencoded'
 		}).then(function(res) {
 			$scope.loadingDone();
-			if (res.data.Success && res.data.IsLogin) {
+			if (res.data) {
 				success(res.data);
-			} else {
-				if (error) {
-					error(res.data);
-				} else {
-					window.notie.alert({
-						type: 3,
-						text: res.data.Message,
-						time: 4
-					});
-				}
-				$scope.CheckLogin(res.data);
 			}
 		}, function() {
 			window.notie.alert({
@@ -431,7 +420,6 @@
 		sessionStorage.setItem("menus",data.menus);
 		$scope.Menus=transData(data.menus,"Id","ParentId","children");
 		$scope.user=data.user;
-		console.log($scope.Menus);
 	}, function() {
 		window.notie.alert({
 				type: 3,

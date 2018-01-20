@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Common
 {
@@ -25,5 +26,23 @@ namespace Common
         public static DateTime StartupTime { get; set; } = DateTime.Now;
 
         #endregion
+        public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right, string strname)
+        {
+            var dateExpr = Expression.Parameter(typeof(T));
+            var parameterReplacer = new ParameterReplacer(dateExpr);
+            var leftwhere = parameterReplacer.Replace(left.Body);
+            var rightwhere = parameterReplacer.Replace(right.Body);
+            var body = Expression.And(leftwhere, rightwhere);
+            return Expression.Lambda<Func<T, bool>>(body, dateExpr);
+        }
+
+        public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right, string strname)
+        {
+            var dateExpr = Expression.Parameter(typeof(T));
+            var leftwhere = left.Body;
+            var rightwhere = right.Body;
+            var body = Expression.Or(leftwhere, rightwhere);
+            return Expression.Lambda<Func<T, bool>>(body, dateExpr);
+        }
     }
 }

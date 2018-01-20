@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Mvc;
 using Common;
 using Masuit.Tools.Security;
@@ -48,6 +49,10 @@ namespace SSO.Passport.IdentityServer.Controllers
             ClientApp app = ClientAppBll.GetById(id);
             if (app != null)
             {
+                if (ClientAppBll.Any(a => a.AppName.Equals(name) && !a.AppName.Equals(app.AppName)))
+                {
+                    return ResultData(null, false, $"{name} 应用已经存在！");
+                }
                 app.AppName = name;
                 bool b = ClientAppBll.UpdateEntitySaved(app);
                 return ResultData(null, b, b ? "修改成功" : "修改失败！");
@@ -63,7 +68,17 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult Delete(int id)
         {
-            bool b = ClientAppBll.DeleteByIdSaved(id);
+            ClientApp app = ClientAppBll.GetById(id);
+            if (app is null)
+            {
+                return ResultData(null, false, "应用不存在！");
+            }
+
+            if (app.Preset)
+            {
+                return ResultData(null, false, "预置应用不能被删除！");
+            }
+            bool b = ClientAppBll.DeleteEntitySaved(a => a.Id.Equals(id) && !a.Preset) > 0;
             return ResultData(null, b, b ? "应用删除成功！" : "应用删除失败！");
         }
 
@@ -72,10 +87,12 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// </summary>
         /// <param name="page"></param>
         /// <param name="size"></param>
+        /// <param name="kw">搜索关键词</param>
         /// <returns></returns>
-        public ActionResult PageData(int page = 1, int size = 10)
+        public ActionResult PageData(int page = 1, int size = 10, string kw = "")
         {
-            List<ClientAppOutputDto> list = ClientAppBll.LoadPageEntitiesFromL2CacheNoTracking<int, ClientAppOutputDto>(page, size, out int total, a => true, a => a.Id, false).ToList();
+            var where = string.IsNullOrEmpty(kw) ? (Expression<Func<ClientApp, bool>>)(a => true) : (a => a.AppName.Contains(kw) || a.Description.Contains(kw));
+            List<ClientAppOutputDto> list = ClientAppBll.LoadPageEntitiesNoTracking<int, ClientAppOutputDto>(page, size, out int total, where, a => a.Id, false).ToList();
             return PageResult(list, size, total);
         }
 
@@ -90,6 +107,38 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(app);
         }
 
+        /// <summary>
+        /// 获取所有的子系统
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetAll()
+        {
+            List<ClientAppOutputDto> apps = ClientAppBll.GetAllNoTracking<ClientAppOutputDto>().ToList();
+            return ResultData(apps);
+        }
+
+        /// <summary>
+        /// 切换应用的可用状态
+        /// </summary>
+        /// <param name="id">应用id</param>
+        /// <param name="state">可用状态</param>
+        /// <returns></returns>
+        public ActionResult ToggleState(int id, bool state)
+        {
+            ClientApp app = ClientAppBll.GetById(id);
+            if (app is null)
+            {
+                return ResultData(null, false, "应用不存在！");
+            }
+
+            if (app.Preset)
+            {
+                return ResultData(null, false, "预置应用的状态不能修改！");
+            }
+            app.Available = state;
+            bool b = ClientAppBll.UpdateEntitySaved(app);
+            return ResultData(null, b, b ? "状态切换成功！" : "状态切换失败！");
+        }
         #endregion
 
         #region 多对多

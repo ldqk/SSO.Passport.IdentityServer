@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 using Common;
 using IBLL;
+using Microsoft.Ajax.Utilities;
 using Models.Dto;
 using Models.Entity;
 
@@ -21,49 +22,45 @@ namespace SSO.Passport.IdentityServer.Controllers
         #region 增删查改
 
         /// <summary>
-        /// 添加角色
+        /// 添加或修改角色
         /// </summary>
-        /// <param name="name">角色名</param>
-        /// <param name="pid">父级组</param>
+        /// <param name="Id"></param>
+        /// <param name="RoleName">新名字</param>
+        /// <param name="ParentId">父级组</param>
+        /// <param name="appid">appid</param>
         /// <returns></returns>
-        public ActionResult Add(string name, int? pid)
+        public ActionResult Save(int Id = 0, string RoleName = "", int? ParentId = null, string appid = "")
         {
-            if (RoleBll.Any(a => a.RoleName.Equals(name)))
-            {
-                return ResultData(null, false, $"{name} 角色已经存在！");
-            }
-
-            Role role = new Role() { RoleName = name, ParentId = pid };
-            role = RoleBll.AddEntitySaved(role);
+            ParentId = ParentId == 0 ? null : ParentId;
+            Role role = RoleBll.GetById(Id);
             if (role != null)
             {
-                return ResultData(role, true, "角色添加成功！");
-            }
-
-            return ResultData(null, false, "角色添加失败！");
-        }
-
-        /// <summary>
-        /// 修改角色
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name">新名字</param>
-        /// <param name="pid">父级角色</param>
-        /// <returns></returns>
-        public ActionResult Update(int id, string name, int? pid)
-        {
-            Role role = RoleBll.GetById(id);
-            if (role != null)
-            {
-                role.RoleName = name;
-                role.ParentId = id;
+                //修改
+                if (RoleBll.Any(a => a.RoleName.Equals(RoleName) && !a.RoleName.Equals(role.RoleName)))
+                {
+                    return ResultData(null, false, $"{RoleName} 角色已经存在！");
+                }
+                role.RoleName = RoleName;
+                role.ParentId = ParentId;
                 bool b = RoleBll.UpdateEntitySaved(role);
                 return ResultData(null, b, b ? "修改成功" : "修改失败！");
             }
-
-            return ResultData(null, false, "未找到角色！");
+            //添加
+            if (RoleBll.Any(a => a.RoleName.Equals(RoleName)))
+            {
+                return ResultData(null, false, $"{RoleName} 角色已经存在！");
+            }
+            role = new Role() { RoleName = RoleName, ParentId = ParentId };
+            if (!string.IsNullOrEmpty(appid) && ClientAppBll.Any(a => a.AppId.Equals(appid)))
+            {
+                var app = ClientAppBll.GetFirstEntity(a => a.AppId.Equals(appid));
+                app.Roles.Add(role);
+                bool b = ClientAppBll.UpdateEntitySaved(app);
+                return ResultData(null, b, b ? "角色添加成功!" : "角色添加失败!");
+            }
+            role = RoleBll.AddEntitySaved(role);
+            return role != null ? ResultData(role, true, "角色添加成功！") : ResultData(null, false, "角色添加失败！");
         }
-
         /// <summary>
         /// 删除角色
         /// </summary>
@@ -84,7 +81,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult PageData(string appid, int page = 1, int size = 10)
         {
-            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Role, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppName.Equals(appid)));
+            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Role, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppId.Equals(appid)));
             List<int> ids = RoleBll.LoadPageEntitiesNoTracking<int, RoleOutputDto>(page, size, out int total, where, a => a.Id, false).Select(g => g.Id).ToList();
             List<RoleOutputDto> list = new List<RoleOutputDto>();
             ids.ForEach(g =>
@@ -92,25 +89,27 @@ namespace SSO.Passport.IdentityServer.Controllers
                 List<RoleOutputDto> temp = RoleBll.GetSelfAndChildrenByParentId(g).ToList();
                 list.AddRange(temp);
             });
-            return PageResult(list, size, total);
+            return PageResult(list.DistinctBy(u => u.Id), size, total);
         }
 
         /// <summary>
         /// 获取应用所有的角色
         /// </summary>
         /// <param name="appid"></param>
+        /// <param name="kw"></param>
         /// <returns></returns>
-        public ActionResult GetAll(string appid)
+        public ActionResult GetAll(string appid, string kw)
         {
-            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Role, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppName.Equals(appid)));
+            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Role, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppId.Equals(appid)));
             List<int> ids = RoleBll.LoadEntitiesNoTracking<RoleOutputDto>(where).Select(g => g.Id).ToList();
             List<RoleOutputDto> list = new List<RoleOutputDto>();
             ids.ForEach(g =>
             {
-                List<RoleOutputDto> temp = RoleBll.GetSelfAndChildrenByParentId(g).ToList();
+                var raw = RoleBll.GetSelfAndChildrenByParentId(g);
+                var temp = string.IsNullOrEmpty(kw) ? raw.ToList() : raw.Where(u => u.RoleName.Contains(kw)).ToList();
                 list.AddRange(temp);
             });
-            return ResultData(list);
+            return ResultData(list.DistinctBy(u => u.Id));
         }
 
         /// <summary>

@@ -22,5 +22,11 @@
     "inputFiles": [
       "ng-views/css/app.css"
     ]
+  },
+  {
+    "outputFileName": "ng-views/css/checkbox.min.css",
+    "inputFiles": [
+      "ng-views/css/checkbox.css"
+    ]
   }
 ]

@@ -7,9 +7,11 @@ using System.Text.RegularExpressions;
 using System.Web.Http;
 using AutoMapper;
 using IBLL;
+using Masuit.Tools;
 using Masuit.Tools.NoSQL;
 using Masuit.Tools.Security;
 using Models.Dto;
+using Models.Entity;
 using Newtonsoft.Json;
 
 namespace SSO.Passport.IdentityServer.Controllers
@@ -24,10 +26,12 @@ namespace SSO.Passport.IdentityServer.Controllers
         public IUserInfoBll UserInfoBll { get; set; }
         public static RedisHelper RedisHelper { get; set; } = new RedisHelper();
         public ILoginRecordBll LoginRecordBll { get; set; }
-        public PublicController(IUserInfoBll userInfoBll, ILoginRecordBll loginRecordBll)
+        public IClientAppBll ClientAppBll { get; set; }
+        public PublicController(IUserInfoBll userInfoBll, ILoginRecordBll loginRecordBll, IClientAppBll clientAppBll)
         {
             UserInfoBll = userInfoBll;
             LoginRecordBll = loginRecordBll;
+            ClientAppBll = clientAppBll;
         }
 
         protected IHttpActionResult ResultData(object data, bool isTrue = true, string message = "", bool isLogin = true)
@@ -166,6 +170,64 @@ namespace SSO.Passport.IdentityServer.Controllers
             List<LoginRecordDto> list = LoginRecordBll.LoadPageEntitiesNoTracking<DateTime, LoginRecordDto>(page, size, out int total, r => r.UserInfoId.Equals(user.Id), r => r.LoginTime, false).ToList();
             int pages = (int)Math.Ceiling(total * 1.0 / size);
             return ResultData(new { list, pages });
+        }
+
+        /// <summary>
+        /// 注册用户
+        /// </summary>
+        /// <param name="appid">appid</param>
+        /// <param name="name"></param>
+        /// <param name="email"></param>
+        /// <param name="pwd"></param>
+        /// <param name="confirm"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult Register(string appid, string name, string email, string pwd, string confirm)
+        {
+            if (!ClientAppBll.Any(a => a.AppId.Equals(appid)))
+            {
+                return ResultData(null, false, "应用不存在！");
+            }
+            if (String.IsNullOrEmpty(name.Trim()))
+            {
+                return ResultData(null, false, "用户名不能为空");
+            }
+
+            if (!email.MatchEmail())
+            {
+                return ResultData(null, false, "邮箱格式不正确！");
+            }
+
+            if (pwd.Length <= 6)
+            {
+                return ResultData(null, false, "密码过短，至少需要6个字符！");
+            }
+
+            if (!pwd.Equals(confirm))
+            {
+                return ResultData(null, false, "两次输入的密码不一致！");
+            }
+
+            var regex = new Regex(@"(?=.*[0-9])                     #必须包含数字
+                                            (?=.*[a-zA-Z])                  #必须包含小写或大写字母
+                                            (?=([\x21-\x7e]+)[^a-zA-Z0-9])  #必须包含特殊符号
+                                            .{6,30}                         #至少6个字符，最多30个字符
+                                            ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
+            if (regex.Match(pwd).Success)
+            {
+                UserInfoDto user = UserInfoBll.Register(new UserInfo() { Username = name, Password = pwd });
+                if (user != null)
+                {
+                    ClientApp app = ClientAppBll.GetFirstEntity(a => a.AppId.Equals(appid));
+                    app.UserInfo.Add(UserInfoBll.GetById(user.Id));
+                    bool b = ClientAppBll.UpdateEntitySaved(app);
+                    return ResultData(user, true, b ? "用户注册成功！" : "用户注册成功，但尚未分配到指定的应用子系统，请联系管理员！");
+                }
+
+                return ResultData(null, false, "用户注册失败！");
+            }
+
+            return ResultData(null, false, "密码强度值不够，密码必须包含数字，必须包含小写或大写字母，必须包含至少一个特殊符号，至少6个字符，最多30个字符！");
         }
     }
 }

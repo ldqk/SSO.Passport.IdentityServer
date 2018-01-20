@@ -62,5 +62,80 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",
 					return $ocLazyLoad.load([cpath + "/loginrecord.js"]);
 				}]
 			}
+		}).state("user", {
+			url: "/user",
+			templateUrl: vpath + "/user/list.html",
+			controller: "user as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/user.js"]);
+				}]
+			}
+		}).state("apps", {
+			url: "/apps",
+			templateUrl: vpath + "/apps/list.html",
+			controller: "apps as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/clientApps.js"]);
+				}]
+			}
+		}).state("group", {
+			url: "/group",
+			templateUrl: vpath + "/group/list.html",
+			controller: "group as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([{
+						files: ["https://cdn.bootcss.com/angular-ui-tree/2.22.6/angular-ui-tree.css","/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/group.js"]);
+				}]
+			}
+		}).state("role", {
+			url: "/role",
+			templateUrl: vpath + "/role/list.html",
+			controller: "role as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([{
+						files: ["https://cdn.bootcss.com/angular-ui-tree/2.22.6/angular-ui-tree.css","/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/role.js"]);
+				}]
+			}
+		}).state("permission", {
+			url: "/permission",
+			templateUrl: vpath + "/permission/list.html",
+			controller: "permission as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([{
+						files: ["https://cdn.bootcss.com/angular-ui-tree/2.22.6/angular-ui-tree.css","/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/permission.js"]);
+				}]
+			}
+		}).state("access", {
+			url: "/access",
+			templateUrl: vpath + "/access/list.html",
+			controller: "access as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/access.js"]);
+				}]
+			}
+		}).state("menu", {
+			url: "/menu",
+			templateUrl: vpath + "/menu/list.html",
+			controller: "menu as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([{
+						files: ["https://cdn.bootcss.com/angular-ui-tree/2.22.6/angular-ui-tree.css","/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/menu.js"]);
+				}]
+			}
 		})
 	}]);

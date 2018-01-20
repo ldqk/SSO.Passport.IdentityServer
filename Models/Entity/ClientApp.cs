@@ -45,6 +45,12 @@ namespace Models.Entity
         [DefaultValue(true)]
         public bool Available { get; set; }
 
+        /// <summary>
+        ///  «∑Ò «‘§÷√
+        /// </summary>
+        [DefaultValue(false)]
+        public bool Preset { get; set; }
+
         public virtual ICollection<UserGroup> UserGroup { get; set; }
         public virtual ICollection<Control> Controls { get; set; }
         public virtual ICollection<Menu> Menus { get; set; }

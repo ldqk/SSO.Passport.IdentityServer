@@ -75,7 +75,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult PageData(string appid, int page = 1, int size = 10)
         {
             var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Control, bool>>)(c => true) : (c => c.ClientApp.AppId.Equals(appid));
-            List<ControlOutputDto> list = ControlBll.LoadPageEntitiesFromL2CacheNoTracking<int, ControlOutputDto>(page, size, out int total, where, c => c.Id, false).ToList();
+            List<ControlOutputDto> list = ControlBll.LoadPageEntitiesNoTracking<int, ControlOutputDto>(page, size, out int total, where, c => c.Id, false).ToList();
             return PageResult(list, size, total);
         }
 

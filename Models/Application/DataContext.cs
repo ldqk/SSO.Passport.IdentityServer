@@ -54,7 +54,6 @@ namespace Models.Application
             //modelBuilder.Entity<UserGroup>().HasRequired(e => e.ClientApp).WithMany(a => a.UserGroup).WillCascadeOnDelete(true);
         }
 
-        //��д SaveChanges
         public int SaveChanges(bool invalidateCacheDependencies = true)
         {
             return SaveAllChanges(invalidateCacheDependencies);
@@ -71,10 +70,10 @@ namespace Models.Application
             return result;
         }
 
-        //�޸ġ�ɾ�����������ʱ����ʧЧ
         private string[] GetChangedEntityNames()
         {
             return ChangeTracker.Entries().Where(x => x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted).Select(x => GetObjectType(x.Entity.GetType()).FullName).Distinct().ToArray();
         }
     }
+
 }

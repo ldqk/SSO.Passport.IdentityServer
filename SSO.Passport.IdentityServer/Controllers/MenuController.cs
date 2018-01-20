@@ -21,19 +21,10 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult Add(MenuInputDto model)
         {
-            if (ModelState.IsValid)
-            {
-                Menu menu = model.Mapper<Menu>();
-                menu = MenuBll.AddEntitySaved(menu);
-                if (menu != null)
-                {
-                    return ResultData(null, true, "菜单添加成功！");
-                }
-
-                return ResultData(null, false, "菜单添加失败");
-            }
-
-            return ResultData(null, false, "数据校验失败！");
+            if (!ModelState.IsValid) return ResultData(null, false, "数据校验失败！");
+            var menu = model.Mapper<Menu>();
+            menu = MenuBll.AddEntitySaved(menu);
+            return menu != null ? ResultData(null, true, "菜单添加成功！") : ResultData(null, false, "菜单添加失败");
         }
 
         /// <summary>
@@ -43,15 +34,11 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult Update(MenuInputDto model)
         {
-            if (ModelState.IsValid)
-            {
-                Menu menu = MenuBll.GetById(model.Id);
-                Mapper.Map(model, menu);
-                bool b = MenuBll.UpdateEntitySaved(menu);
-                return ResultData(null, b, b ? "更新成功！" : "更新失败！");
-            }
-
-            return ResultData(null, false, "数据校验失败！");
+            if (!ModelState.IsValid) return ResultData(null, false, "数据校验失败！");
+            Menu menu = MenuBll.GetById(model.Id);
+            Mapper.Map(model, menu);
+            bool b = MenuBll.UpdateEntitySaved(menu);
+            return ResultData(null, b, b ? "更新成功！" : "更新失败！");
         }
 
         /// <summary>
@@ -75,7 +62,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult PageData(string appid, int page = 1, int size = 10)
         {
             var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Menu, bool>>)(c => true) : (c => c.ClientApp.AppId.Equals(appid));
-            List<MenuOutputDto> list = MenuBll.LoadPageEntitiesFromL2CacheNoTracking<int, MenuOutputDto>(page, size, out int total, where, c => c.Id, false).ToList();
+            List<MenuOutputDto> list = MenuBll.LoadPageEntitiesNoTracking<int, MenuOutputDto>(page, size, out int total, where, c => c.Id, false).ToList();
             return PageResult(list, size, total);
         }
 
@@ -86,7 +73,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult GetAll(string appid)
         {
-            List<MenuOutputDto> list = MenuBll.LoadEntitiesFromL2CacheNoTracking<MenuOutputDto>(m => m.ClientApp.AppId.Equals(appid)).ToList();
+            List<MenuOutputDto> list = MenuBll.LoadEntitiesNoTracking<MenuOutputDto>(m => m.ClientApp.AppId.Equals(appid)).ToList();
             return ResultData(list);
         }
 

@@ -92,7 +92,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult Page(int page = 1, int size = 10, string kw = "")
         {
             var @where = string.IsNullOrEmpty(kw) ? (Expression<Func<UserInfo, bool>>)(u => true) : (u => u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
-            List<UserInfoDto> list = UserInfoBll.LoadPageEntitiesFromL2CacheNoTracking<DateTime, UserInfoDto>(page, size, out int total, where, u => u.LastLoginTime, false).ToList();
+            List<UserInfoDto> list = UserInfoBll.LoadPageEntitiesNoTracking<DateTime, UserInfoDto>(page, size, out int total, where, u => u.LastLoginTime, false).ToList();
             return PageResult(list, size, total);
         }
 
@@ -119,6 +119,24 @@ namespace SSO.Passport.IdentityServer.Controllers
             userInfo.Avatar = path;
             bool b = UserInfoBll.UpdateEntitySaved(userInfo);
             return ResultData(Mapper.Map<UserInfoDto>(userInfo), b, b ? $"头像修改成功。" : "头像修改失败！");
+        }
+
+        /// <summary>
+        /// 锁定用户
+        /// </summary>
+        /// <param name="id">用户id</param>
+        /// <param name="state">用户状态</param>
+        /// <returns></returns>
+        public ActionResult LockUser(Guid id, bool state)
+        {
+            UserInfo user = UserInfoBll.GetById(id);
+            if (user != null)
+            {
+                user.Locked = state;
+                bool b = UserInfoBll.UpdateEntitySaved(user);
+                return ResultData(null, b, b ? "用户状态切换成功！" : "用户状态切换失败！");
+            }
+            return ResultData(null, false, "未找到用户！");
         }
         #region 权限配置
 

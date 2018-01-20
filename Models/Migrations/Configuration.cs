@@ -101,6 +101,7 @@ namespace Models.Migrations
                 IList<UserPermission> ups = new List<UserPermission>() { new UserPermission() { Permission = ps.FirstOrDefault(), UserInfo = userInfos.FirstOrDefault(), HasPermission = true } };
                 IList<UserGroupRole> ugps = new List<UserGroupRole>() { new UserGroupRole() { Role = roles.FirstOrDefault(), UserGroup = groups.FirstOrDefault(), HasRole = true } };
                 context.UserGroup.AddOrUpdate(g => g.GroupName, groups.ToArray());
+                context.Role.AddOrUpdate(g => g.RoleName, roles.ToArray());
                 context.UserPermission.AddOrUpdate(p => new { p.PermissionId, p.UserInfoId }, ups.ToArray());
                 context.UserGroupPermission.AddOrUpdate(p => new { p.RoleId, p.UserGroupId }, ugps.ToArray());
                 context.SaveChanges();

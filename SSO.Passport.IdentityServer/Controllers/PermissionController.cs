@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 using Common;
 using IBLL;
+using Microsoft.Ajax.Utilities;
 using Models.Dto;
 using Models.Entity;
 
@@ -22,47 +23,45 @@ namespace SSO.Passport.IdentityServer.Controllers
         #region 增删查改
 
         /// <summary>
-        /// 添加权限
+        /// 添加或修改权限
         /// </summary>
-        /// <param name="name">权限名</param>
-        /// <param name="pid">父级组</param>
+        /// <param name="Id"></param>
+        /// <param name="PermissionName">新名字</param>
+        /// <param name="ParentId">父级组</param>
+        /// <param name="appid"></param>
         /// <returns></returns>
-        public ActionResult Add(string name, int? pid)
+        public ActionResult Save(int Id = 0, string PermissionName = "", int? ParentId = null, string appid = "")
         {
-            if (PermissionBll.Any(a => a.PermissionName.Equals(name)))
-            {
-                return ResultData(null, false, $"{name} 权限已经存在！");
-            }
-
-            Permission permission = new Permission() { PermissionName = name, ParentId = pid };
-            permission = PermissionBll.AddEntitySaved(permission);
+            ParentId = ParentId == 0 ? null : ParentId;
+            Permission permission = PermissionBll.GetById(Id);
             if (permission != null)
             {
-                return ResultData(permission, true, "权限添加成功！");
-            }
-
-            return ResultData(null, false, "权限添加失败！");
-        }
-
-        /// <summary>
-        /// 修改权限
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name">新名字</param>
-        /// <param name="pid">父级权限</param>
-        /// <returns></returns>
-        public ActionResult Update(int id, string name, int? pid)
-        {
-            Permission @permission = PermissionBll.GetById(id);
-            if (@permission != null)
-            {
-                @permission.PermissionName = name;
-                @permission.ParentId = id;
-                bool b = PermissionBll.UpdateEntitySaved(@permission);
+                //修改
+                if (PermissionBll.Any(a => a.PermissionName.Equals(PermissionName) && !a.PermissionName.Equals(permission.PermissionName)))
+                {
+                    return ResultData(null, false, $"{PermissionName} 权限已经存在！");
+                }
+                permission.PermissionName = PermissionName;
+                permission.ParentId = ParentId;
+                bool b = PermissionBll.UpdateEntitySaved(permission);
                 return ResultData(null, b, b ? "修改成功" : "修改失败！");
             }
+            //添加
+            if (PermissionBll.Any(a => a.PermissionName.Equals(PermissionName)))
+            {
+                return ResultData(null, false, $"{PermissionName} 权限已经存在！");
+            }
 
-            return ResultData(null, false, "未找到权限！");
+            permission = new Permission() { PermissionName = PermissionName, ParentId = ParentId };
+            if (!string.IsNullOrEmpty(appid) && ClientAppBll.Any(a => a.AppId.Equals(appid)))
+            {
+                var app = ClientAppBll.GetFirstEntity(a => a.AppId.Equals(appid));
+                app.Permissions.Add(permission);
+                bool b = ClientAppBll.UpdateEntitySaved(app);
+                return ResultData(null, b, b ? "权限添加成功!" : "权限添加失败!");
+            }
+            permission = PermissionBll.AddEntitySaved(permission);
+            return permission != null ? ResultData(permission, true, "权限添加成功！") : ResultData(null, false, "权限添加失败！");
         }
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult PageData(string appid, int page = 1, int size = 10)
         {
-            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Permission, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppName.Equals(appid)));
+            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Permission, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppId.Equals(appid)));
             List<int> ids = PermissionBll.LoadPageEntitiesNoTracking<int, PermissionOutputDto>(page, size, out int total, where, a => a.Id, false).Select(g => g.Id).ToList();
             List<PermissionOutputDto> list = new List<PermissionOutputDto>();
             ids.ForEach(g =>
@@ -93,25 +92,27 @@ namespace SSO.Passport.IdentityServer.Controllers
                 List<PermissionOutputDto> temp = PermissionBll.GetSelfAndChildrenByParentId(g).ToList();
                 list.AddRange(temp);
             });
-            return PageResult(list, size, total);
+            return PageResult(list.DistinctBy(u => u.Id), size, total);
         }
 
         /// <summary>
         /// 获取应用所有的权限
         /// </summary>
         /// <param name="appid"></param>
+        /// <param name="kw"></param>
         /// <returns></returns>
-        public ActionResult GetAll(string appid)
+        public ActionResult GetAll(string appid, string kw)
         {
-            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Permission, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppName.Equals(appid)));
+            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Permission, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppId.Equals(appid)));
             List<int> ids = PermissionBll.LoadEntitiesNoTracking<PermissionOutputDto>(where).Select(g => g.Id).ToList();
             List<PermissionOutputDto> list = new List<PermissionOutputDto>();
             ids.ForEach(g =>
             {
-                List<PermissionOutputDto> temp = PermissionBll.GetSelfAndChildrenByParentId(g).ToList();
+                var raw = PermissionBll.GetSelfAndChildrenByParentId(g);
+                var temp = string.IsNullOrEmpty(kw) ? raw.ToList() : raw.Where(u => u.PermissionName.Contains(kw)).ToList();
                 list.AddRange(temp);
             });
-            return ResultData(list);
+            return ResultData(list.DistinctBy(u => u.Id));
         }
 
         /// <summary>

@@ -371,6 +371,12 @@
     <Content Include="Assets\select3\select3-full.min.js" />
     <Content Include="Assets\select3\select3.css" />
     <Content Include="Assets\select3\stylesheet.css" />
+    <Content Include="Assets\semantic\semantic.css" />
+    <Content Include="Assets\semantic\semantic.js" />
+    <Content Include="Assets\semantic\semantic.min.css" />
+    <Content Include="Assets\semantic\semantic.min.js" />
+    <Content Include="Assets\semantic\themes\default\assets\fonts\icons.svg" />
+    <Content Include="Assets\semantic\themes\default\assets\images\flags.png" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -416,6 +422,7 @@
     <Content Include="fonts\iconSelector.min.js" />
     <Content Include="fonts\map2.html" />
     <Content Include="Global.asax" />
+    <Content Include="ng-views\controllers\access.js" />
     <Content Include="ng-views\app\app.config.js" />
     <Content Include="ng-views\app\form.js" />
     <Content Include="ng-views\app\route.config.js" />
@@ -423,13 +430,23 @@
     <Content Include="ng-views\app\template.min.js">
       <DependentUpon>template.js</DependentUpon>
     </Content>
+    <Content Include="ng-views\controllers\clientApps.js" />
     <Content Include="ng-views\controllers\dashboard.js" />
+    <Content Include="ng-views\controllers\group.js" />
     <Content Include="ng-views\controllers\loginrecord.js" />
     <Content Include="ng-views\controllers\main.js" />
+    <Content Include="ng-views\controllers\menu.js" />
+    <Content Include="ng-views\controllers\permission.js" />
+    <Content Include="ng-views\controllers\role.js" />
     <Content Include="ng-views\controllers\system.js" />
+    <Content Include="ng-views\controllers\user.js" />
     <Content Include="ng-views\css\app.css" />
     <Content Include="ng-views\css\app.min.css">
       <DependentUpon>app.css</DependentUpon>
+    </Content>
+    <Content Include="ng-views\css\checkbox.css" />
+    <Content Include="ng-views\css\checkbox.min.css">
+      <DependentUpon>checkbox.css</DependentUpon>
     </Content>
     <Content Include="ng-views\filemanager\css\animations.css" />
     <Content Include="ng-views\filemanager\css\dialogs.css" />
@@ -560,12 +577,19 @@
       <DependentUpon>loading.html</DependentUpon>
     </Content>
     <Content Include="ng-views\template\sidebar-left.html" />
+    <Content Include="ng-views\views\access\list.html" />
+    <Content Include="ng-views\views\apps\list.html" />
     <Content Include="ng-views\views\dashboard.html" />
+    <Content Include="ng-views\views\group\list.html" />
     <Content Include="ng-views\views\loginrecord.html" />
+    <Content Include="ng-views\views\menu\list.html" />
+    <Content Include="ng-views\views\permission\list.html" />
+    <Content Include="ng-views\views\role\list.html" />
     <Content Include="ng-views\views\system\file.html" />
     <Content Include="ng-views\views\system\log.html" />
     <Content Include="ng-views\views\system\swagger.html" />
     <Content Include="ng-views\views\system\task.html" />
+    <Content Include="ng-views\views\user\list.html" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\boost.js" />
@@ -608,6 +632,11 @@
     <Content Include="fonts\icomoon.eot" />
     <Content Include="fonts\icomoon.ttf" />
     <Content Include="fonts\icomoon.woff" />
+    <Content Include="Assets\semantic\themes\default\assets\fonts\icons.eot" />
+    <Content Include="Assets\semantic\themes\default\assets\fonts\icons.otf" />
+    <Content Include="Assets\semantic\themes\default\assets\fonts\icons.ttf" />
+    <Content Include="Assets\semantic\themes\default\assets\fonts\icons.woff" />
+    <Content Include="Assets\semantic\themes\default\assets\fonts\icons.woff2" />
     <None Include="bundleconfig.json" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.4.js" />

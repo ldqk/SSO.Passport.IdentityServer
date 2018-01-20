@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Web.Mvc;
 using Common;
 using IBLL;
+using Microsoft.Ajax.Utilities;
 using Models.Dto;
 using Models.Entity;
 
@@ -22,47 +23,44 @@ namespace SSO.Passport.IdentityServer.Controllers
         #region 增删查改
 
         /// <summary>
-        /// 添加用户组
+        /// 添加或修改用户组
         /// </summary>
-        /// <param name="name">用户组名</param>
-        /// <param name="pid">父级组</param>
+        /// <param name="Id"></param>
+        /// <param name="GroupName">新名字</param>
+        /// <param name="ParentId">父级组</param>
+        /// <param name="appid">appid</param>
         /// <returns></returns>
-        public ActionResult Add(string name, int? pid)
+        public ActionResult Save(int Id = 0, string GroupName = "", int? ParentId = null, string appid = "")
         {
-            if (UserGroupBll.Any(a => a.GroupName.Equals(name)))
-            {
-                return ResultData(null, false, $"{name} 用户组已经存在！");
-            }
-
-            UserGroup group = new UserGroup() { GroupName = name, ParentId = pid };
-            group = UserGroupBll.AddEntitySaved(group);
+            ParentId = ParentId == 0 ? null : ParentId;
+            UserGroup group = UserGroupBll.GetById(Id);
             if (group != null)
             {
-                return ResultData(group, true, "用户组添加成功！");
-            }
-
-            return ResultData(null, false, "用户组添加失败！");
-        }
-
-        /// <summary>
-        /// 修改用户组
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name">新名字</param>
-        /// <param name="pid">父级组</param>
-        /// <returns></returns>
-        public ActionResult Update(int id, string name, int? pid)
-        {
-            UserGroup @group = UserGroupBll.GetById(id);
-            if (@group != null)
-            {
-                @group.GroupName = name;
-                @group.ParentId = id;
+                //修改
+                if (UserGroupBll.Any(a => a.GroupName.Equals(GroupName) && !a.GroupName.Equals(group.GroupName)))
+                {
+                    return ResultData(null, false, $"{GroupName} 用户组已经存在！");
+                }
+                group.GroupName = GroupName;
+                group.ParentId = ParentId;
                 bool b = UserGroupBll.UpdateEntitySaved(@group);
                 return ResultData(null, b, b ? "修改成功" : "修改失败！");
             }
-
-            return ResultData(null, false, "未找到用户组！");
+            //添加
+            if (UserGroupBll.Any(a => a.GroupName.Equals(GroupName)))
+            {
+                return ResultData(null, false, $"{GroupName} 用户组已经存在！");
+            }
+            group = new UserGroup { GroupName = GroupName, ParentId = ParentId };
+            if (!string.IsNullOrEmpty(appid) && ClientAppBll.Any(a => a.AppId.Equals(appid)))
+            {
+                var app = ClientAppBll.GetFirstEntity(a => a.AppId.Equals(appid));
+                app.UserGroup.Add(group);
+                bool b = ClientAppBll.UpdateEntitySaved(app);
+                return ResultData(null, b, b ? "用户组添加成功!" : "用户组添加失败!");
+            }
+            group = UserGroupBll.AddEntitySaved(group);
+            return @group != null ? ResultData(@group, true, "用户组添加成功！") : ResultData(null, false, "用户组添加失败！");
         }
 
         /// <summary>
@@ -85,7 +83,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult PageData(string appid, int page = 1, int size = 10)
         {
-            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<UserGroup, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppName.Equals(appid)));
+            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<UserGroup, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppId.Equals(appid)));
             List<int> ids = UserGroupBll.LoadPageEntitiesNoTracking<int, UserGroupOutputDto>(page, size, out int total, where, a => a.Id, false).Select(g => g.Id).ToList();
             List<UserGroupOutputDto> list = new List<UserGroupOutputDto>();
             ids.ForEach(g =>
@@ -93,25 +91,28 @@ namespace SSO.Passport.IdentityServer.Controllers
                 List<UserGroupOutputDto> temp = UserGroupBll.GetSelfAndChildrenByParentId(g).ToList();
                 list.AddRange(temp);
             });
-            return PageResult(list, size, total);
+            return PageResult(list.DistinctBy(u => u.Id), size, total);
         }
 
         /// <summary>
         /// 获取应用所有的用户组
         /// </summary>
         /// <param name="appid"></param>
+        /// <param name="kw">查询关键词</param>
         /// <returns></returns>
-        public ActionResult GetAll(string appid)
+        public ActionResult GetAll(string appid, string kw)
         {
-            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<UserGroup, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppName.Equals(appid)));
+            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<UserGroup, bool>>)(g => true) : (g => g.ClientApp.Any(a => a.AppId.Equals(appid)));
+            UserGroupBll.LoadEntitiesNoTracking<UserGroupOutputDto>(where);
             List<int> ids = UserGroupBll.LoadEntitiesNoTracking<UserGroupOutputDto>(where).Select(g => g.Id).ToList();
             List<UserGroupOutputDto> list = new List<UserGroupOutputDto>();
             ids.ForEach(g =>
             {
-                List<UserGroupOutputDto> temp = UserGroupBll.GetSelfAndChildrenByParentId(g).ToList();
+                var raw = UserGroupBll.GetSelfAndChildrenByParentId(g);
+                var temp = string.IsNullOrEmpty(kw) ? raw.ToList() : raw.Where(u => u.GroupName.Contains(kw)).ToList();
                 list.AddRange(temp);
             });
-            return ResultData(list);
+            return ResultData(list.DistinctBy(u => u.Id));
         }
 
         /// <summary>
