@@ -579,6 +579,7 @@
     <Content Include="ng-views\template\sidebar-left.html" />
     <Content Include="ng-views\views\access\list.html" />
     <Content Include="ng-views\views\apps\list.html" />
+    <Content Include="ng-views\views\apps\user.html" />
     <Content Include="ng-views\views\dashboard.html" />
     <Content Include="ng-views\views\group\list.html" />
     <Content Include="ng-views\views\loginrecord.html" />
