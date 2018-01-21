@@ -1,4 +1,9 @@
-﻿<div>
+﻿<style>
+    .input-group {
+        width: 300px;
+    }
+</style>
+<div>
     <div class="form-inline pull-right">
         <button class="btn btn-info waves-effect" ng-click="list.GetPageData(paginationConf.currentPage, paginationConf.itemsPerPage);">
             <span class="glyphicon glyphicon-refresh"></span>
@@ -7,6 +12,17 @@
             <span class="input-group-addon">全局搜索：</span>
             <div class="fg-line">
                 <input type="text" class="form-control" ng-change="search(kw)" ng-model="kw" placeholder="全局搜索" />
+            </div>
+        </div>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">选择应用：</span>
+        <div class="ui fluid search selection dropdown apps">
+            <input name="apps" type="hidden" id="apps">
+            <i class="dropdown icon"></i>
+            <div class="default text">选择应用</div>
+            <div class="menu">
+                <div class="item" ng-repeat="item in apps track by $index" data-value="{{item.AppId}}">{{item.AppName}}</div>
             </div>
         </div>
     </div>

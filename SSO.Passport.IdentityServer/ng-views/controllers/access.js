@@ -1,10 +1,32 @@
-﻿myApp.controller('access', ["$timeout", "$state", "NgTableParams", "$scope", "$http", function($timeout, $state, NgTableParams, $scope, $http) {
+﻿myApp.controller('access', ["$timeout", "$state", "NgTableParams", "$scope", "$http","$stateParams", function($timeout, $state, NgTableParams, $scope, $http,$stateParams) {
 		window.hub.disconnect();
 		$scope.loading();
 		var self = this;
 		self.stats = [];
 		self.data = {};
 		$scope.kw = "";
+	$scope.request("/app/getall",null, function(data) {
+			$scope.apps=data.Data;
+			$scope.appid=$stateParams.appid||$scope.apps[0].AppId;
+			$('.ui.dropdown.apps').dropdown({
+				onChange: function (value) {
+					$scope.appid=value;
+					$scope.request("/menu/GetAll", {
+						appid:value
+					}, function(data) {
+						$scope.data = transData(data.Data, "Id", "ParentId", "nodes");
+					});	
+				},
+				message: {
+					maxSelections: '最多选择 {maxCount} 项',
+					noResults: '无搜索结果！'
+				}
+			});
+			$timeout(function() {
+				$scope.appid=$stateParams.appid||$scope.apps[0].AppId;
+				$('.ui.dropdown.apps').dropdown("set selected", [$scope.appid]);
+			},10);
+		});
 		$scope.paginationConf = {
 			currentPage: 1,
 			itemsPerPage: 10,
@@ -31,13 +53,6 @@
 					dataset: res.data.Data
 				});
 				self.data = res.data.Data;
-				Enumerable.From(res.data.Data).Select(e => e.Status).Distinct().ToArray().map(function(item, index, array) {
-					self.stats.push({
-						id: item,
-						title: item
-					});
-				});
-				self.stats = Enumerable.From(self.stats).Distinct().ToArray();
 				$scope.loadingDone();
 			});
 		}

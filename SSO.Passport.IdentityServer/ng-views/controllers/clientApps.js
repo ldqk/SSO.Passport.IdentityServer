@@ -166,6 +166,351 @@
 			});
 		}
 	}]);
-myApp.controller('appUser', ["$timeout", "$state", "$scope", "$http","$stateParams", function($timeout, $state, $scope, $http,$stateParams) {
-	console.log($stateParams.id);
+myApp.controller('appUser', ["$timeout", "$state", "$scope", "$http","$stateParams","NgTableParams", function($timeout, $state, $scope, $http,$stateParams,NgTableParams) {
+	window.hub.disconnect();
+	$scope.id=$stateParams.id;
+	$scope.request("/app/get/"+$scope.id,null, function(data) {
+		$scope.app=data.Data;
+	});
+	$scope.loading();
+	var self = this;
+		self.stats = [];
+		self.data = {};
+		$scope.kw = "";
+		$scope.paginationConf = {
+			currentPage: 1,
+			itemsPerPage: 10,
+			pagesLength: 25,
+			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+			rememberPerPage: 'perPageItems',
+			onChange: function() {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		};
+		$scope.paginationConf2 = {
+			currentPage: 1,
+			itemsPerPage: 10,
+			pagesLength: 25,
+			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+			rememberPerPage: 'perPageItems',
+			onChange: function() {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		};
+		this.GetPageData = function(page, size) {
+			$http.post("/app/myusers", {
+				id:$scope.id,
+				page,
+				size,
+				kw: $scope.kw
+			}).then(function(res) {
+				$scope.paginationConf.totalItems = res.data.TotalCount;
+				$("div[ng-table-pagination]").remove();
+				self.tableParams = new NgTableParams({
+					count: 50000
+				}, {
+					filterDelay: 0,
+					dataset: res.data.Data.notMyUsers
+				});
+				self.tableParams2 = new NgTableParams({
+					count: 50000
+				}, {
+					filterDelay: 0,
+					dataset: res.data.Data.myUsers
+				});
+				$scope.loadingDone();
+			});
+		}
+		var _timeout;
+		$scope.search = function(kw) {
+			if (_timeout) {
+				$timeout.cancel(_timeout);
+			}
+			_timeout = $timeout(function() {
+				$scope.kw = kw;
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+				_timeout = null;
+			}, 500);
+		}
+	this.addUser= function(row) {
+		$scope.request("/app/AddUsers", {
+			id:$scope.id,
+			uids:row.Id
+		}, function(data) {
+			if (data.Success) {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		});
+	}
+	this.removeUser= function(row) {
+		$scope.request("/app/RemoveUsers", {
+			id:$scope.id,
+			uids:row.Id
+		}, function(data) {
+			if (data.Success) {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		});
+	}
+}]);
+myApp.controller('appGroup', ["$timeout", "$state", "$scope", "$http","$stateParams","NgTableParams", function($timeout, $state, $scope, $http,$stateParams,NgTableParams) {
+	window.hub.disconnect();
+	$scope.id=$stateParams.id;
+	$scope.request("/app/get/"+$scope.id,null, function(data) {
+		$scope.app=data.Data;
+	});
+	$scope.loading();
+	var self = this;
+		self.stats = [];
+		self.data = {};
+		$scope.kw = "";
+		$scope.paginationConf = {
+			currentPage: 1,
+			itemsPerPage: 10,
+			pagesLength: 25,
+			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+			rememberPerPage: 'perPageItems',
+			onChange: function() {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		};
+		$scope.paginationConf2 = {
+			currentPage: 1,
+			itemsPerPage: 10,
+			pagesLength: 25,
+			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+			rememberPerPage: 'perPageItems',
+			onChange: function() {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		};
+		this.GetPageData = function(page, size) {
+			$http.post("/app/mygroups", {
+				id:$scope.id,
+				page,
+				size,
+				kw: $scope.kw
+			}).then(function(res) {
+				$scope.paginationConf.totalItems = res.data.TotalCount;
+				$("div[ng-table-pagination]").remove();
+				self.tableParams = new NgTableParams({
+					count: 50000
+				}, {
+					filterDelay: 0,
+					dataset: res.data.Data.not
+				});
+				self.tableParams2 = new NgTableParams({
+					count: 50000
+				}, {
+					filterDelay: 0,
+					dataset: res.data.Data.my
+				});
+				$scope.loadingDone();
+			});
+		}
+		var _timeout;
+		$scope.search = function(kw) {
+			if (_timeout) {
+				$timeout.cancel(_timeout);
+			}
+			_timeout = $timeout(function() {
+				$scope.kw = kw;
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+				_timeout = null;
+			}, 500);
+		}
+	this.addGroups= function(row) {
+		$scope.request("/app/AddUserGroups", {
+			id:$scope.id,
+			gids:row.Id
+		}, function(data) {
+			if (data.Success) {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		});
+	}
+	this.removeGroups= function(row) {
+		$scope.request("/app/RemoveUserGroups", {
+			id:$scope.id,
+			gids:row.Id
+		}, function(data) {
+			if (data.Success) {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		});
+	}
+}]);
+myApp.controller('appRole', ["$timeout", "$state", "$scope", "$http","$stateParams","NgTableParams", function($timeout, $state, $scope, $http,$stateParams,NgTableParams) {
+	window.hub.disconnect();
+	$scope.id=$stateParams.id;
+	$scope.request("/app/get/"+$scope.id,null, function(data) {
+		$scope.app=data.Data;
+	});
+	$scope.loading();
+	var self = this;
+		self.stats = [];
+		self.data = {};
+		$scope.kw = "";
+		$scope.paginationConf = {
+			currentPage: 1,
+			itemsPerPage: 10,
+			pagesLength: 25,
+			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+			rememberPerPage: 'perPageItems',
+			onChange: function() {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		};
+		$scope.paginationConf2 = {
+			currentPage: 1,
+			itemsPerPage: 10,
+			pagesLength: 25,
+			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+			rememberPerPage: 'perPageItems',
+			onChange: function() {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		};
+		this.GetPageData = function(page, size) {
+			$http.post("/app/myroles", {
+				id:$scope.id,
+				page,
+				size,
+				kw: $scope.kw
+			}).then(function(res) {
+				$scope.paginationConf.totalItems = res.data.TotalCount;
+				$("div[ng-table-pagination]").remove();
+				self.tableParams = new NgTableParams({
+					count: 50000
+				}, {
+					filterDelay: 0,
+					dataset: res.data.Data.not
+				});
+				self.tableParams2 = new NgTableParams({
+					count: 50000
+				}, {
+					filterDelay: 0,
+					dataset: res.data.Data.my
+				});
+				$scope.loadingDone();
+			});
+		}
+		var _timeout;
+		$scope.search = function(kw) {
+			if (_timeout) {
+				$timeout.cancel(_timeout);
+			}
+			_timeout = $timeout(function() {
+				$scope.kw = kw;
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+				_timeout = null;
+			}, 500);
+		}
+	this.addRoles= function(row) {
+		$scope.request("/app/AddRoles", {
+			id:$scope.id,
+			rids:row.Id
+		}, function(data) {
+			if (data.Success) {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		});
+	}
+	this.removeRoles= function(row) {
+		$scope.request("/app/RemoveRoles", {
+			id:$scope.id,
+			rids:row.Id
+		}, function(data) {
+			if (data.Success) {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		});
+	}
+}]);
+myApp.controller('appPermission', ["$timeout", "$state", "$scope", "$http","$stateParams","NgTableParams", function($timeout, $state, $scope, $http,$stateParams,NgTableParams) {
+	window.hub.disconnect();
+	$scope.id=$stateParams.id;
+	$scope.request("/app/get/"+$scope.id,null, function(data) {
+		$scope.app=data.Data;
+	});
+	$scope.loading();
+	var self = this;
+		self.stats = [];
+		self.data = {};
+		$scope.kw = "";
+		$scope.paginationConf = {
+			currentPage: 1,
+			itemsPerPage: 10,
+			pagesLength: 25,
+			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+			rememberPerPage: 'perPageItems',
+			onChange: function() {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		};
+		$scope.paginationConf2 = {
+			currentPage: 1,
+			itemsPerPage: 10,
+			pagesLength: 25,
+			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+			rememberPerPage: 'perPageItems',
+			onChange: function() {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		};
+		this.GetPageData = function(page, size) {
+			$http.post("/app/mypermissions", {
+				id:$scope.id,
+				page,
+				size,
+				kw: $scope.kw
+			}).then(function(res) {
+				$scope.paginationConf.totalItems = res.data.TotalCount;
+				$("div[ng-table-pagination]").remove();
+				self.tableParams = new NgTableParams({
+					count: 50000
+				}, {
+					filterDelay: 0,
+					dataset: res.data.Data.not
+				});
+				self.tableParams2 = new NgTableParams({
+					count: 50000
+				}, {
+					filterDelay: 0,
+					dataset: res.data.Data.my
+				});
+				$scope.loadingDone();
+			});
+		}
+		var _timeout;
+		$scope.search = function(kw) {
+			if (_timeout) {
+				$timeout.cancel(_timeout);
+			}
+			_timeout = $timeout(function() {
+				$scope.kw = kw;
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+				_timeout = null;
+			}, 500);
+		}
+	this.addPermissions= function(row) {
+		$scope.request("/app/Addpermissions", {
+			id:$scope.id,
+			pids:row.Id
+		}, function(data) {
+			if (data.Success) {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		});
+	}
+	this.removePermissions= function(row) {
+		$scope.request("/app/Removepermissions", {
+			id:$scope.id,
+			pids:row.Id
+		}, function(data) {
+			if (data.Success) {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		});
+	}
 }]);

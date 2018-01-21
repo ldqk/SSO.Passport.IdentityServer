@@ -1,0 +1,47 @@
+﻿<h2 class="text-center">管理【{{app.AppName}}】的用户组</h2>
+<div>
+    <div class="form-inline pull-right">
+        <button class="btn btn-info waves-effect" ng-click="list.GetPageData(paginationConf.currentPage, paginationConf.itemsPerPage);">
+            <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        <div class="input-group">
+            <span class="input-group-addon">全局搜索：</span>
+            <div class="fg-line">
+                <input type="text" class="form-control" ng-change="search(kw)" ng-model="kw" placeholder="全局搜索" />
+            </div>
+        </div>
+    </div>
+    <h3 class="text-danger">不属于【{{app.AppName}}】的用户组</h3>
+    <table ng-table="list.tableParams" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-info':row.ParentId!=null}">
+            <td title="'用户组名'" sortable="'GroupName'">
+                {{row.GroupName}}
+            </td>
+            <td title="'权限配置'">
+                <div class="btn-group">
+                    <button class="btn btn-info btn-sm waves-effect" ng-click="list.addGroups(row)">
+                        添加
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <h3 class="text-success">已归属【{{app.AppName}}】的用户组</h3>
+    <table ng-table="list.tableParams2" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-info':row.ParentId!=null}">
+            <td title="'用户组名'" sortable="'GroupName'">
+                {{row.GroupName}}
+            </td>
+            <td title="'权限配置'">
+                <div class="btn-group">
+                    <button class="btn btn-danger btn-sm waves-effect" ng-click="list.removeGroups(row)">
+                        移除
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <tm-pagination conf="paginationConf"></tm-pagination>
+</div>

@@ -1,6 +1,5 @@
 ﻿"use strict";
-myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",
-	function($stateProvider, $urlRouterProvider, $locationProvider) {
+myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",function($stateProvider, $urlRouterProvider, $locationProvider) {
 		$locationProvider.hashPrefix('');
 		$urlRouterProvider.otherwise("/home");
 		var vpath = "/ng-views/views";
@@ -83,7 +82,34 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",
 		}).state("app-user", {
 			url: "/apps/user/:id",
 			templateUrl: vpath + "/apps/user.html",
-			controller: "appUser",
+			controller: "appUser as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/clientApps.js"]);
+				}]
+			}
+		}).state("app-group", {
+			url: "/apps/group/:id",
+			templateUrl: vpath + "/apps/group.html",
+			controller: "appGroup as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/clientApps.js"]);
+				}]
+			}
+		}).state("app-role", {
+			url: "/apps/role/:id",
+			templateUrl: vpath + "/apps/role.html",
+			controller: "appRole as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/clientApps.js"]);
+				}]
+			}
+		}).state("app-permission", {
+			url: "/apps/permission/:id",
+			templateUrl: vpath + "/apps/permission.html",
+			controller: "appPermission as list",
 			resolve: {
 				deps: ["$ocLazyLoad", function($ocLazyLoad) {
 					return $ocLazyLoad.load([cpath + "/clientApps.js"]);
@@ -126,16 +152,19 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",
 				}]
 			}
 		}).state("access", {
-			url: "/access",
+			url: "/access/:appid",
 			templateUrl: vpath + "/access/list.html",
 			controller: "access as list",
 			resolve: {
 				deps: ["$ocLazyLoad", function($ocLazyLoad) {
-					return $ocLazyLoad.load([cpath + "/access.js"]);
+					return $ocLazyLoad.load([{
+						files: ["/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/access.js"]);
 				}]
 			}
 		}).state("menu", {
-			url: "/menu",
+			url: "/menu/:appid",
 			templateUrl: vpath + "/menu/list.html",
 			controller: "menu as list",
 			resolve: {

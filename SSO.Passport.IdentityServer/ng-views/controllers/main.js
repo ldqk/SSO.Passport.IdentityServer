@@ -200,7 +200,6 @@
 		$(".loading3").hide();
 	}
 	$scope.request = function(url, data, success) {
-		$scope.loading();
 		$http.post(url, data, {
 			'Content-Type': 'application/x-www-form-urlencoded'
 		}).then(function(res) {

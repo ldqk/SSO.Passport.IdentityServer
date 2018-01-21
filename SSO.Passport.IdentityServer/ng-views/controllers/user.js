@@ -31,13 +31,6 @@
 					dataset: res.data.Data
 				});
 				self.data = res.data.Data;
-				Enumerable.From(res.data.Data).Select(e => e.Status).Distinct().ToArray().map(function(item, index, array) {
-					self.stats.push({
-						id: item,
-						title: item
-					});
-				});
-				self.stats = Enumerable.From(self.stats).Distinct().ToArray();
 				$scope.loadingDone();
 			});
 		}
