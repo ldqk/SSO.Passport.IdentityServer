@@ -14,7 +14,7 @@ namespace Common
                 m.CreateMap<ClientApp, ClientAppOutputDto>();
                 m.CreateMap<ClientAppInputDto, ClientApp>();
 
-                m.CreateMap<Control, ControlOutputDto>();
+                m.CreateMap<Control, ControlOutputDto>().ForMember(c => c.HttpMethod, e => e.MapFrom(c => c.HttpMethod.ToString()));
                 m.CreateMap<ControlInputDto, Control>();
 
                 m.CreateMap<Menu, MenuOutputDto>();

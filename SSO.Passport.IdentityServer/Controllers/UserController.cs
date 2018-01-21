@@ -132,7 +132,11 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserInfo user = UserInfoBll.GetById(id);
             if (user != null)
             {
-                user.Locked = state;
+                if (user.IsPreset)
+                {
+                    return ResultData(null, false, "内置管理员不可禁用！");
+                }
+                user.Locked = !state;
                 bool b = UserInfoBll.UpdateEntitySaved(user);
                 return ResultData(null, b, b ? "用户状态切换成功！" : "用户状态切换失败！");
             }

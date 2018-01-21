@@ -78,6 +78,9 @@
 			}).catch(swal.noop);
 		}
 		$scope.toggle= function(row) {
+			if (row.IsPreset) {
+				return ;
+			}
 			$http.post("/user/lockuser", {
 				id:row.Id,
 				state:row.Locked

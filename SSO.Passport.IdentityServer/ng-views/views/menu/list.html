@@ -69,20 +69,33 @@
                 <a class="btn btn-success btn-xs waves-effect" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggle(this)" style="margin-right:5px;">
                     <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed,'glyphicon-chevron-down': !collapsed}"></span>
                 </a>
-                <a ng-href="{{node.Url}}" style="font-size:16px;" target="_blank">{{node.Id}}：{{node.Name}}</a>
-            </div>
-            <div class="col-sm-2">
-                类型：{{MenuType[node.MenuType].name}}
+                <a style="font-size:16px;">{{node.Id}}：{{node.Name}}</a>
             </div>
             <div class="col-sm-1">
                 排序：{{node.Sort}}
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2" ng-if="node.Url">
                 URL：{{node.Url}}
+            </div>
+            <div class="col-sm-2" ng-if="node.Route">
+                路由：{{node.Route}}
+            </div>
+            <div class="col-sm-2" ng-if="node.RouteName">
+                路由标识：{{node.RouteName}}
             </div>
             <div class="col-sm-3" ng-if="node.Icon">
                 图标URL：<img style="height:30px;" ng-src="{{node.Icon}}" />
                 {{node.Icon}}
+            </div>
+            <div class="col-sm-2">
+                <div class="btn-group">
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-click="del(this)">
+                        权限
+                    </a>
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-click="edit(node)">
+                        更改应用
+                    </a>
+                </div>
             </div>
             <div class="col-sm-2">
                 <div class="btn-group">
@@ -167,17 +180,27 @@
             </div>
             <div class="input-group">
                 <span class="input-group-addon">
+                    路由名：
+                </span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="menu-route" ng-model="menu.Route" />
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    路由标识：
+                </span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="menu-route-name" ng-model="menu.RouteName" />
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
                     排序号：
                 </span>
                 <div class="fg-line">
                     <input type="number" class="form-control" id="menu-sort" ng-model="menu.Sort" />
                 </div>
-            </div>
-            <div class="input-group">
-                <span class="input-group-addon">菜单类型：</span>
-                <select class="form-control" ng-model="menu.MenuType" ng-options="m.e as m.name for m in MenuType">
-                    <option value="">请选择菜单类型</option>
-                </select>
             </div>
             <div class="input-group">
                 <label for="desc" class="input-group-addon control-label">图标地址：</label>

@@ -1,5 +1,4 @@
 ﻿using Models.Entity;
-using Models.Enum;
 
 namespace Models.Dto
 {
@@ -23,7 +22,7 @@ namespace Models.Dto
         /// <summary>
         /// http请求方式
         /// </summary>
-        public HttpMethod HttpMethod { get; set; }
+        public string HttpMethod { get; set; }
 
         /// <summary>
         /// 是否可用

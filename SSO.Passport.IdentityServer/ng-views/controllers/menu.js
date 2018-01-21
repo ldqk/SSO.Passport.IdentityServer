@@ -34,7 +34,7 @@
 			index = e.dest.index;
 			if (e.dest.nodesScope.$parent.$modelValue) {
 				parent = e.dest.nodesScope.$parent.$modelValue; //找出父级元素
-				if (parent.Url && parent.Url != "#") {
+				if ((parent.Url && parent.Url != "#")||(parent.Route && parent.Route != "#")||(parent.RouteName && parent.RouteName != "#")) {
 					swal("异常操作！", "菜单【" + parent.Name + "】是一个有链接的菜单，不能作为父级菜单", "error");
 					return false;
 				}

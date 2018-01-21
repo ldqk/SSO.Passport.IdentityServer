@@ -21,14 +21,14 @@
             <col width="35%" />
             <col width="15%" />
         </colgroup>
-        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row">
-            <td title="'客户端子系统名字'" filter="{AppName: 'text'}" sortable="'AppName'">
+        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-danger':row.Preset}">
+            <td title="'子系统名字'" filter="{AppName: 'text'}" sortable="'AppName'">
                 {{row.AppName}}
             </td>
-            <td title="'客户端子系统唯一标识'" filter="{AppId: 'text'}">
+            <td title="'AppId'" filter="{AppId: 'text'}">
                 {{row.AppId}}
             </td>
-            <td title="'客户端子系统密钥'" filter="{AppSecret: 'number'}">
+            <td title="'AppSecret'" filter="{AppSecret: 'number'}">
                 {{row.AppSecret}}
             </td>
             <td title="'可用'">
@@ -46,22 +46,22 @@
             <td title="'权限配置'">
                 <div class="btn-group">
                     <button class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)">
-                        配置用户
+                        用户
                     </button>
                     <button class="btn btn-info btn-sm waves-effect" ng-click="list.del(row)">
-                        配置用户组
+                        用户组
                     </button>
                     <button class="btn btn-primary btn-sm waves-effect" ng-click="list.del(row)">
-                        配置角色
+                        角色
                     </button>
                     <button class="btn btn-success btn-sm waves-effect" ng-click="list.del(row)">
-                        配置权限
+                        权限
                     </button>
                     <button class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)">
-                        管理访问控制
+                        访问控制
                     </button>
                     <button class="btn btn-info btn-sm waves-effect" ng-click="list.del(row)">
-                        管理菜单
+                        菜单
                     </button>
                 </div>
             </td>

@@ -135,7 +135,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 return ResultData(null, false, "预置应用的状态不能修改！");
             }
-            app.Available = state;
+            app.Available = !state;
             bool b = ClientAppBll.UpdateEntitySaved(app);
             return ResultData(null, b, b ? "状态切换成功！" : "状态切换失败！");
         }

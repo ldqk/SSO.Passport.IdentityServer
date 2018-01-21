@@ -28,7 +28,7 @@ namespace Models.Migrations
             {
                 //初始化客户端子系统
                 string appid = Guid.NewGuid().ToString().MDString();
-                List<ClientApp> apps = new List<ClientApp>() { new ClientApp() { AppName = "LocalSystem", AppId = "e51be06c55248fd0165873467ceaf256", AppSecret = appid.MDString(DateTime.Now.GetTotalMilliseconds().ToString()), Description = "主系统应用程序" } };
+                List<ClientApp> apps = new List<ClientApp>() { new ClientApp() { AppName = "LocalSystem", AppId = "e51be06c55248fd0165873467ceaf256", AppSecret = appid.MDString(DateTime.Now.GetTotalMilliseconds().ToString()), Description = "主系统应用程序", Preset = true, Available = true } };
 
                 //初始化功能控制
                 IList<Control> controls = new List<Control>();

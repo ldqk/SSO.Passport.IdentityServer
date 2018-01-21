@@ -90,6 +90,23 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(c);
         }
 
+        /// <summary>
+        /// 切换功能控制器的可用状态
+        /// </summary>
+        /// <param name="id">功能控制器id</param>
+        /// <param name="state">可用状态</param>
+        /// <returns></returns>
+        public ActionResult ToggleState(int id, bool state)
+        {
+            Control control = ControlBll.GetById(id);
+            if (control is null)
+            {
+                return ResultData(null, false, "功能控制器不存在！");
+            }
+            control.IsAvailable = !state;
+            bool b = ControlBll.UpdateEntitySaved(control);
+            return ResultData(null, b, b ? "状态切换成功！" : "状态切换失败！");
+        }
         #endregion
 
         #region 权限配置

@@ -23,7 +23,7 @@
             <col width="20%" />
             <col width="10%" />
         </colgroup>
-        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row">
+        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-danger':row.IsMaster}">
             <td title="'用户名'" filter="{Username: 'text'}" sortable="'Username'">
                 {{row.Username}}
             </td>
@@ -48,10 +48,10 @@
                     <span class="el-checkbox-style"></span>
                 </label>
             </td>
-            <td title="'注册时间'" filter="{RegisterTime: 'text'}">
+            <td title="'注册时间'" filter="{RegisterTime: 'text'}" sortable="'RegisterTime'">
                 {{row.RegisterTime|date:'yyyy-MM-dd HH:mm'}}
             </td>
-            <td title="'最后登录时间'" filter="{LastLoginTime: 'text'}">
+            <td title="'最后登录时间'" filter="{LastLoginTime: 'text'}" sortable="'LastLoginTime'">
                 {{row.LastLoginTime|date:'yyyy-MM-dd HH:mm'}}
             </td>
             <td title="'权限配置'">
@@ -60,13 +60,13 @@
                         配置应用
                     </button>
                     <button class="btn btn-info btn-sm waves-effect" ng-click="list.del(row)">
-                        分配到用户组
+                        用户组
                     </button>
                     <button class="btn btn-primary btn-sm waves-effect" ng-click="list.del(row)">
-                        配置角色
+                        角色
                     </button>
                     <button class="btn btn-success btn-sm waves-effect" ng-click="list.del(row)">
-                        临时权限
+                        权限
                     </button>
                 </div>
             </td>

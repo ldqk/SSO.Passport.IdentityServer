@@ -279,7 +279,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult ToggleState(int id, int rid, bool state)
         {
             UserGroupRole role = UserGroupRoleBll.GetFirstEntity(u => u.UserGroupId.Equals(id) && u.RoleId.Equals(rid));
-            role.HasRole = state;
+            role.HasRole = !state;
             bool b = UserGroupRoleBll.UpdateEntitySaved(role);
             return ResultData(null, b, b ? "用户组状态切换成功！" : "用户组状态切换失败！");
         }

@@ -153,6 +153,9 @@
 			}).catch(swal.noop);
 		}
 		$scope.toggle= function(row) {
+			if (row.Preset) {
+				return ;
+			}
 			$http.post("/app/togglestate", {
 				id:row.Id,
 				state:row.Available

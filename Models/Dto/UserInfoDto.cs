@@ -45,6 +45,7 @@ namespace Models.Dto
         /// 是否是内置管理员
         /// </summary>
         public bool IsMaster { get; set; }
+        public bool IsPreset { get; set; }
 
         /// <summary>
         /// 用户头像
