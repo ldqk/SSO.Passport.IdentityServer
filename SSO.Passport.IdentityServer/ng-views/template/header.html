@@ -40,12 +40,6 @@
                         <span ng-repeat="w in mactrl.skinList | limitTo : 6" class="ss-skin bgm-{{ w }}" data-ng-click="mactrl.skinSwitch(w)"></span>
                     </li>
                     <li class="divider hidden-xs"></li>
-                    <li>
-                        <a data-ui-sref="system-panel"><i class="zmdi zmdi-settings"></i>网站设置</a>
-                    </li>
-                    <li>
-                        <a data-ui-sref="menu"><i class="zmdi zmdi-layers"></i>菜单管理</a>
-                    </li>
                     <li class="hidden-xs">
                         <a data-ng-click="mactrl.fullScreen()" href=""><i class="zmdi zmdi-fullscreen"></i>切换全屏</a>
                     </li>
