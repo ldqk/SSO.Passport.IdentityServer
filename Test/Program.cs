@@ -16,8 +16,6 @@ namespace Test
             DataContext db = new DataContext();
             List<ClientApp> apps = db.ClientApp.ToList();
             
-
-            Console.ReadKey();
         }
     }
 }

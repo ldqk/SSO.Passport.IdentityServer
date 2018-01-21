@@ -42,6 +42,7 @@ namespace Models.Migrations
                     controls.Add(new Control() { Controller = m.Groups[1].Value, Action = m.Groups[2].Value, Name = m.Groups[3].Value, ClientApp = apps.FirstOrDefault(), HttpMethod = HttpMethod.Post });
                 }
 
+                var childmenu = new Menu() { Name = "查看系统日志", RouteName = "system-log", Route = "system-log", ClientApp = apps.FirstOrDefault(), Sort = 900 };
                 //初始化菜单
                 List<Menu> menus = new List<Menu>()
                 {
@@ -53,13 +54,15 @@ namespace Models.Migrations
                     new Menu(){Name = "权限管理",CssStyle = "zmdi-globe-lock",RouteName = "permission",Route = "permission",ClientApp = apps.FirstOrDefault(),Sort = 60},
                     new Menu(){Name = "访问控制管理",CssStyle = "zmdi-flash-auto",RouteName = "access",Route = "access",ClientApp = apps.FirstOrDefault(),Sort = 70},
                     new Menu(){Name = "菜单管理",CssStyle = "zmdi-menu",RouteName = "menu",Route = "menu",ClientApp = apps.FirstOrDefault(),Sort = 80},
-                    new Menu(){Name = "系统设置",CssStyle = "zmdi-wrench",RouteName = "system",Route = "system",ClientApp = apps.FirstOrDefault(),Sort = 90,Children = new List<Menu>(){new Menu(){Name = "查看系统日志",RouteName = "system-log",Route = "system-log",ClientApp = apps.FirstOrDefault(),Sort = 900}}},
+                    new Menu(){Name = "系统设置",CssStyle = "zmdi-wrench",RouteName = "system",Route = "system",ClientApp = apps.FirstOrDefault(),Sort = 90,Children = new List<Menu>(){childmenu}},
                     new Menu(){Name = "文件管理",CssStyle = "zmdi-archive",RouteName = "filemanager",Route = "filemanager",ClientApp = apps.FirstOrDefault(),Sort = 100},
                     new Menu(){Name = "任务管理器",CssStyle = "zmdi-view-list",RouteName = "taskcenter",Route = "taskcenter",ClientApp = apps.FirstOrDefault(),Sort = 110},
                     new Menu(){Name = "swagger",CssStyle = "zmdi-code-setting",RouteName = "swagger",Route = "swagger",ClientApp = apps.FirstOrDefault(),Sort = 120}
                 };
 
                 //初始化权限
+                var settingsMenu = menus.Where(m => m.Name.Equals("系统设置")).ToList();
+                settingsMenu.Add(childmenu);
                 IList<Permission> ps = new List<Permission>()
                 {
                     new Permission() {PermissionName = "超级权限",Controls = controls,Menu = menus,ClientApp = apps,Description = "超级权限"},
@@ -71,7 +74,7 @@ namespace Models.Migrations
                     new Permission() {PermissionName = "主系统用户组管理",Controls = controls.Where(c => c.Controller.Equals("Group")).ToList(),Menu = menus.Where(m => m.Name.Equals("用户组管理")).ToList(), ClientApp = apps,Description = "主系统用户组管理"},
                     new Permission() {PermissionName = "主系统权限管理",Controls = controls.Where(c => c.Controller.Equals("Permission")).ToList(),Menu = menus.Where(m => m.Name.Equals("权限管理")).ToList(), ClientApp = apps,Description = "主系统权限管理"},
                     new Permission() {PermissionName = "主系统角色管理",Controls = controls.Where(c => c.Controller.Equals("Role")).ToList(),Menu = menus.Where(m => m.Name.Equals("角色管理")).ToList(), ClientApp = apps,Description = "主系统角色管理"},
-                    new Permission() {PermissionName = "主系统系统设置",Controls = controls.Where(c => c.Controller.Equals("System")).ToList(),Menu = menus.Where(m => m.Name.Equals("系统设置")||m.Name.Equals("查看系统日志")).ToList(), ClientApp = apps,Description = "主系统系统设置"},
+                    new Permission() {PermissionName = "主系统系统设置",Controls = controls.Where(c => c.Controller.Equals("System")).ToList(),Menu = settingsMenu, ClientApp = apps,Description = "主系统系统设置"},
                     new Permission() {PermissionName = "主系统用户管理",Controls = controls.Where(c => c.Controller.Equals("User")).ToList(),Menu = menus.Where(m => m.Name.Equals("用户管理")).ToList(), ClientApp = apps,Description = "主系统用户管理"},
                 };
 

@@ -15,32 +15,35 @@ namespace SSO.Passport.IdentityServer.Controllers
         #region 增删查改
 
         /// <summary>
-        /// 添加菜单
+        /// 添加或修改菜单
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="appid"></param>
         /// <returns></returns>
-        public ActionResult Add(MenuInputDto model)
+        public ActionResult Save(MenuInputDto model, string appid)
         {
-            if (!ModelState.IsValid) return ResultData(null, false, "数据校验失败！");
-            var menu = model.Mapper<Menu>();
-            menu = MenuBll.AddEntitySaved(menu);
-            return menu != null ? ResultData(null, true, "菜单添加成功！") : ResultData(null, false, "菜单添加失败");
+            model.ParentId = model.ParentId == 0 ? null : model.ParentId;
+            if (string.IsNullOrEmpty(model.IconUrl) || !model.IconUrl.Contains("/"))
+            {
+                model.IconUrl = null;
+            }
+            Menu m = MenuBll.GetById(model.Id);
+            if (m == null)
+            {
+                if (!string.IsNullOrEmpty(appid) && ClientAppBll.Any(a => a.AppId.Equals(appid)))
+                {
+                    ClientApp app = ClientAppBll.GetFirstEntity(a => a.AppId.Equals(appid));
+                    app.Menus.Add(model.Mapper<Menu>());
+                    bool saved = ClientAppBll.UpdateEntitySaved(app);
+                    return ResultData(null, saved, saved ? "添加成功" : "添加失败");
+                }
+                var menu = MenuBll.AddEntitySaved(model.Mapper<Menu>());
+                return menu != null ? ResultData(menu, true, "添加成功") : ResultData(null, false, "添加失败");
+            }
+            Mapper.Map(model, m);
+            bool b = MenuBll.UpdateEntitySaved(m);
+            return ResultData(null, b, b ? "修改成功" : "修改失败");
         }
-
-        /// <summary>
-        /// 更新菜单
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public ActionResult Update(MenuInputDto model)
-        {
-            if (!ModelState.IsValid) return ResultData(null, false, "数据校验失败！");
-            Menu menu = MenuBll.GetById(model.Id);
-            Mapper.Map(model, menu);
-            bool b = MenuBll.UpdateEntitySaved(menu);
-            return ResultData(null, b, b ? "更新成功！" : "更新失败！");
-        }
-
         /// <summary>
         /// 删除菜单
         /// </summary>
@@ -53,27 +56,15 @@ namespace SSO.Passport.IdentityServer.Controllers
         }
 
         /// <summary>
-        /// 加载分页数据
-        /// </summary>
-        /// <param name="appid">appid</param>
-        /// <param name="page"></param>
-        /// <param name="size"></param>
-        /// <returns></returns>
-        public ActionResult PageData(string appid, int page = 1, int size = 10)
-        {
-            var where = string.IsNullOrEmpty(appid) ? (Expression<Func<Menu, bool>>)(c => true) : (c => c.ClientApp.AppId.Equals(appid));
-            List<MenuOutputDto> list = MenuBll.LoadPageEntitiesNoTracking<int, MenuOutputDto>(page, size, out int total, where, c => c.Id, false).ToList();
-            return PageResult(list, size, total);
-        }
-
-        /// <summary>
         /// 获取所有的菜单
         /// </summary>
         /// <param name="appid"></param>
+        /// <param name="kw"></param>
         /// <returns></returns>
-        public ActionResult GetAll(string appid)
+        public ActionResult GetAll(string appid, string kw)
         {
-            List<MenuOutputDto> list = MenuBll.LoadEntitiesNoTracking<MenuOutputDto>(m => m.ClientApp.AppId.Equals(appid)).ToList();
+            var @where = string.IsNullOrEmpty(kw) ? (Expression<Func<Menu, bool>>)(m => m.ClientApp.AppId.Equals(appid)) : (m => m.ClientApp.AppId.Equals(appid) && (m.Name.Contains(kw) || (m.Url != null && m.Url.Contains(kw)) || (m.Route != null && m.Route.Contains(kw)) || (m.RouteName != null && m.RouteName.Contains(kw))));
+            List<MenuOutputDto> list = MenuBll.LoadEntitiesNoTracking<int, MenuOutputDto>(where, m => m.Sort).ToList();
             return ResultData(list);
         }
 
