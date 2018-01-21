@@ -80,6 +80,15 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",
 					return $ocLazyLoad.load([cpath + "/clientApps.js"]);
 				}]
 			}
+		}).state("app-user", {
+			url: "/apps/user/:id",
+			templateUrl: vpath + "/apps/user.html",
+			controller: "appUser",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/clientApps.js"]);
+				}]
+			}
 		}).state("group", {
 			url: "/group",
 			templateUrl: vpath + "/group/list.html",

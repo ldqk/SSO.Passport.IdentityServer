@@ -166,3 +166,6 @@
 			});
 		}
 	}]);
+myApp.controller('appUser', ["$timeout", "$state", "$scope", "$http","$stateParams", function($timeout, $state, $scope, $http,$stateParams) {
+	console.log($stateParams.id);
+}]);
