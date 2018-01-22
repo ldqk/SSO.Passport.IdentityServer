@@ -56,7 +56,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <param name="token"></param>
         /// <returns></returns>
         [HttpPost, HttpGet, Route("api/user/{appid}/{token}")]
-        public object User(string appid, string token)
+        public new object User(string appid, string token)
         {
             if (!RedisHelper.KeyExists(token)) return null;
             RedisHelper.Expire(token, TimeSpan.FromMinutes(20));

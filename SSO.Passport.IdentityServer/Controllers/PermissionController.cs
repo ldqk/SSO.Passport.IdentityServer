@@ -131,6 +131,149 @@ namespace SSO.Passport.IdentityServer.Controllers
         #region 权限配置
 
         /// <summary>
+        /// 获取拥有该临时权限权限的用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
+        public ActionResult MyUsers(int id, int page = 1, int size = 10, string kw = "")
+        {
+            Expression<Func<UserInfo, bool>> where;
+            Expression<Func<UserInfo, bool>> where2;
+            if (!string.IsNullOrEmpty(kw))
+            {
+                where = u => u.UserPermission.All(c => c.PermissionId != id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                where2 = u => u.UserPermission.Any(c => c.PermissionId == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+            }
+            else
+            {
+                where = u => u.UserPermission.All(c => c.PermissionId != id);
+                where2 = u => u.UserPermission.Any(c => c.PermissionId == id);
+            }
+            List<UserInfoDto> not = UserInfoBll.LoadPageEntities<DateTime, UserInfoDto>(page, size, out int total1, where, u => u.LastLoginTime, false).ToList();//不属于该应用
+            List<UserInfo> list = UserInfoBll.LoadPageEntities(page, size, out int total2, where2, u => u.Id, false).ToList();//属于该应用
+            List<UserInfoDto> my = new List<UserInfoDto>();
+            foreach (var p in list)
+            {
+                //判断有没有临时权限
+                UserInfoDto per = p.Mapper<UserInfoDto>();
+                per.HasPermission = p.UserPermission.Any(u => u.PermissionId.Equals(id) && u.UserInfoId == p.Id && u.HasPermission);
+                my.Add(per);
+            }
+            return PageResult(new { my, not }, size, total1 >= total2 ? total1 : total2);
+        }
+
+        /// <summary>
+        /// 获取该权限的角色
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
+        public ActionResult MyRoles(int id, int page = 1, int size = 10, string kw = "")
+        {
+            Expression<Func<Role, bool>> where;
+            Expression<Func<Role, bool>> where2;
+            if (!string.IsNullOrEmpty(kw))
+            {
+                where = u => u.Permission.All(c => c.Id != id) && u.RoleName.Contains(kw);
+                where2 = u => u.Permission.Any(c => c.Id == id) && u.RoleName.Contains(kw);
+            }
+            else
+            {
+                where = u => u.Permission.All(c => c.Id != id);
+                where2 = u => u.Permission.Any(c => c.Id == id);
+            }
+            List<RoleOutputDto> not = RoleBll.LoadPageEntities<int, RoleOutputDto>(page, size, out int total1, where, u => u.Id, false).ToList();//不属于该应用
+            List<RoleOutputDto> my = RoleBll.LoadPageEntities<int, RoleOutputDto>(page, size, out int total2, where2, u => u.Id, false).ToList();//属于该应用
+            return PageResult(new { my, not }, size, total1 >= total2 ? total1 : total2);
+        }
+
+        /// <summary>
+        /// 获取该权限的应用
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
+        public ActionResult MyApps(int id, int page = 1, int size = 10, string kw = "")
+        {
+            Expression<Func<ClientApp, bool>> where;
+            Expression<Func<ClientApp, bool>> where2;
+            if (!string.IsNullOrEmpty(kw))
+            {
+                where = u => u.Permissions.All(c => c.Id != id) && u.AppName.Contains(kw);
+                where2 = u => u.Permissions.Any(c => c.Id == id) && u.AppName.Contains(kw);
+            }
+            else
+            {
+                where = u => u.Permissions.All(c => c.Id != id);
+                where2 = u => u.Permissions.Any(c => c.Id == id);
+            }
+            List<ClientAppOutputDto> not = ClientAppBll.LoadPageEntities<int, ClientAppOutputDto>(page, size, out int total1, where, u => u.Id, false).ToList();//不属于该应用
+            List<ClientAppOutputDto> my = ClientAppBll.LoadPageEntities<int, ClientAppOutputDto>(page, size, out int total2, where2, u => u.Id, false).ToList();//属于该应用
+            return PageResult(new { my, not }, size, total1 >= total2 ? total1 : total2);
+        }
+
+        /// <summary>
+        /// 获取该权限的控制器
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
+        public ActionResult MyControls(int id, int page = 1, int size = 10, string kw = "")
+        {
+            Expression<Func<Control, bool>> where;
+            Expression<Func<Control, bool>> where2;
+            if (!string.IsNullOrEmpty(kw))
+            {
+                where = u => u.Permission.All(c => c.Id != id) && u.Name.Contains(kw);
+                where2 = u => u.Permission.Any(c => c.Id == id) && u.Name.Contains(kw);
+            }
+            else
+            {
+                where = u => u.Permission.All(c => c.Id != id);
+                where2 = u => u.Permission.Any(c => c.Id == id);
+            }
+            List<ControlOutputDto> not = ControlBll.LoadPageEntities<int, ControlOutputDto>(page, size, out int total1, where, u => u.Id, false).ToList();//不属于该应用
+            List<ControlOutputDto> my = ControlBll.LoadPageEntities<int, ControlOutputDto>(page, size, out int total2, where2, u => u.Id, false).ToList();//属于该应用
+            return PageResult(new { my, not }, size, total1 >= total2 ? total1 : total2);
+        }
+
+        /// <summary>
+        /// 获取该权限的控制器
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
+        public ActionResult MyMenus(int id, int page = 1, int size = 10, string kw = "")
+        {
+            Expression<Func<Menu, bool>> where;
+            Expression<Func<Menu, bool>> where2;
+            if (!string.IsNullOrEmpty(kw))
+            {
+                where = u => u.Permission.All(c => c.Id != id) && u.Name.Contains(kw) || (u.Url != null && u.Url.Contains(kw)) || (u.Route != null && u.Route.Contains(kw)) || (u.RouteName != null && u.RouteName.Contains(kw));
+                where2 = u => u.Permission.Any(c => c.Id == id) && u.Name.Contains(kw) || (u.Url != null && u.Url.Contains(kw)) || (u.Route != null && u.Route.Contains(kw)) || (u.RouteName != null && u.RouteName.Contains(kw));
+            }
+            else
+            {
+                where = u => u.Permission.All(c => c.Id != id);
+                where2 = u => u.Permission.Any(c => c.Id == id);
+            }
+            List<MenuOutputDto> not = MenuBll.LoadPageEntities<int, MenuOutputDto>(page, size, out int total1, where, u => u.Id, false).ToList();//不属于该应用
+            List<MenuOutputDto> my = MenuBll.LoadPageEntities<int, MenuOutputDto>(page, size, out int total2, where2, u => u.Id, false).ToList();//属于该应用
+            return PageResult(new { my, not }, size, total1 >= total2 ? total1 : total2);
+        }
+
+        /// <summary>
         /// 为用户分配临时权限
         /// </summary>
         /// <param name="id">权限id</param>
@@ -198,9 +341,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
             List<Control> controls = ControlBll.LoadEntities(c => cids.Contains(c.Id.ToString())).ToList();
             controls.ForEach(c => permission.Controls.Add(c));
-            PermissionBll.UpdateEntity(permission);
-            PermissionBll.BulkSaveChanges();
-            return ResultData(null, true, "权限配置完成！");
+            bool b = PermissionBll.UpdateEntitySaved(permission);
+            return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
         }
 
         /// <summary>
@@ -219,9 +361,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
             List<Control> controls = ControlBll.LoadEntities(c => cids.Contains(c.Id.ToString())).ToList();
             controls.ForEach(c => permission.Controls.Remove(c));
-            PermissionBll.UpdateEntity(permission);
-            PermissionBll.BulkSaveChanges();
-            return ResultData(null, true, "权限配置完成！");
+            bool b = PermissionBll.UpdateEntitySaved(permission);
+            return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
         }
 
         /// <summary>
@@ -240,9 +381,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
             List<Menu> menus = MenuBll.LoadEntities(m => mids.Contains(m.Id.ToString())).ToList();
             menus.ForEach(m => permission.Menu.Add(m));
-            PermissionBll.UpdateEntity(permission);
-            PermissionBll.BulkSaveChanges();
-            return ResultData(null, true, "权限配置完成！");
+            bool b = PermissionBll.UpdateEntitySaved(permission);
+            return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
         }
 
         /// <summary>
@@ -261,9 +401,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
             List<Menu> menus = MenuBll.LoadEntities(m => mids.Contains(m.Id.ToString())).ToList();
             menus.ForEach(m => permission.Menu.Remove(m));
-            PermissionBll.UpdateEntity(permission);
-            PermissionBll.BulkSaveChanges();
-            return ResultData(null, true, "权限配置完成！");
+            bool b = PermissionBll.UpdateEntitySaved(permission);
+            return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
         }
 
 
@@ -283,9 +422,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
             List<ClientApp> apps = ClientAppBll.LoadEntities(a => aids.Contains(a.Id.ToString())).ToList();
             apps.ForEach(a => permission.ClientApp.Add(a));
-            PermissionBll.UpdateEntity(permission);
-            PermissionBll.BulkSaveChanges();
-            return ResultData(null, true, "权限配置完成！");
+            bool b = PermissionBll.UpdateEntitySaved(permission);
+            return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
         }
 
         /// <summary>
@@ -304,9 +442,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
             List<ClientApp> apps = ClientAppBll.LoadEntities(a => aids.Contains(a.Id.ToString())).ToList();
             apps.ForEach(a => permission.ClientApp.Remove(a));
-            PermissionBll.UpdateEntity(permission);
-            PermissionBll.BulkSaveChanges();
-            return ResultData(null, true, "权限配置完成！");
+            bool b = PermissionBll.UpdateEntitySaved(permission);
+            return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
         }
 
         /// <summary>
@@ -325,9 +462,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
             List<Role> roles = RoleBll.LoadEntities(r => rids.Contains(r.Id.ToString())).ToList();
             roles.ForEach(r => permission.Role.Add(r));
-            PermissionBll.UpdateEntity(permission);
-            PermissionBll.BulkSaveChanges();
-            return ResultData(null, true, "权限配置完成！");
+            bool b = PermissionBll.UpdateEntitySaved(permission);
+            return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
         }
 
         /// <summary>
@@ -346,9 +482,8 @@ namespace SSO.Passport.IdentityServer.Controllers
 
             List<Role> apps = RoleBll.LoadEntities(r => rids.Contains(r.Id.ToString())).ToList();
             apps.ForEach(r => permission.Role.Remove(r));
-            PermissionBll.UpdateEntity(permission);
-            PermissionBll.BulkSaveChanges();
-            return ResultData(null, true, "权限配置完成！");
+            bool b = PermissionBll.UpdateEntitySaved(permission);
+            return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
         }
 
         /// <summary>

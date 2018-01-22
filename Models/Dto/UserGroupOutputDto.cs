@@ -14,6 +14,7 @@ namespace Models.Dto
         /// 父级组
         /// </summary>
         public int? ParentId { get; set; }
+        public bool HasRole { get; set; }
 
         public virtual ICollection<UserGroupRoleOutputDto> UserGroupPermission { get; set; }
     }

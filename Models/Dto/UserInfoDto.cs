@@ -51,5 +51,7 @@ namespace Models.Dto
         /// 用户头像
         /// </summary>
         public string Avatar { get; set; }
+
+        public bool HasPermission { get; set; }
     }
 }

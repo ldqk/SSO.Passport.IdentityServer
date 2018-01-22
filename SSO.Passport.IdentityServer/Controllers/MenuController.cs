@@ -27,6 +27,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 model.IconUrl = null;
             }
+
             Menu m = MenuBll.GetById(model.Id);
             if (m == null)
             {
@@ -37,13 +38,16 @@ namespace SSO.Passport.IdentityServer.Controllers
                     bool saved = ClientAppBll.UpdateEntitySaved(app);
                     return ResultData(null, saved, saved ? "添加成功" : "添加失败");
                 }
+
                 var menu = MenuBll.AddEntitySaved(model.Mapper<Menu>());
                 return menu != null ? ResultData(menu, true, "添加成功") : ResultData(null, false, "添加失败");
             }
+
             Mapper.Map(model, m);
             bool b = MenuBll.UpdateEntitySaved(m);
             return ResultData(null, b, b ? "修改成功" : "修改失败");
         }
+
         /// <summary>
         /// 删除菜单
         /// </summary>
@@ -84,7 +88,35 @@ namespace SSO.Passport.IdentityServer.Controllers
         #region 权限配置
 
         /// <summary>
-        /// 指派权限
+        /// 获取该控制器的权限
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
+        public ActionResult MyPermissions(int id, int page = 1, int size = 10, string kw = "")
+        {
+            Expression<Func<Permission, bool>> where;
+            Expression<Func<Permission, bool>> where2;
+            if (!string.IsNullOrEmpty(kw))
+            {
+                where = u => u.Menu.All(c => c.Id != id) && u.PermissionName.Contains(kw);
+                where2 = u => u.Menu.Any(c => c.Id == id) && u.PermissionName.Contains(kw);
+            }
+            else
+            {
+                where = u => u.Menu.All(c => c.Id != id);
+                where2 = u => u.Menu.Any(c => c.Id == id);
+            }
+
+            List<PermissionOutputDto> not = PermissionBll.LoadPageEntities<int, PermissionOutputDto>(page, size, out int total1, where, u => u.Id, false).ToList(); //不属于该角色
+            List<PermissionOutputDto> my = PermissionBll.LoadPageEntities<int, PermissionOutputDto>(page, size, out int total2, where2, u => u.Id, false).ToList(); //属于该角色
+            return PageResult(new { my, not }, size, total1 >= total2 ? total1 : total2);
+        }
+
+        /// <summary>
+        /// 指派菜单权限
         /// </summary>
         /// <param name="id">菜单id</param>
         /// <param name="pid">权限id</param>
@@ -99,8 +131,30 @@ namespace SSO.Passport.IdentityServer.Controllers
                 bool b = MenuBll.UpdateEntitySaved(menu);
                 return ResultData(null, b, b ? "权限分配成功！" : "权限分配失败！");
             }
+
             return ResultData(null, false, "未找到菜单或权限！");
         }
+
+        /// <summary>
+        /// 移除菜单权限
+        /// </summary>
+        /// <param name="id">菜单id</param>
+        /// <param name="pid">权限id</param>
+        /// <returns></returns>
+        public ActionResult RemovePermission(int id, int pid)
+        {
+            Menu menu = MenuBll.GetById(id);
+            Permission permission = PermissionBll.GetById(pid);
+            if (menu != null && permission != null)
+            {
+                menu.Permission.Remove(permission);
+                bool b = MenuBll.UpdateEntitySaved(menu);
+                return ResultData(null, b, b ? "权限分配成功！" : "权限分配失败！");
+            }
+
+            return ResultData(null, false, "未找到菜单或权限！");
+        }
+
         #endregion
     }
 }

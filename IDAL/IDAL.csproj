@@ -60,7 +60,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>IBaseDal.cs</LastGenOutput>
     </Content>
-    <Content Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

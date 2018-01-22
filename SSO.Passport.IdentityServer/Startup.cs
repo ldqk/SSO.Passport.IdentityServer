@@ -1,12 +1,9 @@
 ﻿using System.Configuration;
-using System.Web;
 using Hangfire;
 using Hangfire.Dashboard;
-using Masuit.Tools.Net;
 using Masuit.Tools.NoSQL;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
-using Models.Dto;
 using Owin;
 using SSO.Passport.IdentityServer;
 
@@ -40,9 +37,10 @@ namespace SSO.Passport.IdentityServer
         {
 #if DEBUG
             return true;
-#endif
+#else
             UserInfoDto user = HttpContext.Current.Session.GetByCookieRedis<UserInfoDto>() ?? new UserInfoDto();
             return user.IsMaster;
+#endif
         }
     }
 }

@@ -103,13 +103,43 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 return ResultData(null, false, "功能控制器不存在！");
             }
+
             control.IsAvailable = !state;
             bool b = ControlBll.UpdateEntitySaved(control);
             return ResultData(null, b, b ? "状态切换成功！" : "状态切换失败！");
         }
+
         #endregion
 
         #region 权限配置
+
+        /// <summary>
+        /// 获取该控制器的权限
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="kw"></param>
+        /// <returns></returns>
+        public ActionResult MyPermissions(int id, int page = 1, int size = 10, string kw = "")
+        {
+            Expression<Func<Permission, bool>> where;
+            Expression<Func<Permission, bool>> where2;
+            if (!string.IsNullOrEmpty(kw))
+            {
+                where = u => u.Controls.All(c => c.Id != id) && u.PermissionName.Contains(kw);
+                where2 = u => u.Controls.Any(c => c.Id == id) && u.PermissionName.Contains(kw);
+            }
+            else
+            {
+                where = u => u.Controls.All(c => c.Id != id);
+                where2 = u => u.Controls.Any(c => c.Id == id);
+            }
+
+            List<PermissionOutputDto> not = PermissionBll.LoadPageEntities<int, PermissionOutputDto>(page, size, out int total1, where, u => u.Id, false).ToList(); //不属于该角色
+            List<PermissionOutputDto> my = PermissionBll.LoadPageEntities<int, PermissionOutputDto>(page, size, out int total2, where2, u => u.Id, false).ToList(); //属于该角色
+            return PageResult(new { my, not }, size, total1 >= total2 ? total1 : total2);
+        }
 
         /// <summary>
         /// 指派权限
@@ -127,8 +157,30 @@ namespace SSO.Passport.IdentityServer.Controllers
                 bool b = ControlBll.UpdateEntitySaved(control);
                 return ResultData(null, b, b ? "权限分配成功！" : "权限分配失败！");
             }
+
             return ResultData(null, false, "未找到功能或权限！");
         }
+
+        /// <summary>
+        /// 移除权限
+        /// </summary>
+        /// <param name="id">功能id</param>
+        /// <param name="pid">权限id</param>
+        /// <returns></returns>
+        public ActionResult RemovePermission(int id, int pid)
+        {
+            Control control = ControlBll.GetById(id);
+            Permission permission = PermissionBll.GetById(pid);
+            if (control != null && permission != null)
+            {
+                control.Permission.Remove(permission);
+                bool b = ControlBll.UpdateEntitySaved(control);
+                return ResultData(null, b, b ? "权限移除成功！" : "权限移除失败！");
+            }
+
+            return ResultData(null, false, "未找到功能或权限！");
+        }
+
         #endregion
     }
 }
