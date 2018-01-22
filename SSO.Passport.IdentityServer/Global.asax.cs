@@ -12,7 +12,7 @@ namespace SSO.Passport.IdentityServer
 
         protected void Application_Start(object sender, EventArgs e)
         {
-            LicenseManager.AddLicense("67;100-MASUIT", "809739091397182EC1ECEA8770EB4218");
+            LicenseManager.AddLicense("83;100-3EQWD", "96389A270C0805BB1B8D190BC2E3685D");
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
