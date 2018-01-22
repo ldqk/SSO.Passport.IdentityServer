@@ -7,8 +7,8 @@ namespace Models.Dto
     {
         public bool HasPermission { get; set; }
 
-        public Guid? UserInfoId { get; set; }
+        public Guid UserInfoId { get; set; }
 
-        public int? PermissionId { get; set; }
+        public int PermissionId { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿myApp.controller("menu", ["$scope", "$http", "$timeout", function($scope, $http, $timeout) {
+﻿myApp.controller("menu", ["$scope", "$http", "$timeout","$location", function($scope, $http, $timeout,$location) {
 	window.hub.disconnect();
 	$scope.loading();
 	$scope.menu = {};
@@ -7,7 +7,7 @@
 	$scope.init = function() {
 		$scope.request("/app/getall",null, function(data) {
 			$scope.apps=data.Data;
-			$scope.appid=$scope.apps[0].AppId;
+			$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
 			$('.ui.dropdown.apps').dropdown({
 				onChange: function (value) {
 					$scope.appid=value;
@@ -23,8 +23,8 @@
 				}
 			});
 			$timeout(function() {
-				$scope.appid=$scope.apps[0].AppId;
-				$('.ui.dropdown.apps').dropdown("set selected", [$scope.apps[0].AppId]);
+				$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
+				$('.ui.dropdown.apps').dropdown("set selected", [$scope.appid]);
 			},10);
 		});
 	}

@@ -201,7 +201,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             return PageResult(new { my, not }, size, total1 >= total2 ? total1 : total2);
         }
         /// <summary>
-        /// 获取该应用的用户组
+        /// 获取该应用的角色
         /// </summary>
         /// <param name="id"></param>
         /// <param name="page"></param>
@@ -228,7 +228,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         }
 
         /// <summary>
-        /// 获取该应用的用户组
+        /// 获取该应用的权限
         /// </summary>
         /// <param name="id"></param>
         /// <param name="page"></param>

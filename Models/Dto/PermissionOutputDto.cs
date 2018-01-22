@@ -16,6 +16,7 @@ namespace Models.Dto
         public string Description { get; set; }
 
         public int? ParentId { get; set; }
+        public bool HasPermission { get; set; }
 
         public virtual ICollection<ControlOutputDto> Controls { get; set; }
 

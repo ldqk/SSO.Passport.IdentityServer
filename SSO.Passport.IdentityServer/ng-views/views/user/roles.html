@@ -1,0 +1,63 @@
+﻿<h2 class="text-center">管理用户【{{user.Username}}】拥有的角色</h2>
+<div>
+    <div class="form-inline pull-right">
+        <button class="btn btn-info waves-effect" ng-click="list.GetPageData(paginationConf.currentPage, paginationConf.itemsPerPage);">
+            <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        <div class="input-group">
+            <span class="input-group-addon">全局搜索：</span>
+            <div class="fg-line">
+                <input type="text" class="form-control" ng-change="search(kw)" ng-model="kw" placeholder="全局搜索" />
+            </div>
+        </div>
+    </div>
+    <h3 class="text-danger">【{{user.Username}}】未拥有的角色</h3>
+    <table ng-table="list.tableParams" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+        <colgroup>
+            <col width="10%" />
+            <col width="20%" />
+            <col width="10%" />
+        </colgroup>
+        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-danger':row.Preset}">
+            <td title="'角色名'" sortable="'RoleName'">
+                {{row.RoleName}}
+            </td>
+            <td title="'角色描述'" sortable="'Description'">
+                {{row.Description}}
+            </td>
+            <td title="'权限配置'">
+                <div class="btn-group">
+                    <button class="btn btn-info btn-sm waves-effect" ng-click="list.addRoles(row)">
+                        添加
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <h3 class="text-success">【{{user.Username}}】拥有的角色</h3>
+    <table ng-table="list.tableParams2" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+        <colgroup>
+            <col width="10%" />
+            <col width="20%" />
+            <col width="10%" />
+        </colgroup>
+        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-danger':row.Preset}">
+            <td title="'角色名'" sortable="'RoleName'">
+                {{row.RoleName}}
+            </td>
+            <td title="'角色描述'" sortable="'Description'">
+                {{row.Description}}
+            </td>
+            <td title="'权限配置'">
+                <div class="btn-group">
+                    <button class="btn btn-danger btn-sm waves-effect" ng-click="list.removeRoles(row)">
+                        移除
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <tm-pagination conf="paginationConf"></tm-pagination>
+</div>

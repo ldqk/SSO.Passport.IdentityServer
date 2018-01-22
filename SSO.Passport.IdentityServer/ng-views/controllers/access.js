@@ -1,4 +1,4 @@
-﻿myApp.controller('access', ["$timeout", "$state", "NgTableParams", "$scope", "$http","$stateParams", function($timeout, $state, NgTableParams, $scope, $http,$stateParams) {
+﻿myApp.controller('access', ["$timeout", "$state", "NgTableParams", "$scope", "$http","$location", function($timeout, $state, NgTableParams, $scope, $http,$location) {
 		window.hub.disconnect();
 		$scope.loading();
 		var self = this;
@@ -7,7 +7,7 @@
 		$scope.kw = "";
 	$scope.request("/app/getall",null, function(data) {
 			$scope.apps=data.Data;
-			$scope.appid=$stateParams.appid||$scope.apps[0].AppId;
+			$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
 			$('.ui.dropdown.apps').dropdown({
 				onChange: function (value) {
 					$scope.appid=value;
@@ -23,7 +23,7 @@
 				}
 			});
 			$timeout(function() {
-				$scope.appid=$stateParams.appid||$scope.apps[0].AppId;
+				$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
 				$('.ui.dropdown.apps').dropdown("set selected", [$scope.appid]);
 			},10);
 		});

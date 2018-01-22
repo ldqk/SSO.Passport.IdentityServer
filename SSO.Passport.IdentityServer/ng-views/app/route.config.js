@@ -70,6 +70,42 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 					return $ocLazyLoad.load([cpath + "/user.js"]);
 				}]
 			}
+		}).state("user-apps", {
+			url: "/user/apps/:id",
+			templateUrl: vpath + "/user/apps.html",
+			controller: "userApps as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/user.js"]);
+				}]
+			}
+		}).state("user-groups", {
+			url: "/user/groups/:id",
+			templateUrl: vpath + "/user/groups.html",
+			controller: "userGroups as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/user.js"]);
+				}]
+			}
+		}).state("user-roles", {
+			url: "/user/roles/:id",
+			templateUrl: vpath + "/user/roles.html",
+			controller: "userRoles as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/user.js"]);
+				}]
+			}
+		}).state("user-permissions", {
+			url: "/user/permissions/:id",
+			templateUrl: vpath + "/user/permissions.html",
+			controller: "userPermissions as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/user.js"]);
+				}]
+			}
 		}).state("apps", {
 			url: "/apps",
 			templateUrl: vpath + "/apps/list.html",
@@ -152,7 +188,7 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 				}]
 			}
 		}).state("access", {
-			url: "/access/:appid",
+			url: "/access",
 			templateUrl: vpath + "/access/list.html",
 			controller: "access as list",
 			resolve: {
@@ -164,7 +200,7 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 				}]
 			}
 		}).state("menu", {
-			url: "/menu/:appid",
+			url: "/menu",
 			templateUrl: vpath + "/menu/list.html",
 			controller: "menu as list",
 			resolve: {

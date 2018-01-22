@@ -593,7 +593,11 @@
     <Content Include="ng-views\views\system\log.html" />
     <Content Include="ng-views\views\system\swagger.html" />
     <Content Include="ng-views\views\system\task.html" />
+    <Content Include="ng-views\views\user\permissions.html" />
+    <Content Include="ng-views\views\user\roles.html" />
+    <Content Include="ng-views\views\user\groups.html" />
     <Content Include="ng-views\views\user\list.html" />
+    <Content Include="ng-views\views\user\apps.html" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\boost.js" />

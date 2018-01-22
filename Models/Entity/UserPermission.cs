@@ -9,10 +9,10 @@ namespace Models.Entity
         public bool HasPermission { get; set; }
 
         [ForeignKey("UserInfo")]
-        public Guid? UserInfoId { get; set; }
+        public Guid UserInfoId { get; set; }
 
         [ForeignKey("Permission")]
-        public int? PermissionId { get; set; }
+        public int PermissionId { get; set; }
 
         public virtual Permission Permission { get; set; }
 
