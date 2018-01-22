@@ -163,6 +163,33 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 					},cpath + "/group.js"]);
 				}]
 			}
+		}).state("group-apps", {
+			url: "/group/apps/:id",
+			templateUrl: vpath + "/group/apps.html",
+			controller: "groupApps as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/group.js"]);
+				}]
+			}
+		}).state("group-role", {
+			url: "/group/role/:id",
+			templateUrl: vpath + "/group/role.html",
+			controller: "groupRoles as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/group.js"]);
+				}]
+			}
+		}).state("group-user", {
+			url: "/group/user/:id",
+			templateUrl: vpath + "/group/user.html",
+			controller: "groupUsers as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/group.js"]);
+				}]
+			}
 		}).state("role", {
 			url: "/role",
 			templateUrl: vpath + "/role/list.html",
@@ -173,6 +200,42 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 						files: ["https://cdn.bootcss.com/angular-ui-tree/2.22.6/angular-ui-tree.css","/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
 						cache: true
 					},cpath + "/role.js"]);
+				}]
+			}
+		}).state("role-apps", {
+			url: "/role/apps/:id",
+			templateUrl: vpath + "/role/apps.html",
+			controller: "roleApps as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/role.js"]);
+				}]
+			}
+		}).state("role-group", {
+			url: "/role/group/:id",
+			templateUrl: vpath + "/role/group.html",
+			controller: "roleGroups as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/role.js"]);
+				}]
+			}
+		}).state("role-permission", {
+			url: "/role/permission/:id",
+			templateUrl: vpath + "/role/permission.html",
+			controller: "rolePermissions as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/role.js"]);
+				}]
+			}
+		}).state("role-user", {
+			url: "/role/user/:id",
+			templateUrl: vpath + "/role/user.html",
+			controller: "roleUsers as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/role.js"]);
 				}]
 			}
 		}).state("permission", {
@@ -187,6 +250,51 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 					},cpath + "/permission.js"]);
 				}]
 			}
+		}).state("permission-access", {
+			url: "/permission/access/:id",
+			templateUrl: vpath + "/permission/access.html",
+			controller: "permissionAccess as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/permission.js"]);
+				}]
+			}
+		}).state("permission-apps", {
+			url: "/permission/apps/:id",
+			templateUrl: vpath + "/permission/apps.html",
+			controller: "permissionApps as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/permission.js"]);
+				}]
+			}
+		}).state("permission-menu", {
+			url: "/permission/menu/:id",
+			templateUrl: vpath + "/permission/menu.html",
+			controller: "permissionMenus as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/permission.js"]);
+				}]
+			}
+		}).state("permission-role", {
+			url: "/permission/role/:id",
+			templateUrl: vpath + "/permission/role.html",
+			controller: "permissionRoles as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/permission.js"]);
+				}]
+			}
+		}).state("permission-user", {
+			url: "/permission/user/:id",
+			templateUrl: vpath + "/permission/user.html",
+			controller: "permissionUsers as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/permission.js"]);
+				}]
+			}
 		}).state("access", {
 			url: "/access",
 			templateUrl: vpath + "/access/list.html",
@@ -199,10 +307,31 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 					},cpath + "/access.js"]);
 				}]
 			}
+		}).state("access-permission", {
+			url: "/access/permission/:id",
+			templateUrl: vpath + "/access/permission.html",
+			controller: "accessPermission as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/access.js"]);
+				}]
+			}
 		}).state("menu", {
 			url: "/menu",
 			templateUrl: vpath + "/menu/list.html",
 			controller: "menu as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([{
+						files: ["https://cdn.bootcss.com/angular-ui-tree/2.22.6/angular-ui-tree.css","/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/menu.js"]);
+				}]
+			}
+		}).state("menu-permission", {
+			url: "/menu/permission/:id",
+			templateUrl: vpath + "/menu/permission.html",
+			controller: "menuPermission as list",
 			resolve: {
 				deps: ["$ocLazyLoad", function($ocLazyLoad) {
 					return $ocLazyLoad.load([{
