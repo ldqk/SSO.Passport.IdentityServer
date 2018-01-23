@@ -250,13 +250,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddUsers(int id, string uids)
         {
+            string[] ids = uids.Split(',');
             UserGroup @group = UserGroupBll.GetById(id);
             if (@group is null)
             {
                 return ResultData(null, false, "未找到用户组！");
             }
 
-            List<UserInfo> users = UserInfoBll.LoadEntities(u => uids.Contains(u.Id.ToString())).ToList();
+            List<UserInfo> users = UserInfoBll.LoadEntities(u => ids.Contains(u.Id.ToString())).ToList();
             users.ForEach(u => { @group.UserInfo.Add(u); });
             bool b = UserGroupBll.UpdateEntitySaved(@group);
             return ResultData(null, b, b ? "添加用户成功！" : "添加用户失败！");
@@ -270,13 +271,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveUsers(int id, string uids)
         {
+            string[] ids = uids.Split(',');
             UserGroup @group = UserGroupBll.GetById(id);
             if (@group is null)
             {
                 return ResultData(null, false, "未找到用户组！");
             }
 
-            List<UserInfo> users = UserInfoBll.LoadEntities(u => uids.Contains(u.Id.ToString())).ToList();
+            List<UserInfo> users = UserInfoBll.LoadEntities(u => ids.Contains(u.Id.ToString())).ToList();
             users.ForEach(u => { @group.UserInfo.Remove(u); });
             bool b = UserGroupBll.UpdateEntitySaved(@group);
             return ResultData(null, b, b ? "移除用户成功！" : "移除用户失败！");
@@ -288,13 +290,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddApps(int id, string aids)
         {
+            string[] ids = aids.Split(',');
             UserGroup @group = UserGroupBll.GetById(id);
             if (@group is null)
             {
                 return ResultData(null, false, "未找到用户组！");
             }
 
-            List<ClientApp> users = ClientAppBll.LoadEntities(u => aids.Contains(u.Id.ToString())).ToList();
+            List<ClientApp> users = ClientAppBll.LoadEntities(u => ids.Contains(u.Id.ToString())).ToList();
             users.ForEach(u => { @group.ClientApp.Add(u); });
             bool b = UserGroupBll.UpdateEntitySaved(@group);
             return ResultData(null, b, b ? "添加客户端子系统成功！" : "添加客户端子系统失败！");
@@ -308,13 +311,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveApps(int id, string aids)
         {
+            string[] ids = aids.Split(',');
             UserGroup @group = UserGroupBll.GetById(id);
             if (@group is null)
             {
                 return ResultData(null, false, "未找到用户组！");
             }
 
-            List<ClientApp> users = ClientAppBll.LoadEntities(u => aids.Contains(u.Id.ToString())).ToList();
+            List<ClientApp> users = ClientAppBll.LoadEntities(u => ids.Contains(u.Id.ToString())).ToList();
             users.ForEach(u => { @group.ClientApp.Remove(u); });
             bool b = UserGroupBll.UpdateEntitySaved(@group);
             return ResultData(null, b, b ? "移除客户端子系统成功！" : "移除客户端子系统失败！");
@@ -328,13 +332,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddRoles(int id, string rids)
         {
+            string[] ids = rids.Split(',');
             var @group = UserGroupBll.GetById(id);
             if (group is null)
             {
                 return ResultData(null, false, "用户组不存在");
             }
 
-            List<Role> roles = RoleBll.LoadEntities(r => rids.Contains(r.Id.ToString())).ToList();
+            List<Role> roles = RoleBll.LoadEntities(r => ids.Contains(r.Id.ToString())).ToList();
             roles.ForEach(r =>
             {
                 UserGroupRole groupRole = new UserGroupRole() { UserGroupId = @group.Id, HasRole = true, RoleId = r.Id, Role = r, UserGroup = @group };
@@ -352,8 +357,9 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveRoles(int id, string rids)
         {
-            bool b = UserGroupRoleBll.DeleteEntitySaved(r => rids.Contains(r.Id.ToString()) && r.UserGroupId.Equals(id)) > 0;
-            return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
+            string[] ids = rids.Split(',');
+            UserGroupRoleBll.DeleteEntitySaved(r => ids.Contains(r.RoleId.ToString()) && r.UserGroupId.Equals(id));
+            return ResultData(null, true, "角色配置完成！");
         }
 
         /// <summary>

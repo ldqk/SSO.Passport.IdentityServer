@@ -1,10 +1,95 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+﻿<h2 class="text-center">管理【{{group.GroupName}}】的用户</h2>
+<div>
+    <div class="form-inline pull-right">
+        <button class="btn btn-info waves-effect" ng-click="list.GetPageData(paginationConf.currentPage, paginationConf.itemsPerPage);">
+            <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        <div class="input-group">
+            <span class="input-group-addon">全局搜索：</span>
+            <div class="fg-line">
+                <input type="text" class="form-control" ng-change="search(kw)" ng-model="kw" placeholder="全局搜索" />
+            </div>
+        </div>
+    </div>
+    <h3 class="text-danger">不属于【{{group.GroupName}}】的用户</h3>
+    <table ng-table="list.tableParams" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-danger':row.IsMaster}">
+            <td title="'用户名'" filter="{Username: 'text'}" sortable="'Username'">
+                {{row.Username}}
+            </td>
+            <td title="'手机号码'" filter="{PhoneNumber: 'text'}">
+                {{row.PhoneNumber}}
+            </td>
+            <td title="'邮箱'" filter="{Email: 'text'}">
+                {{row.Email}}
+            </td>
+            <td title="'锁定状态'">
+                <label class="el-switch el-switch-red">
+                    <input type="checkbox" name="switch" ng-model="row.Locked">
+                    <span class="el-switch-style"></span>
+                </label>
+            </td>
+            <td title="'管理员'">
+                <label class="el-checkbox">
+                    <input type="checkbox" name="check" ng-model="row.IsMaster">
+                    <span class="el-checkbox-style"></span>
+                </label>
+            </td>
+            <td title="'注册时间'" filter="{RegisterTime: 'text'}" sortable="'RegisterTime'">
+                {{row.RegisterTime|date:'yyyy-MM-dd HH:mm'}}
+            </td>
+            <td title="'最后登录时间'" filter="{LastLoginTime: 'text'}" sortable="'LastLoginTime'">
+                {{row.LastLoginTime|date:'yyyy-MM-dd HH:mm'}}
+            </td>
+            <td title="'权限配置'">
+                <div class="btn-group">
+                    <button class="btn btn-info btn-sm waves-effect" ng-click="list.addUser(row)">
+                        添加
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <h3 class="text-success">已归属【{{group.GroupName}}】的用户</h3>
+    <table ng-table="list.tableParams2" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+        <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-danger':row.IsMaster}">
+            <td title="'用户名'" filter="{Username: 'text'}" sortable="'Username'">
+                {{row.Username}}
+            </td>
+            <td title="'手机号码'" filter="{PhoneNumber: 'text'}">
+                {{row.PhoneNumber}}
+            </td>
+            <td title="'邮箱'" filter="{Email: 'text'}">
+                {{row.Email}}
+            </td>
+            <td title="'锁定状态'">
+                <label class="el-switch el-switch-red">
+                    <input type="checkbox" name="switch" ng-model="row.Locked">
+                    <span class="el-switch-style"></span>
+                </label>
+            </td>
+            <td title="'管理员'">
+                <label class="el-checkbox">
+                    <input type="checkbox" name="check" ng-model="row.IsMaster">
+                    <span class="el-checkbox-style"></span>
+                </label>
+            </td>
+            <td title="'注册时间'" filter="{RegisterTime: 'text'}" sortable="'RegisterTime'">
+                {{row.RegisterTime|date:'yyyy-MM-dd HH:mm'}}
+            </td>
+            <td title="'最后登录时间'" filter="{LastLoginTime: 'text'}" sortable="'LastLoginTime'">
+                {{row.LastLoginTime|date:'yyyy-MM-dd HH:mm'}}
+            </td>
+            <td title="'权限配置'">
+                <div class="btn-group">
+                    <button class="btn btn-danger btn-sm waves-effect" ng-click="list.removeUser(row)">
+                        移除
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <tm-pagination conf="paginationConf"></tm-pagination>
+</div>

@@ -68,14 +68,14 @@
             </div>
             <div class="col-sm-7">
                 <div class="btn-group">
-                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-click="del(this)">
-                        加入用户
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/group/user/{{node.Id}}">
+                        管理用户
                     </a>
-                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-click="edit(node)">
-                        分配角色
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-href="#/group/role/{{node.Id}}">
+                        角色
                     </a>
-                    <a class="pull-right btn btn-primary waves-effect" data-nodrag ng-click="newSubItem(this)">
-                        应用管理
+                    <a class="pull-right btn btn-primary waves-effect" data-nodrag ng-href="#/group/apps/{{node.Id}}">
+                        配置应用
                     </a>
                 </div>
             </div>
