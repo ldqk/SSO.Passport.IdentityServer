@@ -281,13 +281,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddUsers(int id, string uids)
         {
+            string[] ids = uids.Split(',');
             Permission permission = PermissionBll.GetById(id);
             if (permission is null)
             {
                 return ResultData(null, false, "未找到相应的权限信息！");
             }
 
-            List<UserInfo> users = UserInfoBll.LoadEntities(u => uids.Contains(u.Id.ToString())).ToList();
+            List<UserInfo> users = UserInfoBll.LoadEntities(u => ids.Contains(u.Id.ToString())).ToList();
             users.ForEach(u => { UserPermissionBll.AddEntity(new UserPermission() { Permission = permission, HasPermission = true, PermissionId = permission.Id, UserInfo = u, UserInfoId = u.Id }); });
             UserPermissionBll.BulkSaveChanges();
             return ResultData(null, true, "权限配置完成！");
@@ -301,7 +302,8 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveUsers(int id, string uids)
         {
-            bool b = UserPermissionBll.DeleteEntitySaved(p => p.PermissionId.Equals(id) && uids.Contains(p.UserInfoId.ToString())) > 0;
+            string[] ids = uids.Split(',');
+            bool b = UserPermissionBll.DeleteEntitySaved(p => p.PermissionId.Equals(id) && ids.Contains(p.UserInfoId.ToString())) > 0;
             return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
         }
 
@@ -333,13 +335,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddControls(int id, string cids)
         {
+            string[] ids = cids.Split(',');
             Permission permission = PermissionBll.GetById(id);
             if (permission is null)
             {
                 return ResultData(null, false, "未找到相应的权限信息！");
             }
 
-            List<Control> controls = ControlBll.LoadEntities(c => cids.Contains(c.Id.ToString())).ToList();
+            List<Control> controls = ControlBll.LoadEntities(c => ids.Contains(c.Id.ToString())).ToList();
             controls.ForEach(c => permission.Controls.Add(c));
             bool b = PermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
@@ -353,13 +356,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveControls(int id, string cids)
         {
+            string[] ids = cids.Split(',');
             Permission permission = PermissionBll.GetById(id);
             if (permission is null)
             {
                 return ResultData(null, false, "未找到相应的权限信息！");
             }
 
-            List<Control> controls = ControlBll.LoadEntities(c => cids.Contains(c.Id.ToString())).ToList();
+            List<Control> controls = ControlBll.LoadEntities(c => ids.Contains(c.Id.ToString())).ToList();
             controls.ForEach(c => permission.Controls.Remove(c));
             bool b = PermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
@@ -373,13 +377,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddMenus(int id, string mids)
         {
+            string[] ids = mids.Split(',');
             Permission permission = PermissionBll.GetById(id);
             if (permission is null)
             {
                 return ResultData(null, false, "未找到相应的权限信息！");
             }
 
-            List<Menu> menus = MenuBll.LoadEntities(m => mids.Contains(m.Id.ToString())).ToList();
+            List<Menu> menus = MenuBll.LoadEntities(m => ids.Contains(m.Id.ToString())).ToList();
             menus.ForEach(m => permission.Menu.Add(m));
             bool b = PermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
@@ -393,13 +398,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveMenus(int id, string mids)
         {
+            string[] ids = mids.Split(',');
             Permission permission = PermissionBll.GetById(id);
             if (permission is null)
             {
                 return ResultData(null, false, "未找到相应的权限信息！");
             }
 
-            List<Menu> menus = MenuBll.LoadEntities(m => mids.Contains(m.Id.ToString())).ToList();
+            List<Menu> menus = MenuBll.LoadEntities(m => ids.Contains(m.Id.ToString())).ToList();
             menus.ForEach(m => permission.Menu.Remove(m));
             bool b = PermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
@@ -414,13 +420,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddApps(int id, string aids)
         {
+            string[] ids = aids.Split(',');
             Permission permission = PermissionBll.GetById(id);
             if (permission is null)
             {
                 return ResultData(null, false, "未找到相应的权限信息！");
             }
 
-            List<ClientApp> apps = ClientAppBll.LoadEntities(a => aids.Contains(a.Id.ToString())).ToList();
+            List<ClientApp> apps = ClientAppBll.LoadEntities(a => ids.Contains(a.Id.ToString())).ToList();
             apps.ForEach(a => permission.ClientApp.Add(a));
             bool b = PermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
@@ -434,13 +441,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveApps(int id, string aids)
         {
+            string[] ids = aids.Split(',');
             Permission permission = PermissionBll.GetById(id);
             if (permission is null)
             {
                 return ResultData(null, false, "未找到相应的权限信息！");
             }
 
-            List<ClientApp> apps = ClientAppBll.LoadEntities(a => aids.Contains(a.Id.ToString())).ToList();
+            List<ClientApp> apps = ClientAppBll.LoadEntities(a => ids.Contains(a.Id.ToString())).ToList();
             apps.ForEach(a => permission.ClientApp.Remove(a));
             bool b = PermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
@@ -454,13 +462,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddRoles(int id, string rids)
         {
+            string[] ids = rids.Split(',');
             Permission permission = PermissionBll.GetById(id);
             if (permission is null)
             {
                 return ResultData(null, false, "未找到相应的权限信息！");
             }
 
-            List<Role> roles = RoleBll.LoadEntities(r => rids.Contains(r.Id.ToString())).ToList();
+            List<Role> roles = RoleBll.LoadEntities(r => ids.Contains(r.Id.ToString())).ToList();
             roles.ForEach(r => permission.Role.Add(r));
             bool b = PermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
@@ -474,13 +483,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveRoles(int id, string rids)
         {
+            string[] ids = rids.Split(',');
             Permission permission = PermissionBll.GetById(id);
             if (permission is null)
             {
                 return ResultData(null, false, "未找到相应的权限信息！");
             }
 
-            List<Role> apps = RoleBll.LoadEntities(r => rids.Contains(r.Id.ToString())).ToList();
+            List<Role> apps = RoleBll.LoadEntities(r => ids.Contains(r.Id.ToString())).ToList();
             apps.ForEach(r => permission.Role.Remove(r));
             bool b = PermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");

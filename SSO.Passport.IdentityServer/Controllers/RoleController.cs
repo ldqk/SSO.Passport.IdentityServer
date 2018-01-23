@@ -204,13 +204,13 @@ namespace SSO.Passport.IdentityServer.Controllers
             Expression<Func<UserGroup, bool>> where2;
             if (!string.IsNullOrEmpty(kw))
             {
-                where = u => u.UserGroupPermission.All(c => c.UserGroupId != id) && u.GroupName.Contains(kw);
-                where2 = u => u.UserGroupPermission.Any(c => c.UserGroupId == id) && u.GroupName.Contains(kw);
+                where = u => u.UserGroupPermission.All(c => c.RoleId != id) && u.GroupName.Contains(kw);
+                where2 = u => u.UserGroupPermission.Any(c => c.RoleId == id) && u.GroupName.Contains(kw);
             }
             else
             {
-                where = u => u.UserGroupPermission.All(c => c.UserGroupId != id);
-                where2 = u => u.UserGroupPermission.Any(c => c.UserGroupId == id);
+                where = u => u.UserGroupPermission.All(c => c.RoleId != id);
+                where2 = u => u.UserGroupPermission.Any(c => c.RoleId == id);
             }
 
             List<UserGroupOutputDto> not = UserGroupBll.LoadPageEntities<int, UserGroupOutputDto>(page, size, out int total1, where, u => u.Id, false).ToList(); //不属于该角色
@@ -220,7 +220,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 //判断有没有临时权限
                 UserGroupOutputDto per = p.Mapper<UserGroupOutputDto>();
-                per.HasRole = p.UserGroupPermission.Any(u => u.UserGroupId.Equals(id) && u.RoleId == p.Id && u.HasRole);
+                per.HasRole = p.UserGroupPermission.Any(u => u.RoleId.Equals(id) && u.UserGroupId == p.Id && u.HasRole);
                 my.Add(per);
             }
 
@@ -263,13 +263,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddUsers(int id, string uids)
         {
+            string[] ids = uids.Split(',');
             Role role = RoleBll.GetById(id);
             if (role is null)
             {
                 return ResultData(null, false, "未找到相应的角色信息！");
             }
 
-            List<UserInfo> users = UserInfoBll.LoadEntities(u => uids.Contains(u.Id.ToString())).ToList();
+            List<UserInfo> users = UserInfoBll.LoadEntities(u => ids.Contains(u.Id.ToString())).ToList();
             users.ForEach(u => role.UserInfo.Add(u));
             bool b = RoleBll.SaveChanges() > 0;
             return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
@@ -283,13 +284,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveUsers(int id, string uids)
         {
+            string[] ids = uids.Split(',');
             Role role = RoleBll.GetById(id);
             if (role is null)
             {
                 return ResultData(null, false, "未找到相应的角色信息！");
             }
 
-            List<UserInfo> users = UserInfoBll.LoadEntities(u => uids.Contains(u.Id.ToString())).ToList();
+            List<UserInfo> users = UserInfoBll.LoadEntities(u => ids.Contains(u.Id.ToString())).ToList();
             users.ForEach(u => role.UserInfo.Remove(u));
             bool b = RoleBll.SaveChanges() > 0;
             return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
@@ -310,7 +312,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 return ResultData(null, false, "未找到相应的角色信息！");
             }
 
-            role.HasRole = state;
+            role.HasRole = !state;
             bool b = UserGroupRoleBll.UpdateEntitySaved(role);
             return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
         }
@@ -323,16 +325,17 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddGroups(int id, string gids)
         {
+            string[] ids = gids.Split(',');
             Role role = RoleBll.GetById(id);
             if (role is null)
             {
                 return ResultData(null, false, "未找到相应的角色信息！");
             }
 
-            List<UserGroup> controls = UserGroupBll.LoadEntities(g => gids.Contains(g.Id.ToString())).ToList();
-            controls.ForEach(g => UserGroupRoleBll.AddEntity(new UserGroupRole() { UserGroup = g, Role = role, HasRole = true, RoleId = role.Id, UserGroupId = g.Id }));
-            UserGroupRoleBll.BulkSaveChanges();
-            return ResultData(null, true, "角色配置完成！");
+            List<UserGroup> groups = UserGroupBll.LoadEntities(g => ids.Contains(g.Id.ToString())).ToList();
+            groups.ForEach(g => UserGroupRoleBll.AddEntity(new UserGroupRole() { UserGroup = g, Role = role, HasRole = true, RoleId = role.Id, UserGroupId = g.Id }));
+            bool b = UserGroupRoleBll.SaveChanges() > 0;
+            return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
         }
 
         /// <summary>
@@ -343,8 +346,9 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveGroups(int id, string gids)
         {
-            bool b = UserGroupRoleBll.DeleteEntitySaved(r => r.RoleId.Equals(id) && gids.Contains(r.UserGroupId.ToString())) > 0;
-            return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
+            string[] ids = gids.Split(',');
+            UserGroupRoleBll.DeleteEntitySaved(r => r.RoleId.Equals(id) && ids.Contains(r.UserGroupId.ToString()));
+            return ResultData(null, true, "角色配置完成！");
         }
 
         /// <summary>
@@ -355,13 +359,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddPermissions(int id, string pids)
         {
+            string[] ids = pids.Split(',');
             Role role = RoleBll.GetById(id);
             if (role is null)
             {
                 return ResultData(null, false, "未找到相应的角色信息！");
             }
 
-            List<Permission> permissions = PermissionBll.LoadEntities(p => pids.Contains(p.Id.ToString())).ToList();
+            List<Permission> permissions = PermissionBll.LoadEntities(p => ids.Contains(p.Id.ToString())).ToList();
             permissions.ForEach(p => role.Permission.Add(p));
             bool b = RoleBll.UpdateEntitySaved(role);
             return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
@@ -375,13 +380,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemovePermissions(int id, string pids)
         {
+            string[] ids = pids.Split(',');
             Role role = RoleBll.GetById(id);
             if (role is null)
             {
                 return ResultData(null, false, "未找到相应的角色信息！");
             }
 
-            List<Permission> permissions = PermissionBll.LoadEntities(p => pids.Contains(p.Id.ToString())).ToList();
+            List<Permission> permissions = PermissionBll.LoadEntities(p => ids.Contains(p.Id.ToString())).ToList();
             permissions.ForEach(p => role.Permission.Remove(p));
             bool b = RoleBll.UpdateEntitySaved(role);
             return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
@@ -396,13 +402,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult AddApps(int id, string aids)
         {
+            string[] ids = aids.Split(',');
             Role role = RoleBll.GetById(id);
             if (role is null)
             {
                 return ResultData(null, false, "未找到相应的角色信息！");
             }
 
-            List<ClientApp> apps = ClientAppBll.LoadEntities(a => aids.Contains(a.Id.ToString())).ToList();
+            List<ClientApp> apps = ClientAppBll.LoadEntities(a => ids.Contains(a.Id.ToString())).ToList();
             apps.ForEach(a => role.ClientApp.Add(a));
             bool b = RoleBll.UpdateEntitySaved(role);
             return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
@@ -416,13 +423,14 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult RemoveApps(int id, string aids)
         {
+            string[] ids = aids.Split(',');
             Role role = RoleBll.GetById(id);
             if (role is null)
             {
                 return ResultData(null, false, "未找到相应的角色信息！");
             }
 
-            List<ClientApp> apps = ClientAppBll.LoadEntities(a => aids.Contains(a.Id.ToString())).ToList();
+            List<ClientApp> apps = ClientAppBll.LoadEntities(a => ids.Contains(a.Id.ToString())).ToList();
             apps.ForEach(a => role.ClientApp.Remove(a));
             bool b = RoleBll.UpdateEntitySaved(role);
             return ResultData(null, b, b ? "角色配置完成！" : "角色配置失败！");
