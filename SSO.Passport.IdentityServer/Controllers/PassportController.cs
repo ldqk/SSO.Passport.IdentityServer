@@ -15,6 +15,8 @@ using Masuit.Tools.Strings;
 using Models.Dto;
 using Models.Entity;
 using Newtonsoft.Json;
+using SSO.Core.Client;
+using SSO.Core.Server;
 using SSO.Passport.IdentityServer.Models.Hangfire;
 
 namespace SSO.Passport.IdentityServer.Controllers
@@ -34,6 +36,43 @@ namespace SSO.Passport.IdentityServer.Controllers
         {
             return Content(JsonConvert.SerializeObject(new { Success = isTrue, Message = message, Data = data }, new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Ignore }), "application/json");
         }
+        public ActionResult PassportCenter()
+        {
+            //没有授权Token非法访问
+            if (string.IsNullOrEmpty(Request["token"]))
+            {
+                return Content("没有授权Token，非法访问");
+            }
+            if (Session.GetByCookieRedis<UserInfo>() != null)
+            {
+                UserInfo userInfo = Session.GetByCookieRedis<UserInfo>();
+                return Redirect(PassportService.GetReturnUrl(userInfo.Id.ToString(), Request["token"], Request["returnUrl"]));
+            }
+            return View();
+        }
+
+
+        /// <summary>
+        /// 授权登陆验证
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult PassportVertify()
+        {
+            var cookie = Request.Cookies[Constants.USER_COOKIE_KEY];
+            if (cookie == null || string.IsNullOrEmpty(cookie.ToString()))
+            {
+                return RedirectToAction("Login", new { ReturnUrl = Regex.Replace(Request["ReturnUrl"], @"ticket=(.{0,36})&token=(.{0,32})", String.Empty), Token = Request["Token"] });
+            }
+            string userId = cookie.Value;
+            var success = PassportService.AuthernVertify(Request["Token"], Convert.ToDateTime(Request["TimeStamp"]));
+            if (!success)
+            {
+                return RedirectToAction("Login", new { ReturnUrl = Regex.Replace(Request["ReturnUrl"], @"ticket=(.{0,36})&token=(.{0,32})", String.Empty), Token = Request["Token"] });
+            }
+            return Redirect(PassportService.GetReturnUrl(userId, Request["Token"], Request["ReturnUrl"]));
+        }
+
 
         /// <summary>
         /// 登录页

@@ -687,6 +687,7 @@
     <Content Include="Views\Passport\Login.cshtml" />
     <Content Include="Views\Home\FileManager.cshtml" />
     <Content Include="Views\Home\Apis.cshtml" />
+    <Content Include="Views\Passport\PassportCenter.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -770,6 +771,10 @@
     <ProjectReference Include="..\Models\Models.csproj">
       <Project>{f64ba0ef-9dcd-4a5c-8758-be688a3dd8cc}</Project>
       <Name>Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SSO.Core\SSO.Core.csproj">
+      <Project>{c4f95646-e348-4413-9f5d-219f8d8cdcd0}</Project>
+      <Name>SSO.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

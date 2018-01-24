@@ -2,16 +2,16 @@
 using System.Text;
 using System.Web.Mvc;
 using Autofac;
-using Common;
 using IBLL;
-using Masuit.Tools.Net;
 using Masuit.Tools.NoSQL;
 using Models.Dto;
 using Models.ViewModel;
 using Newtonsoft.Json;
+using SSO.Core.Client;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
+    [Authority(Code = AuthCodeEnum.Login)]
     public class BaseController : Controller
     {
         protected IUserInfoBll UserInfoBll { get; set; } = AutofacConfig.Container.Resolve<IUserInfoBll>();
@@ -39,7 +39,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <param name="filterContext">有关当前请求和操作的信息。</param>
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-#if DEBUG
+#if !DEBUG
             var user = UserInfoBll.GetByUsername("admin").Mapper<UserInfoDto>();
             CurrentUser = user;
             Session.SetByRedis(user);

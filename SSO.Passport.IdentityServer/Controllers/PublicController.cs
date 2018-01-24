@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Http;
 using AutoMapper;
+using Common;
 using IBLL;
 using Masuit.Tools;
 using Masuit.Tools.NoSQL;
@@ -233,5 +234,13 @@ namespace SSO.Passport.IdentityServer.Controllers
 
             return ResultData(null, false, "密码强度值不够，密码必须包含数字，必须包含小写或大写字母，必须包含至少一个特殊符号，至少6个字符，最多30个字符！");
         }
+
+        /// <summary>
+        /// 根据id获取用户，仅限服务端本机
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet, Route("api/user/{id}")]
+        public UserInfoDto GetUser(Guid id) => UserInfoBll.GetById(id).Mapper<UserInfoDto>();
     }
 }

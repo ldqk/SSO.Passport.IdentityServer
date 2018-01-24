@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Text;
 using System.Web;
 using Masuit.Tools.NoSQL;
@@ -21,7 +20,7 @@ namespace SSO.Core.Client
             if (RedisHelper.KeyExists(ticket))
             {
                 string userid = RedisHelper.GetString(ticket);
-                string data = AuthernUtil.CallServerApi("/Api/GetUser", new Dictionary<string, string> { { "id", userid } });
+                string data = AuthernUtil.CallServerApi($"/Api/User/{userid}");
                 try
                 {
                     return JsonConvert.DeserializeObject<UserInfoLoginModel>(data);

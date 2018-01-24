@@ -37,7 +37,7 @@ namespace SSO.Core.Client
         /// <param name="path">API路径，格式：/Controller/Action</param>
         /// <param name="param">参数，键值对</param>
         /// <returns></returns>
-        public static string CallServerApi(string path, IDictionary<string, string> param)
+        public static string CallServerApi(string path, IDictionary<string, string> param = null)
         {
             HttpClient client = new HttpClient() { BaseAddress = new Uri(ConfigurationManager.AppSettings["PassportUrl"] ?? $"{HttpContext.Current.Request.Url.Scheme}://{HttpContext.Current.Request.Url.Authority}") };
             int time = DateTime.Now.GetTotalSeconds().ToInt32();

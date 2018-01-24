@@ -14,6 +14,10 @@ namespace SSO.Passport.IdentityServer.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            if (!string.IsNullOrEmpty(Request.Url?.Query))
+            {
+                return Redirect("/");
+            }
             return View();
         }
 

@@ -16,9 +16,9 @@ namespace SSO.Core.Server
         /// <param name="token">令牌</param>
         /// <param name="timestamp">时间戳</param>
         /// <returns></returns>
-        public bool AuthernVertify(string token, DateTime timestamp) => AuthernUtil.CreateToken(timestamp) == token;
+        public static bool AuthernVertify(string token, DateTime timestamp) => AuthernUtil.CreateToken(timestamp) == token;
 
-        public string CreateTicket(string userId)
+        public static string CreateTicket(string userId)
         {
             //加密userinfo
             string ticket = Guid.NewGuid().ToString().MDString();
@@ -26,7 +26,7 @@ namespace SSO.Core.Server
             return ticket;
         }
 
-        public string GetReturnUrl(string userId, string token, string returnUrl)
+        public static string GetReturnUrl(string userId, string token, string returnUrl)
         {
             return $"{returnUrl.Replace(new Regex("ticket=(.{0,36})&token=(.{0,32})"), String.Empty)}{(returnUrl.Contains("?") ? "&" : "?")}ticket={CreateTicket(userId)}&token={token}".Replace(new Regex(@"(\?&+)"), "?").Replace(new Regex(@"&+"), "&");
         }
