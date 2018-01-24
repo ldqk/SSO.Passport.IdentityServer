@@ -29,7 +29,11 @@ namespace SSO.Passport.IdentityServer
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-
+            string httpMethod = Request.HttpMethod;
+            if (httpMethod.Equals("OPTIONS", StringComparison.InvariantCultureIgnoreCase) || httpMethod.Equals("HEAD", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Response.End();
+            }
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

@@ -7,6 +7,7 @@ using AutoMapper;
 using Common;
 using Models.Dto;
 using Models.Entity;
+using Models.Enum;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
@@ -107,6 +108,21 @@ namespace SSO.Passport.IdentityServer.Controllers
             control.IsAvailable = !state;
             bool b = ControlBll.UpdateEntitySaved(control);
             return ResultData(null, b, b ? "状态切换成功！" : "状态切换失败！");
+        }
+
+        /// <summary>
+        /// 获取http请求方式
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetHttpMethod()
+        {
+            Array array = Enum.GetValues(typeof(HttpMethod));
+            List<object> list = new List<object>();
+            foreach (Enum e in array)
+            {
+                list.Add(new { name = e.ToString(), value = e });
+            }
+            return ResultData(list);
         }
 
         #endregion

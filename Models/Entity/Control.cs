@@ -15,18 +15,30 @@ namespace Models.Entity
             IsAvailable = true;
         }
 
-
+        /// <summary>
+        /// 访问控制名
+        /// </summary>
         [Display(Name = "功能名称")]
         [Required]
         public string Name { get; set; }
 
+        /// <summary>
+        /// 控制器名
+        /// </summary>
         [Display(Name = "控制器名称")]
-        [Required]
         public string Controller { get; set; }
 
+        /// <summary>
+        /// 方法名
+        /// </summary>
         [Display(Name = "方法名称")]
-        [Required]
         public string Action { get; set; }
+
+        /// <summary>
+        /// 请求路径
+        /// </summary>
+        [Display(Name = "请求路径")]
+        public string Path { get; set; }
 
         [Display(Name = "HTTP请求方式")]
         [Required]

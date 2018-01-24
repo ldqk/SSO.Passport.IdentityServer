@@ -1,27 +1,31 @@
 ﻿myApp.controller('access', ["$timeout", "$state", "NgTableParams", "$scope", "$http","$location", function($timeout, $state, NgTableParams, $scope, $http,$location) {
-		window.hub.disconnect();
-		$scope.loading();
-		var self = this;
-		self.stats = [];
-		self.data = {};
-		$scope.kw = "";
+	window.hub.disconnect();
+	$scope.loading();
+	var self = this;
+	self.stats = [];
+	self.data = {};
+	$scope.kw = "";
 	$scope.request("/app/getall",null, function(data) {
-			$scope.apps=data.Data;
+		$scope.apps=data.Data;
+		$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
+		$('.ui.dropdown.apps').dropdown({
+			onChange: function (value) {
+				$scope.appid=value;
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			},
+			message: {
+				maxSelections: '最多选择 {maxCount} 项',
+				noResults: '无搜索结果！'
+			}
+		});
+		$timeout(function() {
 			$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
-			$('.ui.dropdown.apps').dropdown({
-				onChange: function (value) {
-					$scope.appid=value;
-					self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
-				},
-				message: {
-					maxSelections: '最多选择 {maxCount} 项',
-					noResults: '无搜索结果！'
-				}
-			});
-			$timeout(function() {
-				$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
-				$('.ui.dropdown.apps').dropdown("set selected", [$scope.appid]);
-			},10);
+			$('.ui.dropdown.apps').dropdown("set selected", [$scope.appid]);
+		},10);
+	});
+	$scope.request("/access/gethttpmethod",null, function(data) {
+			$scope.HttpMethod=data.Data;
+		$scope.acl["HttpMethod"]=data.Data[0].value;
 		});
 		$scope.paginationConf = {
 			currentPage: 1,
@@ -65,45 +69,50 @@
 			}, 500);
 		}
 		$scope.add = function() {
-			swal({
-				title: "添加访问控制器",
-				text: "请输入访问控制器名:",
-				input: "text",
-				showCancelButton: true,
-				closeOnConfirm: false,
-				animation: "slide-from-top",
-				confirmButtonText: "确认",
-				cancelButtonText: "取消",
-				inputPlaceholder: "请输入访问控制器名",
-				preConfirm: function(inputValue) {
-					return new Promise(function(resolve, reject) {
-						if (inputValue === false) {
-							return false;
-						}
-						if (inputValue === "") {
-							swal("访问控制器名不能为空!", "", "error");
-							return false;
-						}
-						$scope.request("/access/Add", {
-							name: inputValue
-						}, function(data) {
-							data.inputValue = inputValue;
-							if (data.Success) {
-								resolve(data);
-							} else {
-								reject(data.Message);
-							}
-						});
-					});
+			layer.open({
+				type: 1,
+				zIndex: 20,
+				title: '修改菜单信息',
+				area: (window.screen.width > 600 ? 600 : window.screen.width) + 'px',// '340px'], //宽高
+				content: $("#modal"),
+				success: function(layero, index) {
+					$scope.menu = {};
 				},
-				allowOutsideClick: false
-			}).then(function(data) {
-				swal("添加成功!", "已新增访问控制器：" + data.inputValue, "success");
-				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
-			}, function(error) {
-				swal("操作被取消!", "未做任何更改!", "info");
-			}).catch(swal.noop);
+				end: function() {
+					$("#modal").css("display", "none");
+				}
+			});
 		}
+	$scope.submit= function(acl) {
+		acl.ClientAppId = _.find($scope.apps, {AppId:$scope.appid}).Id;
+		if (acl.Name.length<=0) {
+			window.notie.alert({
+				type: 3,
+				text: "访问控制名不能为空",
+				time: 4
+			});
+		}
+		if (acl.HttpMethod) {
+			$scope.request("/access/add",acl, function(res) {
+				if (res.Success) {
+					$scope.closeAll();
+					self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+				} else {
+					window.notie.alert({
+						type: 3,
+						text: res.Message,
+						time: 4
+					});									
+				}
+			});
+		} else {
+			window.notie.alert({
+				type: 3,
+				text: "请求方式不能为空",
+				time: 4
+			});
+		}
+	}
 		$scope.closeAll = function() {
 			layer.closeAll();
 			setTimeout(function() {

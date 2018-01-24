@@ -20,6 +20,11 @@ namespace Models.Dto
         public string Action { get; set; }
 
         /// <summary>
+        /// 请求路径
+        /// </summary>
+        public string Path { get; set; }
+
+        /// <summary>
         /// http请求方式
         /// </summary>
         public string HttpMethod { get; set; }

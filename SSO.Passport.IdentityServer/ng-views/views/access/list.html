@@ -1,5 +1,5 @@
 ﻿<style>
-    .input-group {
+    .search.input-group {
         width: 300px;
     }
 </style>
@@ -15,7 +15,12 @@
             </div>
         </div>
     </div>
-    <div class="input-group">
+    <div class="pull-left">
+        <button class="btn btn-primary waves-effect" ng-click="add()">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+    </div>
+    <div class="search input-group">
         <span class="input-group-addon">选择应用：</span>
         <div class="ui fluid search selection dropdown apps">
             <input name="apps" type="hidden" id="apps">
@@ -90,4 +95,57 @@
         </tr>
     </table>
     <tm-pagination conf="paginationConf"></tm-pagination>
+</div>
+
+<div id="modal" class="modal">
+    <div class="container-fluid" style="margin: 15px 0;">
+        <form class="bgm-white">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    访问控制名：
+                </span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="acl-name" ng-model="acl.Name" />
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    Controller控制器名：
+                </span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="acl-controller" ng-model="acl.Controller" />
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    Action方法名：
+                </span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="acl-action" ng-model="acl.Action" />
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    Path请求路径：
+                </span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="acl-path" ng-model="acl.Path" />
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    HTTP请求方式：
+                </span>
+                <div class="fg-line">
+                    <select class="form-control" ng-model="acl.HttpMethod" ng-options="m.value as m.name for m in HttpMethod">
+                        <option value="">请选择请求方式</option>
+                    </select>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-info waves-effect" ng-click="submit(acl)">确认</button>
+                <button type="button" class="btn btn-danger waves-effect" ng-click="closeAll()">取消</button>
+            </div>
+        </form>
+    </div>
 </div>
