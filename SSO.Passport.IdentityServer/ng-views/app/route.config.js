@@ -106,6 +106,18 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 					return $ocLazyLoad.load([cpath + "/user.js"]);
 				}]
 			}
+		}).state("user-authority", {
+			url: "/user/authority/:id",
+			templateUrl: vpath + "/user/authority.html",
+			controller: "userAuthority as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([{
+						files: ["https://cdn.bootcss.com/angular-ui-tree/2.22.6/angular-ui-tree.css","/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/user.js"]);
+				}]
+			}
 		}).state("apps", {
 			url: "/apps",
 			templateUrl: vpath + "/apps/list.html",

@@ -72,23 +72,11 @@
             </td>
             <td title="'操作'" style="width: 155px;">
                 <div class="btn-group">
-                    <button class="btn btn-default btn-sm waves-effect" ng-click="list.pass(row)" ng-if="row.Status=='审核中'">
-                        <i class="icon-checkmark"></i>
-                    </button>
-                    <a class="btn btn-success btn-sm waves-effect" ng-href="#/post/edit?id={{row.Id}}">
-                        <i class="icon-pencil"></i>
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-click="del(row)">
+                        <span class="glyphicon glyphicon-remove"></span>
                     </a>
-                    <button class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)" ng-if="row.Status!='已删除'">
-                        <i class="icon-bin"></i>
-                    </button>
-                    <a class="btn btn-danger btn-sm waves-effect" ng-click="list.truncate(row)" ng-if="row.Status=='已删除'">
-                        <i class="icon-cross"></i>
-                    </a>
-                    <a class="btn btn-info btn-sm waves-effect" ng-click="list.restore(row)" ng-if="row.Status=='已删除'">
-                        <i class="icon-undo2"></i>
-                    </a>
-                    <a class="btn  btn-sm waves-effect" ng-class="{true:'btn-success',false:'btn-primary'}[row.IsFixedTop]" ng-click="list.fixtop(row.Id)">
-                        <i class="icon-pushpin" ng-class="{true:'text-danger'}[row.IsFixedTop]"></i>
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-click="edit(row)">
+                        <span class="glyphicon glyphicon-edit"></span>
                     </a>
                 </div>
             </td>

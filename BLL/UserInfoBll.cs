@@ -214,92 +214,100 @@ namespace BLL
             DataContext context = BaseDal.GetDataContext();
             ClientApp app = context.ClientApp.FirstOrDefault(a => a.AppId.Equals(appid));//获取客户端子系统应用
             UserInfo user = GetById(id);//获取用户
+            if (app == null || user == null) return new List<ControlOutputDto>();
+            var list = GetControls(user);
+            return list.Where(c => c.IsAvailable && c.ClientAppId == app.Id).Distinct(new AccessControlComparision()).ToList().Mapper<List<ControlOutputDto>>();
+        }
+        /// <summary>
+        /// 获取用户所有的访问控制
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private List<Control> GetControls(UserInfo user)
+        {
+            DataContext context = BaseDal.GetDataContext();
             List<Control> list = new List<Control>();
-            if (app != null && user != null)
+            //1.0 用户-角色-权限-功能 主线，权限的优先级最低
+            user.Role.ForEach(r =>
             {
-                //1.0 用户-角色-权限-功能 主线，权限的优先级最低
-                user.Role.ForEach(r =>
+                int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + r.Id).ToArray(); //拿到所有上级角色
+                foreach (int i in rids)
                 {
-                    int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + r.Id).ToArray();//拿到所有上级角色
-                    foreach (int i in rids)
+                    Role role = context.Role.FirstOrDefault(o => o.Id == i);
+                    role?.Permission.ForEach(p =>
                     {
-                        Role role = context.Role.FirstOrDefault(o => o.Id == i);
-                        role?.Permission.ForEach(p =>
+                        int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray(); //拿到所有上级权限
+                        foreach (int s in pids)
                         {
-                            int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray();//拿到所有上级权限
-                            foreach (int s in pids)
-                            {
-                                Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
-                                list.AddRange(permission.Controls.Where(c => c.IsAvailable));
-                            }
-                        });
-                    }
-                });
-
-                //2.0 用户-用户组-角色-权限，权限的优先级其次
-                user.UserGroup.ForEach(g =>
-                {
-                    //2.1 拿到所有上级用户组
-                    int[] gids = context.Database.SqlQuery<int>("exec sp_getParentGroupIdByChildId " + g.Id).ToArray();//拿到所有上级用户组
-                    foreach (int i in gids)
-                    {
-                        UserGroup group = context.UserGroup.FirstOrDefault(u => u.Id == i);
-                        List<int> noRoleIds = @group.UserGroupPermission.Where(x => !x.HasRole).Select(x => x.Id).ToList();//没有角色的id集合
-                        group?.UserGroupPermission.ForEach(ugp =>
-                        {
-                            if (ugp.HasRole)
-                            {
-                                //角色可用，取并集
-                                //2.2 拿到所有上级角色，并排除掉角色不可用的角色id
-                                int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + ugp.Role.Id).Except(noRoleIds).ToArray();//拿到所有上级角色，并排除掉角色不可用的角色id
-                                foreach (int r in rids)
-                                {
-                                    Role role = context.Role.FirstOrDefault(o => o.Id == r);
-                                    role?.Permission.ForEach(p =>
-                                    {
-                                        //2.3 拿到所有上级权限
-                                        int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray();//拿到所有上级权限
-                                        foreach (int s in pids)
-                                        {
-                                            Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
-                                            list.AddRange(permission.Controls.Where(c => c.IsAvailable));
-                                        }
-                                    });
-                                }
-                            }
-                            else
-                            {
-                                //角色不可用，取差集
-                                ugp.Role.Permission.ForEach(p => list = list.Except(p.Controls).Where(c => c.IsAvailable).ToList());
-                            }
-                        });
-                    }
-                });
-
-                //3.0 用户-权限-功能 临时权限，权限的优先级最高
-                List<int> noPermissionIds = user.UserPermission.Where(p => !p.HasPermission).Select(p => p.Id).ToList();//没有权限的id集合
-                user.UserPermission?.ForEach(p =>
-                {
-                    if (p.HasPermission)
-                    {
-                        //临时权限可用，取并集
-                        //3.1 拿到所有上级权限，并排除掉没有权限的角色id
-                        int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).Except(noPermissionIds).ToArray();//拿到所有上级权限，并排除掉没有权限的角色id
-                        foreach (int i in pids)
-                        {
-                            Permission permission = context.Permission.FirstOrDefault(x => x.Id == i);
+                            Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
                             list.AddRange(permission.Controls.Where(c => c.IsAvailable));
                         }
-                    }
-                    else
+                    });
+                }
+            });
+
+            //2.0 用户-用户组-角色-权限，权限的优先级其次
+            user.UserGroup.ForEach(g =>
+            {
+                //2.1 拿到所有上级用户组
+                int[] gids = context.Database.SqlQuery<int>("exec sp_getParentGroupIdByChildId " + g.Id).ToArray(); //拿到所有上级用户组
+                foreach (int i in gids)
+                {
+                    UserGroup group = context.UserGroup.FirstOrDefault(u => u.Id == i);
+                    List<int> noRoleIds = @group.UserGroupPermission.Where(x => !x.HasRole).Select(x => x.Id).ToList(); //没有角色的id集合
+                    @group?.UserGroupPermission.ForEach(ugp =>
                     {
-                        //临时权限不可用，取差集
-                        list = list.Except(p.Permission.Controls.Where(c => c.IsAvailable)).ToList();
+                        if (ugp.HasRole)
+                        {
+                            //角色可用，取并集
+                            //2.2 拿到所有上级角色，并排除掉角色不可用的角色id
+                            int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + ugp.Role.Id).Except(noRoleIds).ToArray(); //拿到所有上级角色，并排除掉角色不可用的角色id
+                            foreach (int r in rids)
+                            {
+                                Role role = context.Role.FirstOrDefault(o => o.Id == r);
+                                role?.Permission.ForEach(p =>
+                                {
+                                    //2.3 拿到所有上级权限
+                                    int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray(); //拿到所有上级权限
+                                    foreach (int s in pids)
+                                    {
+                                        Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
+                                        list.AddRange(permission.Controls.Where(c => c.IsAvailable));
+                                    }
+                                });
+                            }
+                        }
+                        else
+                        {
+                            //角色不可用，取差集
+                            ugp.Role.Permission.ForEach(p => list = list.Except(p.Controls).Where(c => c.IsAvailable).ToList());
+                        }
+                    });
+                }
+            });
+
+            //3.0 用户-权限-功能 临时权限，权限的优先级最高
+            List<int> noPermissionIds = user.UserPermission.Where(p => !p.HasPermission).Select(p => p.Id).ToList(); //没有权限的id集合
+            user.UserPermission?.ForEach(p =>
+            {
+                if (p.HasPermission)
+                {
+                    //临时权限可用，取并集
+                    //3.1 拿到所有上级权限，并排除掉没有权限的角色id
+                    int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).Except(noPermissionIds).ToArray(); //拿到所有上级权限，并排除掉没有权限的角色id
+                    foreach (int i in pids)
+                    {
+                        Permission permission = context.Permission.FirstOrDefault(x => x.Id == i);
+                        list.AddRange(permission.Controls.Where(c => c.IsAvailable));
                     }
-                });
-                return list.Where(c => c.IsAvailable && c.ClientAppId == app.Id).Distinct(new AccessControlComparision()).ToList().Mapper<List<ControlOutputDto>>();
-            }
-            return new List<ControlOutputDto>();
+                }
+                else
+                {
+                    //临时权限不可用，取差集
+                    list = list.Except(p.Permission.Controls.Where(c => c.IsAvailable)).ToList();
+                }
+            });
+            return list;
         }
 
         /// <summary>
@@ -313,92 +321,114 @@ namespace BLL
             DataContext context = BaseDal.GetDataContext();
             ClientApp app = context.ClientApp.FirstOrDefault(a => a.AppId.Equals(appid));//获取客户端子系统应用
             UserInfo user = GetById(id);//获取用户
+            if (app == null || user == null) return new List<MenuOutputDto>();
+            var list = GetMenus(user);
+            return list.Where(c => c.IsAvailable && c.ClientAppId == app.Id).OrderBy(m => m.Sort).Distinct(new MenuComparision()).ToList().Mapper<List<MenuOutputDto>>();
+        }
+
+        /// <summary>
+        /// 获取用户所有的菜单
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private List<Menu> GetMenus(UserInfo user)
+        {
             List<Menu> list = new List<Menu>();
-            if (app != null && user != null)
+            DataContext context = BaseDal.GetDataContext();
+            //1.0 用户-角色-权限-功能 主线，权限的优先级最低
+            user.Role.ForEach(r =>
             {
-                //1.0 用户-角色-权限-功能 主线，权限的优先级最低
-                user.Role.ForEach(r =>
+                int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + r.Id).ToArray(); //拿到所有上级角色
+                foreach (int i in rids)
                 {
-                    int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + r.Id).ToArray();//拿到所有上级角色
-                    foreach (int i in rids)
+                    Role role = context.Role.FirstOrDefault(o => o.Id == i);
+                    role?.Permission.ForEach(p =>
                     {
-                        Role role = context.Role.FirstOrDefault(o => o.Id == i);
-                        role?.Permission.ForEach(p =>
+                        int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray(); //拿到所有上级权限
+                        foreach (int s in pids)
                         {
-                            int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray();//拿到所有上级权限
-                            foreach (int s in pids)
-                            {
-                                Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
-                                list.AddRange(permission.Menu.Where(c => c.IsAvailable));
-                            }
-                        });
-                    }
-                });
-
-                //2.0 用户-用户组-角色-权限，权限的优先级其次
-                user.UserGroup.ForEach(g =>
-                {
-                    //2.1 拿到所有上级用户组
-                    int[] gids = context.Database.SqlQuery<int>("exec sp_getParentGroupIdByChildId " + g.Id).ToArray();//拿到所有上级用户组
-                    foreach (int i in gids)
-                    {
-                        UserGroup group = context.UserGroup.FirstOrDefault(u => u.Id == i);
-                        List<int> noRoleIds = @group.UserGroupPermission.Where(x => !x.HasRole).Select(x => x.Id).ToList();//没有角色的id集合
-                        group?.UserGroupPermission.ForEach(ugp =>
-                        {
-                            if (ugp.HasRole)
-                            {
-                                //角色可用，取并集
-                                //2.2 拿到所有上级角色，并排除掉角色不可用的角色id
-                                int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + ugp.Role.Id).Except(noRoleIds).ToArray();//拿到所有上级角色，并排除掉角色不可用的角色id
-                                foreach (int r in rids)
-                                {
-                                    Role role = context.Role.FirstOrDefault(o => o.Id == r);
-                                    role?.Permission.ForEach(p =>
-                                    {
-                                        //2.3 拿到所有上级权限
-                                        int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray();//拿到所有上级权限
-                                        foreach (int s in pids)
-                                        {
-                                            Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
-                                            list.AddRange(permission.Menu.Where(c => c.IsAvailable));
-                                        }
-                                    });
-                                }
-                            }
-                            else
-                            {
-                                //角色不可用，取差集
-                                ugp.Role.Permission.ForEach(p => list = list.Except(p.Menu).Where(c => c.IsAvailable).ToList());
-                            }
-                        });
-                    }
-                });
-
-                //3.0 用户-权限-功能 临时权限，权限的优先级最高
-                List<int> noPermissionIds = user.UserPermission.Where(p => !p.HasPermission).Select(p => p.Id).ToList();//没有权限的id集合
-                user.UserPermission?.ForEach(p =>
-                {
-                    if (p.HasPermission)
-                    {
-                        //临时权限可用，取并集
-                        //3.1 拿到所有上级权限，并排除掉没有权限的角色id
-                        int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).Except(noPermissionIds).ToArray();//拿到所有上级权限，并排除掉没有权限的角色id
-                        foreach (int i in pids)
-                        {
-                            Permission permission = context.Permission.FirstOrDefault(x => x.Id == i);
+                            Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
                             list.AddRange(permission.Menu.Where(c => c.IsAvailable));
                         }
-                    }
-                    else
+                    });
+                }
+            });
+
+            //2.0 用户-用户组-角色-权限，权限的优先级其次
+            user.UserGroup.ForEach(g =>
+            {
+                //2.1 拿到所有上级用户组
+                int[] gids = context.Database.SqlQuery<int>("exec sp_getParentGroupIdByChildId " + g.Id).ToArray(); //拿到所有上级用户组
+                foreach (int i in gids)
+                {
+                    UserGroup group = context.UserGroup.FirstOrDefault(u => u.Id == i);
+                    List<int> noRoleIds = @group.UserGroupPermission.Where(x => !x.HasRole).Select(x => x.Id).ToList(); //没有角色的id集合
+                    @group?.UserGroupPermission.ForEach(ugp =>
                     {
-                        //临时权限不可用，取差集
-                        list = list.Except(p.Permission.Menu.Where(c => c.IsAvailable)).ToList();
+                        if (ugp.HasRole)
+                        {
+                            //角色可用，取并集
+                            //2.2 拿到所有上级角色，并排除掉角色不可用的角色id
+                            int[] rids = context.Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + ugp.Role.Id).Except(noRoleIds).ToArray(); //拿到所有上级角色，并排除掉角色不可用的角色id
+                            foreach (int r in rids)
+                            {
+                                Role role = context.Role.FirstOrDefault(o => o.Id == r);
+                                role?.Permission.ForEach(p =>
+                                {
+                                    //2.3 拿到所有上级权限
+                                    int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray(); //拿到所有上级权限
+                                    foreach (int s in pids)
+                                    {
+                                        Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
+                                        list.AddRange(permission.Menu.Where(c => c.IsAvailable));
+                                    }
+                                });
+                            }
+                        }
+                        else
+                        {
+                            //角色不可用，取差集
+                            ugp.Role.Permission.ForEach(p => list = list.Except(p.Menu).Where(c => c.IsAvailable).ToList());
+                        }
+                    });
+                }
+            });
+
+            //3.0 用户-权限-功能 临时权限，权限的优先级最高
+            List<int> noPermissionIds = user.UserPermission.Where(p => !p.HasPermission).Select(p => p.Id).ToList(); //没有权限的id集合
+            user.UserPermission?.ForEach(p =>
+            {
+                if (p.HasPermission)
+                {
+                    //临时权限可用，取并集
+                    //3.1 拿到所有上级权限，并排除掉没有权限的角色id
+                    int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).Except(noPermissionIds).ToArray(); //拿到所有上级权限，并排除掉没有权限的角色id
+                    foreach (int i in pids)
+                    {
+                        Permission permission = context.Permission.FirstOrDefault(x => x.Id == i);
+                        list.AddRange(permission?.Menu.Where(c => c.IsAvailable));
                     }
-                });
-                return list.Where(c => c.IsAvailable && c.ClientAppId == app.Id).OrderBy(m => m.Sort).Distinct(new MenuComparision()).ToList().Mapper<List<MenuOutputDto>>();
-            }
-            return new List<MenuOutputDto>();
+                }
+                else
+                {
+                    //临时权限不可用，取差集
+                    list = list.Except(p.Permission.Menu.Where(c => c.IsAvailable)).ToList();
+                }
+            });
+            return list;
+        }
+
+        /// <summary>
+        /// 获取用户所拥有菜单和功能
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public (List<MenuOutputDto>, List<ControlOutputDto>) GetAllAccess(Guid id)
+        {
+            UserInfo user = GetById(id);
+            List<Menu> menus = GetMenus(user);
+            List<Control> controls = GetControls(user);
+            return (menus.Mapper<List<MenuOutputDto>>(), controls.Mapper<List<ControlOutputDto>>());
         }
     }
 

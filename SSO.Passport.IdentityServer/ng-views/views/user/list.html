@@ -6,22 +6,22 @@
         <div class="input-group">
             <span class="input-group-addon">全局搜索：</span>
             <div class="fg-line">
-                <input type="text" class="form-control" ng-change="search(kw)" ng-model="kw" placeholder="全局搜索" />
+                <input type="text" class="form-control" ng-change="search(kw)" ng-model="kw" placeholder="全局搜索"/>
             </div>
         </div>
     </div>
     <table ng-table="list.tableParams" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
         <colgroup>
-            <col width="10%" />
-            <col width="10%" />
-            <col width="10%" />
-            <col width="10%" />
-            <col width="5%" />
-            <col width="5%" />
-            <col width="10%" />
-            <col width="10%" />
-            <col width="20%" />
-            <col width="10%" />
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="5%"/>
+            <col width="5%"/>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="20%"/>
+            <col width="10%"/>
         </colgroup>
         <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-danger':row.IsMaster}">
             <td title="'用户名'" filter="{Username: 'text'}" sortable="'Username'">
@@ -55,6 +55,11 @@
                 {{row.LastLoginTime|date:'yyyy-MM-dd HH:mm'}}
             </td>
             <td title="'权限配置'">
+                <div class="btn-group">
+                    <a class="btn btn-info btn-sm waves-effect" ng-href="#/user/authority/{{row.Id}}">
+                        最终配置
+                    </a>
+                </div>
                 <div class="btn-group">
                     <a class="btn btn-danger btn-sm waves-effect" ng-href="#/user/apps/{{row.Id}}">
                         配置应用

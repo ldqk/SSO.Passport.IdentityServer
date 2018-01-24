@@ -1,0 +1,237 @@
+﻿<style>
+    .angular-ui-tree-handle {
+        background: #f8faff;
+        border: 1px solid #dae2ea;
+        color: #7c9eb2;
+        padding: 10px 10px;
+        line-height: 26px;
+    }
+
+        .angular-ui-tree-handle:hover {
+            color: #438eb9;
+            background: #f4f6f7;
+            border-color: #dce2e8;
+        }
+
+    .angular-ui-tree-placeholder {
+        background: #f0f9ff;
+        border: 2px dashed #bed2db;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    tr.angular-ui-tree-empty {
+        height: 100px
+    }
+
+    .group-title {
+        background-color: #687074 !important;
+        color: #FFF !important;
+    }
+
+    .tree-node {
+        border: 1px solid #dae2ea;
+        background: #f8faff;
+        color: #7c9eb2;
+    }
+
+    .nodrop {
+        background-color: #f2dede;
+    }
+
+    .tree-handle {
+        padding: 10px;
+        background: #428bca;
+        color: #FFF;
+        margin-right: 10px;
+    }
+
+    .angular-ui-tree-placeholder {
+        background: #f0f9ff;
+        border: 2px dashed #bed2db;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .ui.fluid.dropdown {
+        min-width: 200px;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+</style>
+<h2 class="text-center">用户【{{user.Username}}】最终所拥有的菜单和访问控制权限</h2>
+<div class="input-group">
+    <span class="input-group-addon">选择应用：</span>
+    <div class="ui fluid search selection dropdown apps">
+        <input name="apps" type="hidden" id="apps">
+        <i class="dropdown icon"></i>
+        <div class="default text">选择应用</div>
+        <div class="menu">
+            <div class="item" ng-repeat="item in apps track by $index" data-value="{{item.AppId}}">{{item.AppName}}</div>
+        </div>
+    </div>
+</div>
+<h3 class="text-info">包含的访问控制</h3>
+<table ng-table="list.tableParams" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+    <colgroup>
+        <col width="15%" />
+        <col width="10%" />
+        <col width="10%" />
+        <col width="10%" />
+        <col width="5%" />
+        <col width="15%" />
+    </colgroup>
+    <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row">
+        <td title="'功能'" filter="{Name: 'text'}" sortable="'Name'">
+            {{row.Name}}
+        </td>
+        <td title="'控制器名'" filter="{Controller: 'text'}" sortable="'Controller'">
+            {{row.Controller}}
+        </td>
+        <td title="'方法名称'" filter="{Action: 'text'}" sortable="'Action'">
+            {{row.Action}}
+        </td>
+        <td title="'请求方式'" filter="{HttpMethod: 'text'}" sortable="'HttpMethod'">
+            {{row.HttpMethod}}
+        </td>
+        <td title="'可用'">
+            <label class="el-switch">
+                <input type="checkbox" name="switch" ng-model="row.IsAvailable">
+                <span class="el-switch-style"></span>
+            </label>
+        </td>
+        <td title="'操作'" style="width: 155px;">
+            <div class="btn-group">
+                <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-click="del(row)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+                <a class="pull-right btn btn-info waves-effect" data-nodrag ng-click="edit(row)">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </a>
+            </div>
+        </td>
+    </tr>
+</table>
+<h3 class="text-success">包含的菜单</h3>
+
+<script type="text/ng-template" id="nodes_renderer.html">
+    <div ui-tree-handle class="tree-node tree-node-content">
+        <div class="row">
+            <div class="col-sm-2">
+                <a class="btn btn-success btn-xs waves-effect" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggle(this)" style="margin-right:5px;">
+                    <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed,'glyphicon-chevron-down': !collapsed}"></span>
+                </a>
+                <a style="font-size:16px;">{{node.Id}}：{{node.Name}}</a>
+            </div>
+            <div class="col-sm-1">
+                排序：{{node.Sort}}
+            </div>
+            <div class="col-sm-2" ng-if="node.Url">
+                URL：{{node.Url}}
+            </div>
+            <div class="col-sm-2" ng-if="node.Route">
+                路由：{{node.Route}}
+            </div>
+            <div class="col-sm-2" ng-if="node.RouteName">
+                路由标识：{{node.RouteName}}
+            </div>
+            <div class="col-sm-3" ng-if="node.Icon">
+                图标URL：<img style="height:30px;" ng-src="{{node.Icon}}" />
+                {{node.Icon}}
+            </div>
+            <div class="col-sm-2">
+                <div class="btn-group">
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-click="del(this)">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-click="edit(node)">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                    <a class="pull-right btn btn-primary waves-effect" data-nodrag ng-click="newSubItem(this)" ng-if='node.Url == "#"||node.Url == ""'>
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}" class="animated fadeIn">
+        <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+    </ol>
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-inline m-b-5">
+            <div class="btn-group">
+                <button class="btn btn-success waves-effect" ng-click="expandAll()">展开/收起所有</button>
+            </div>
+        </div>
+        <div data-ui-tree="treeOptions" id="tree-root">
+            <ol data-ui-tree-nodes ng-model="menus" class="animated fadeIn">
+                <li data-ng-repeat="node in menus" data-ui-tree-node ng-include="'nodes_renderer.html'" ng-show="visible(node)"></li>
+            </ol>
+        </div>
+    </div>
+</div>
+<div id="modal" class="modal">
+    <div class="container-fluid" style="margin: 15px 0;">
+        <form class="bgm-white">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    菜单名：
+                </span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="menu-name" ng-model="menu.Name" />
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    URL地址：
+                </span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="menu-url" ng-model="menu.Url" />
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    路由名：
+                </span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="menu-route" ng-model="menu.Route" />
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    路由标识：
+                </span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="menu-route-name" ng-model="menu.RouteName" />
+                </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    排序号：
+                </span>
+                <div class="fg-line">
+                    <input type="number" class="form-control" id="menu-sort" ng-model="menu.Sort" />
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="desc" class="input-group-addon control-label">图标地址：</label>
+                <div class="fg-line">
+                    <input type="text" class="form-control" id="desc" placeholder="请输入头标URL" ng-model="menu.Icon">
+                </div>
+                <span class="input-group-btn">
+                    <button class="btn btn-success" ng-click="upload()">上传本地图片</button>
+                </span>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-info waves-effect" ng-click="submit(menu)">确认</button>
+                <button type="button" class="btn btn-danger waves-effect" ng-click="closeAll()">取消</button>
+            </div>
+        </form>
+    </div>
+</div>

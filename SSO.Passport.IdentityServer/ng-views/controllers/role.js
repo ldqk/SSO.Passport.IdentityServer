@@ -191,8 +191,6 @@
 				$("#modal").css("display", "none");
 			}
 		});
-		var nodeData = $scope.data[$scope.data.length - 1];
-		$scope.role.Sort = nodeData.Sort + (nodeData.nodes.length + 1) * 10;
 		$scope.role.ParentId  = 0;
 	};
 	$scope.subrole = {};

@@ -191,8 +191,6 @@
 				$("#modal").css("display", "none");
 			}
 		});
-		var nodeData = $scope.data[$scope.data.length - 1];
-		$scope.permission.Sort = nodeData.Sort + (nodeData.nodes.length + 1) * 10;
 		$scope.permission.ParentId  = 0;
 	};
 	$scope.subpermission = {};

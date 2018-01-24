@@ -18,7 +18,7 @@ namespace Common
                 m.CreateMap<ControlInputDto, Control>();
 
                 m.CreateMap<Menu, MenuOutputDto>();
-                m.CreateMap<MenuInputDto, Menu>();
+                m.CreateMap<MenuInputDto, Menu>().ForMember(e => e.Url, e => e.MapFrom(x => x.Url.Equals("null") ? null : x.Url)).ForMember(e => e.Route, e => e.MapFrom(x => x.Route.Equals("null") ? null : x.Route)).ForMember(e => e.RouteName, e => e.MapFrom(x => x.RouteName.Equals("null") ? null : x.RouteName));
 
                 m.CreateMap<Permission, PermissionOutputDto>();
                 m.CreateMap<PermissionInputDto, Permission>();

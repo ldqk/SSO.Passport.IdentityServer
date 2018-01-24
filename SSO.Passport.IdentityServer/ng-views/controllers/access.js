@@ -4,6 +4,7 @@
 	var self = this;
 	self.stats = [];
 	self.data = {};
+	$scope.acl = {HttpMethod:null}
 	$scope.kw = "";
 	$scope.request("/app/getall",null, function(data) {
 		$scope.apps=data.Data;
@@ -25,7 +26,7 @@
 	});
 	$scope.request("/access/gethttpmethod",null, function(data) {
 			$scope.HttpMethod=data.Data;
-		$scope.acl["HttpMethod"]=data.Data[0].value;
+		$scope.acl.HttpMethod=data.Data[0].value;
 		});
 		$scope.paginationConf = {
 			currentPage: 1,

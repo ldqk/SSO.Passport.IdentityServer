@@ -17,7 +17,8 @@ myApp.config(["$provide", "$compileProvider", "$controllerProvider", "$filterPro
 		};
 
 		$httpProvider.defaults.headers.post = {
-			'Content-Type': 'application/x-www-form-urlencoded; charser=UTF-8'
+			'Content-Type': 'application/x-www-form-urlencoded; charser=UTF-8',
+			"Authorization":"aaaaaaaaa"
 		}
 }]);
 myApp.directive("trackedTable", function () {

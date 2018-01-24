@@ -2,7 +2,6 @@
 		window.hub.disconnect();
 	$scope.loading();
 	$scope.group = {};
-	$scope.appid="";
 	$scope.query="";
 	$scope.init = function() {
 		$scope.request("/app/getall",null, function(data) {
@@ -191,8 +190,6 @@
 				$("#modal").css("display", "none");
 			}
 		});
-		var nodeData = $scope.data[$scope.data.length - 1];
-		$scope.group.Sort = nodeData.Sort + (nodeData.nodes.length + 1) * 10;
 		$scope.group.ParentId  = 0;
 	};
 	$scope.subgroup = {};

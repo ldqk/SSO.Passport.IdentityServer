@@ -2,25 +2,14 @@
 	window.hub = {
 		disconnect: function() {}
 	};
-	var _self=this;
+	$scope.appid="";
 	$scope.post = {};
 	Waves.init();
 	iziToast.settings({
 		timeout: 15000,
-		// position: 'center',
-		// imageWidth: 50,
 		pauseOnHover: true,
-		// resetOnHover: true,
 		close: true,
 		progressBar: true,
-		// layout: 1,
-		// balloon: true,
-		// target: '.target',
-		// icon: 'material-icons',
-		// iconText: 'face',
-		// animateInside: false,
-		// transitionIn: 'flipInX',
-		// transitionOut: 'flipOutX',
 	});
 	ifvisible.blur(function () {
 		$("body").animate({

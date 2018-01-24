@@ -425,6 +425,18 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, b, b ? "临时权限配置完成！" : "临时权限配置失败！");
         }
 
+        /// <summary>
+        /// 获取用户菜单、访问控制
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="appid"></param>
+        /// <returns></returns>
+        public ActionResult GetUserAuthority(Guid id, string appid)
+        {
+            List<MenuOutputDto> menus = UserInfoBll.GetMenus(appid, id);
+            List<ControlOutputDto> controls = UserInfoBll.GetAccessControls(appid, id);
+            return ResultData(new { menus, controls });
+        }
         #endregion
     }
 }

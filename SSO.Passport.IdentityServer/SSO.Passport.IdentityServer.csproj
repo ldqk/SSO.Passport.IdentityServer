@@ -598,6 +598,7 @@
     <Content Include="ng-views\views\system\log.html" />
     <Content Include="ng-views\views\system\swagger.html" />
     <Content Include="ng-views\views\system\task.html" />
+    <Content Include="ng-views\views\user\authority.html" />
     <Content Include="ng-views\views\user\permissions.html" />
     <Content Include="ng-views\views\user\roles.html" />
     <Content Include="ng-views\views\user\groups.html" />

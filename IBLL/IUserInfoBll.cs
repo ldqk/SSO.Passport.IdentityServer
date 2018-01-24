@@ -95,5 +95,12 @@ namespace IBLL
         /// <param name="id"></param>
         /// <returns></returns>
         List<MenuOutputDto> GetMenus(string appid, Guid id);
+
+        /// <summary>
+        /// 获取用户所拥有菜单和功能
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        (List<MenuOutputDto>, List<ControlOutputDto>) GetAllAccess(Guid id);
     }
 }
