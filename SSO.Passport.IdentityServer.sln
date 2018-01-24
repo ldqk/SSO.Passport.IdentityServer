@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{138F01FA-B23F-4ACA-93DB-D899BB244A1A}"
 EndProject
@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.数据会话层", "2.数�
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.业务逻辑层", "3.业务逻辑层", "{F07B6135-FCCA-423A-A4A6-AC6EDAF7EA9D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.模型层", "4.模型层", "{E2424472-789E-470A-BB3F-A8B1AE15AB7D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.领域层", "4.领域层", "{E2424472-789E-470A-BB3F-A8B1AE15AB7D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.公共层", "5.公共层", "{6D81B600-29FA-4069-9A6D-8A2C05AE4884}"
 EndProject
