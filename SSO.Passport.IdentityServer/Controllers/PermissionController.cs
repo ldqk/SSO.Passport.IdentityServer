@@ -303,8 +303,8 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult RemoveUsers(int id, string uids)
         {
             string[] ids = uids.Split(',');
-            bool b = UserPermissionBll.DeleteEntitySaved(p => p.PermissionId.Equals(id) && ids.Contains(p.UserInfoId.ToString())) > 0;
-            return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
+            UserPermissionBll.DeleteEntitySaved(p => p.PermissionId.Equals(id) && ids.Contains(p.UserInfoId.ToString()));
+            return ResultData(null, true, "权限配置完成！");
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                 return ResultData(null, false, "未找到相应的权限信息！");
             }
 
-            permission.HasPermission = state;
+            permission.HasPermission = !state;
             bool b = UserPermissionBll.UpdateEntitySaved(permission);
             return ResultData(null, b, b ? "权限配置完成！" : "权限配置失败！");
         }

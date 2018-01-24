@@ -74,19 +74,19 @@
             </div>
             <div class="col-md-7 col-sm-6">
                 <div class="btn-group">
-                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-click="del(this)">
-                        给用户指派临时权限
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/permission/user/{{node.Id}}">
+                        临时分配给用户
                     </a>
-                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-click="edit(node)">
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-href="#/permission/role/{{node.Id}}">
                         指派角色
                     </a>
-                    <a class="pull-right btn btn-success waves-effect" data-nodrag ng-click="newSubItem(this)">
+                    <a class="pull-right btn btn-success waves-effect" data-nodrag ng-href="#/permission/menu/{{node.Id}}">
                         配置菜单
                     </a>
-                    <a class="pull-right btn btn-primary waves-effect" data-nodrag ng-click="newSubItem(this)">
+                    <a class="pull-right btn btn-primary waves-effect" data-nodrag ng-href="#/permission/access/{{node.Id}}">
                         配置访问控制
                     </a>
-                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-click="newSubItem(this)">
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/permission/apps/{{node.Id}}">
                         配置客户端应用
                     </a>
                 </div>
