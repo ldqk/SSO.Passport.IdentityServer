@@ -210,7 +210,7 @@ namespace BLL
             DataContext context = BaseDal.GetDataContext();
             ClientApp app = context.ClientApp.FirstOrDefault(a => a.AppId.Equals(appid));//获取客户端子系统应用
             UserInfo user = GetById(id);//获取用户
-            if (app == null || user == null) return new List<ControlOutputDto>();
+            if (app == null || user == null || !app.Available) return new List<ControlOutputDto>();
             var list = GetControls(user);
             return list.Where(c => c.IsAvailable && c.ClientAppId == app.Id).Distinct(new AccessControlComparision()).ToList().Mapper<List<ControlOutputDto>>();
         }
@@ -317,7 +317,7 @@ namespace BLL
             DataContext context = BaseDal.GetDataContext();
             ClientApp app = context.ClientApp.FirstOrDefault(a => a.AppId.Equals(appid));//获取客户端子系统应用
             UserInfo user = GetById(id);//获取用户
-            if (app == null || user == null) return new List<MenuOutputDto>();
+            if (app == null || user == null || !app.Available) return new List<MenuOutputDto>();
             var list = GetMenus(user);
             return list.Where(c => c.IsAvailable && c.ClientAppId == app.Id).OrderBy(m => m.Sort).Distinct(new MenuComparision()).ToList().Mapper<List<MenuOutputDto>>();
         }

@@ -219,9 +219,13 @@ namespace SSO.Passport.IdentityServer.Controllers
                 if (user != null)
                 {
                     ClientApp app = ClientAppBll.GetFirstEntity(a => a.AppId.Equals(appid));
-                    app.UserInfo.Add(UserInfoBll.GetById(user.Id));
-                    bool b = ClientAppBll.UpdateEntitySaved(app);
-                    return ResultData(user, true, b ? "用户注册成功！" : "用户注册成功，但尚未分配到指定的应用子系统，请联系管理员！");
+                    if (app.Available)
+                    {
+                        app.UserInfo.Add(UserInfoBll.GetById(user.Id));
+                        bool b = ClientAppBll.UpdateEntitySaved(app);
+                        return ResultData(user, true, b ? "用户注册成功！" : "用户注册成功，但尚未分配到指定的应用子系统，请联系管理员！");
+                    }
+                    return ResultData(user, false, $"用户注册成功，但由于【{app.AppName}】网站当前服务不可用，而无法登陆，请联系管理员！");
                 }
 
                 return ResultData(null, false, "用户注册失败！");
