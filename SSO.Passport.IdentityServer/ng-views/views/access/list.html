@@ -57,12 +57,12 @@
             </td>
             <td title="'权限配置'">
                 <div class="btn-group">
-                    <button class="btn btn-success btn-sm waves-effect" ng-click="list.del(row)">
+                    <a class="btn btn-success btn-sm waves-effect" ng-href="#/access/permission/{{row.Id}}">
                         配置权限
-                    </button>
-                    <button class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)">
+                    </a>
+                    <a class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)">
                         更改应用
-                    </button>
+                    </a>
                 </div>
             </td>
             <td title="'操作'" style="width: 155px;">

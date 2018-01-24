@@ -176,3 +176,90 @@
 			});
 		}
 	}]);
+myApp.controller('accessPermission', ["$timeout", "$state", "$scope", "$http","$stateParams","NgTableParams", function($timeout, $state, $scope, $http,$stateParams,NgTableParams) {
+	window.hub.disconnect();
+	$scope.id=$stateParams.id;
+	$scope.request("/access/get/"+$scope.id,null, function(data) {
+		$scope.access=data.Data;
+	});
+	$scope.loading();
+	var self = this;
+		self.stats = [];
+		self.data = {};
+		$scope.kw = "";
+		$scope.paginationConf = {
+			currentPage: 1,
+			itemsPerPage: 10,
+			pagesLength: 25,
+			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+			rememberPerPage: 'perPageItems',
+			onChange: function() {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		};
+		$scope.paginationConf2 = {
+			currentPage: 1,
+			itemsPerPage: 10,
+			pagesLength: 25,
+			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+			rememberPerPage: 'perPageItems',
+			onChange: function() {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		};
+		this.GetPageData = function(page, size) {
+			$http.post("/access/mypermissions", {
+				id:$scope.id,
+				page,
+				size,
+				kw: $scope.kw
+			}).then(function(res) {
+				$scope.paginationConf.totalItems = res.data.TotalCount;
+				$("div[ng-table-pagination]").remove();
+				self.tableParams = new NgTableParams({
+					count: 50000
+				}, {
+					filterDelay: 0,
+					dataset: res.data.Data.not
+				});
+				self.tableParams2 = new NgTableParams({
+					count: 50000
+				}, {
+					filterDelay: 0,
+					dataset: res.data.Data.my
+				});
+				$scope.loadingDone();
+			});
+		}
+		var _timeout;
+		$scope.search = function(kw) {
+			if (_timeout) {
+				$timeout.cancel(_timeout);
+			}
+			_timeout = $timeout(function() {
+				$scope.kw = kw;
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+				_timeout = null;
+			}, 500);
+		}
+	this.addPermissions= function(row) {
+		$scope.request("/access/AssignPermission", {
+			id:$scope.id,
+			pid:row.Id
+		}, function(data) {
+			if (data.Success) {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		});
+	}
+	this.removePermissions= function(row) {
+		$scope.request("/access/RemovePermission", {
+			id:$scope.id,
+			pid:row.Id
+		}, function(data) {
+			if (data.Success) {
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+		});
+	}
+}]);
