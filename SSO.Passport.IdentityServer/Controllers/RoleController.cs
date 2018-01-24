@@ -140,20 +140,37 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <param name="kw"></param>
+        /// <param name="appid">appid</param>
         /// <returns></returns>
-        public ActionResult MyUsers(int id, int page = 1, int size = 10, string kw = "")
+        public ActionResult MyUsers(int id, int page = 1, int size = 10, string kw = "", string appid = "")
         {
             Expression<Func<UserInfo, bool>> where;
             Expression<Func<UserInfo, bool>> where2;
             if (!string.IsNullOrEmpty(kw))
             {
-                where = u => u.Role.All(c => c.Id != id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
-                where2 = u => u.Role.Any(c => c.Id == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.Role.All(c => c.Id != id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                    where2 = u => u.Role.Any(c => c.Id == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(a => a.AppId.Equals(appid)) && u.Role.All(c => c.Id != id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                    where2 = u => u.ClientApp.Any(a => a.AppId.Equals(appid)) && u.Role.Any(c => c.Id == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                }
             }
             else
             {
-                where = u => u.Role.All(c => c.Id != id);
-                where2 = u => u.Role.Any(c => c.Id == id);
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.Role.All(c => c.Id != id);
+                    where2 = u => u.Role.Any(c => c.Id == id);
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(a => a.AppId.Equals(appid)) && u.Role.All(c => c.Id != id);
+                    where2 = u => u.ClientApp.Any(a => a.AppId.Equals(appid)) && u.Role.Any(c => c.Id == id);
+                }
             }
 
             List<UserInfoDto> not = UserInfoBll.LoadPageEntities<DateTime, UserInfoDto>(page, size, out int total1, where, u => u.LastLoginTime, false).ToList(); //不属于该角色

@@ -7,10 +7,11 @@
 	$scope.init = function() {
 		$scope.request("/app/getall",null, function(data) {
 			$scope.apps=data.Data;
-			$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
+			$scope.appid=$location.search()['appid']||sessionStorage.getItem("appid")||$scope.apps[0].AppId;
 			$('.ui.dropdown.apps').dropdown({
 				onChange: function (value) {
 					$scope.appid=value;
+				sessionStorage.setItem("appid",value);
 					$scope.request("/menu/GetAll", {
 						appid:value
 					}, function(data) {
@@ -23,7 +24,7 @@
 				}
 			});
 			$timeout(function() {
-				$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
+				$scope.appid=$location.search()['appid']||sessionStorage.getItem("appid")||$scope.apps[0].AppId;
 				$('.ui.dropdown.apps').dropdown("set selected", [$scope.appid]);
 			},10);
 		});

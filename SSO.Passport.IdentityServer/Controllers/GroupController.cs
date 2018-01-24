@@ -160,20 +160,37 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <param name="kw"></param>
+        /// <param name="appid">子系统appid</param>
         /// <returns></returns>
-        public ActionResult MyUsers(int id, int page = 1, int size = 10, string kw = "")
+        public ActionResult MyUsers(int id, int page = 1, int size = 10, string kw = "", string appid = "")
         {
             Expression<Func<UserInfo, bool>> where;
             Expression<Func<UserInfo, bool>> where2;
             if (!string.IsNullOrEmpty(kw))
             {
-                where = u => u.UserGroup.All(c => c.Id != id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
-                where2 = u => u.UserGroup.Any(c => c.Id == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.UserGroup.All(c => c.Id != id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                    where2 = u => u.UserGroup.Any(c => c.Id == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(c => c.AppId.Equals(appid)) && u.UserGroup.All(c => c.Id != id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                    where2 = u => u.ClientApp.Any(c => c.AppId.Equals(appid)) && u.UserGroup.Any(c => c.Id == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                }
             }
             else
             {
-                where = u => u.UserGroup.All(c => c.Id != id);
-                where2 = u => u.UserGroup.Any(c => c.Id == id);
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.UserGroup.All(c => c.Id != id);
+                    where2 = u => u.UserGroup.Any(c => c.Id == id);
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(c => c.AppId.Equals(appid)) && u.UserGroup.All(c => c.Id != id);
+                    where2 = u => u.ClientApp.Any(c => c.AppId.Equals(appid)) && u.UserGroup.Any(c => c.Id == id);
+                }
             }
             List<UserInfoDto> not = UserInfoBll.LoadPageEntities<DateTime, UserInfoDto>(page, size, out int total1, where, u => u.LastLoginTime, false).ToList();//不属于该应用
             List<UserInfoDto> my = UserInfoBll.LoadPageEntities<DateTime, UserInfoDto>(page, size, out int total2, where2, u => u.LastLoginTime, false).ToList();//属于该应用

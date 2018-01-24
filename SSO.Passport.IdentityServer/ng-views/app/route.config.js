@@ -67,7 +67,10 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 			controller: "user as list",
 			resolve: {
 				deps: ["$ocLazyLoad", function($ocLazyLoad) {
-					return $ocLazyLoad.load([cpath + "/user.js"]);
+					return $ocLazyLoad.load([{
+						files: ["/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/user.js"]);
 				}]
 			}
 		}).state("user-apps", {
@@ -199,7 +202,10 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 			controller: "groupUsers as list",
 			resolve: {
 				deps: ["$ocLazyLoad", function($ocLazyLoad) {
-					return $ocLazyLoad.load([cpath + "/group.js"]);
+					return $ocLazyLoad.load([{
+						files: ["/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/group.js"]);
 				}]
 			}
 		}).state("role", {
@@ -247,7 +253,10 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 			controller: "roleUsers as list",
 			resolve: {
 				deps: ["$ocLazyLoad", function($ocLazyLoad) {
-					return $ocLazyLoad.load([cpath + "/role.js"]);
+					return $ocLazyLoad.load([{
+						files: ["/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/role.js"]);
 				}]
 			}
 		}).state("permission", {
@@ -304,7 +313,10 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 			controller: "permissionUsers as list",
 			resolve: {
 				deps: ["$ocLazyLoad", function($ocLazyLoad) {
-					return $ocLazyLoad.load([cpath + "/permission.js"]);
+					return $ocLazyLoad.load([{
+						files: ["/Assets/semantic/semantic.css","https://cdn.bootcss.com/semantic-ui/2.2.13/semantic.min.js"],
+						cache: true
+					},cpath + "/permission.js"]);
 				}]
 			}
 		}).state("access", {

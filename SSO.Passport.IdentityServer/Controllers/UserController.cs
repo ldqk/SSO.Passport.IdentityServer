@@ -89,10 +89,34 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <param name="kw"></param>
+        /// <param name="appid"></param>
         /// <returns></returns>
-        public ActionResult Page(int page = 1, int size = 10, string kw = "")
+        public ActionResult Page(int page = 1, int size = 10, string kw = "", string appid = "")
         {
-            var @where = string.IsNullOrEmpty(kw) ? (Expression<Func<UserInfo, bool>>)(u => true) : (u => u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+            Expression<Func<UserInfo, bool>> @where;
+            if (string.IsNullOrEmpty(kw))
+            {
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => true;
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(a => a.AppId.Equals(appid));
+                }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw);
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(a => a.AppId.Equals(appid)) && u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw);
+                }
+            }
+
             List<UserInfoDto> list = UserInfoBll.LoadPageEntitiesNoTracking<DateTime, UserInfoDto>(page, size, out int total, where, u => u.LastLoginTime, false).ToList();
             return PageResult(list, size, total);
         }

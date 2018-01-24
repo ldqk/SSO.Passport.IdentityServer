@@ -137,20 +137,38 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <param name="kw"></param>
+        /// <param name="appid">appid</param>
         /// <returns></returns>
-        public ActionResult MyUsers(int id, int page = 1, int size = 10, string kw = "")
+        public ActionResult MyUsers(int id, int page = 1, int size = 10, string kw = "", string appid = "")
         {
             Expression<Func<UserInfo, bool>> where;
             Expression<Func<UserInfo, bool>> where2;
             if (!string.IsNullOrEmpty(kw))
             {
-                where = u => u.UserPermission.All(c => c.PermissionId != id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
-                where2 = u => u.UserPermission.Any(c => c.PermissionId == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.UserPermission.All(c => c.PermissionId != id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                    where2 = u => u.UserPermission.Any(c => c.PermissionId == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(a => a.AppId.Equals(appid)) && u.UserPermission.All(c => c.PermissionId != id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                    where2 = u => u.ClientApp.Any(a => a.AppId.Equals(appid)) && u.UserPermission.Any(c => c.PermissionId == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+
+                }
             }
             else
             {
-                where = u => u.UserPermission.All(c => c.PermissionId != id);
-                where2 = u => u.UserPermission.Any(c => c.PermissionId == id);
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.UserPermission.All(c => c.PermissionId != id);
+                    where2 = u => u.UserPermission.Any(c => c.PermissionId == id);
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(a => a.AppId.Equals(appid)) && u.UserPermission.All(c => c.PermissionId != id);
+                    where2 = u => u.ClientApp.Any(a => a.AppId.Equals(appid)) && u.UserPermission.Any(c => c.PermissionId == id);
+                }
             }
             List<UserInfoDto> not = UserInfoBll.LoadPageEntities<DateTime, UserInfoDto>(page, size, out int total1, where, u => u.LastLoginTime, false).ToList();//不属于该应用
             List<UserInfo> list = UserInfoBll.LoadPageEntities(page, size, out int total2, where2, u => u.Id, false).ToList();//属于该应用

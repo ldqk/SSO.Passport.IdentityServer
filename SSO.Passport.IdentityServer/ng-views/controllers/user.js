@@ -1,4 +1,4 @@
-﻿myApp.controller('user', ["$timeout", "$state", "NgTableParams", "$scope", "$http",function($timeout, $state, NgTableParams, $scope, $http) {
+﻿myApp.controller('user', ["$timeout", "$state", "NgTableParams", "$scope", "$http","$location",function($timeout, $state, NgTableParams, $scope, $http,$location) {
 		window.hub.disconnect();
 		$scope.loading();
 		var self = this;
@@ -15,12 +15,32 @@
 				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
 			}
 		};
+	$scope.request("/app/getall",null, function(data) {
+		$scope.apps=data.Data.concat([{AppId:"",AppName:"所有"}]);
+		$scope.appid=$location.search()['appid']||sessionStorage.getItem("appid")||$scope.apps[0].AppId;
+		$('.ui.dropdown.apps').dropdown({
+			onChange: function (value) {
+				$scope.appid=value;
+				sessionStorage.setItem("appid",value);
+				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			},
+			message: {
+				maxSelections: '最多选择 {maxCount} 项',
+				noResults: '无搜索结果！'
+			}
+		});
+		$timeout(function() {
+			$scope.appid=$location.search()['appid']||sessionStorage.getItem("appid")||$scope.apps[0].AppId;
+			$('.ui.dropdown.apps').dropdown("set selected", [$scope.appid]);
+		},10);
+	});
 		this.GetPageData = function(page, size) {
 			$scope.loading();
 			$http.post("/user/page", {
 				page,
 				size,
-				kw: $scope.kw
+				kw: $scope.kw,
+				appid:$scope.appid
 			}).then(function(res) {
 				$scope.paginationConf.totalItems = res.data.TotalCount;
 				$("div[ng-table-pagination]").remove();
@@ -430,10 +450,11 @@ myApp.controller('userAuthority', ["$timeout", "$state", "$scope", "$http","$sta
 	var self = this;
 	$scope.request("/app/getall",null, function(data) {
 		$scope.apps=data.Data;
-		$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
+		$scope.appid=$location.search()['appid']||sessionStorage.getItem("appid")||$scope.apps[0].AppId;
 		$('.ui.dropdown.apps').dropdown({
 			onChange: function (value) {
 				$scope.appid=value;
+				sessionStorage.setItem("appid",value);
 				self.GetData();
 			},
 			message: {
@@ -442,7 +463,7 @@ myApp.controller('userAuthority', ["$timeout", "$state", "$scope", "$http","$sta
 			}
 		});
 		$timeout(function() {
-			$scope.appid=$location.search()['appid']||$scope.apps[0].AppId;
+			$scope.appid=$location.search()['appid']||sessionStorage.getItem("appid")||$scope.apps[0].AppId;
 			$('.ui.dropdown.apps').dropdown("set selected", [$scope.appid]);
 		},10);
 	});

@@ -54,17 +54,13 @@ namespace BLL
         public UserInfoDto Register(UserInfo userInfo)
         {
             UserInfo exist = GetFirstEntity(u => u.Username.Equals(userInfo.Username) || u.Email.Equals(userInfo.Email) || u.PhoneNumber.Equals(userInfo.PhoneNumber));
-            if (exist is null)
-            {
-                userInfo.Id = Guid.NewGuid();
-                var salt = $"{new Random().StrictNext()}{DateTime.Now.GetTotalMilliseconds()}".MDString2(Guid.NewGuid().ToString()).Base64Encrypt();
-                userInfo.Password = userInfo.Password.MDString2(salt);
-                userInfo.SaltKey = salt;
-                UserInfo added = AddEntity(userInfo);
-                int line = SaveChanges();
-                return line > 0 ? added.Mapper<UserInfoDto>() : null;
-            }
-            return null;
+            if (exist == null) return null;
+            userInfo.Id = Guid.NewGuid();
+            var salt = $"{new Random().StrictNext()}{DateTime.Now.GetTotalMilliseconds()}".MDString2(Guid.NewGuid().ToString()).Base64Encrypt();
+            userInfo.Password = userInfo.Password.MDString2(salt);
+            userInfo.SaltKey = salt;
+            UserInfo added = AddEntitySaved(userInfo);
+            return added?.Mapper<UserInfoDto>();
         }
 
         /// <summary>

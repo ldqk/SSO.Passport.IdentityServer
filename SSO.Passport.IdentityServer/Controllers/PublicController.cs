@@ -215,7 +215,7 @@ namespace SSO.Passport.IdentityServer.Controllers
                                             ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
             if (regex.Match(pwd).Success)
             {
-                UserInfoDto user = UserInfoBll.Register(new UserInfo() { Username = name, Password = pwd });
+                UserInfoDto user = UserInfoBll.Register(new UserInfo() { Username = name, Password = pwd, Email = email });
                 if (user != null)
                 {
                     ClientApp app = ClientAppBll.GetFirstEntity(a => a.AppId.Equals(appid));
