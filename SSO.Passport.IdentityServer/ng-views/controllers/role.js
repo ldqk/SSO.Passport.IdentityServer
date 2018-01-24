@@ -292,14 +292,12 @@
 		}else {
 			//添加
 			role.appid=$scope.appid;
-			if (role.ParentId == 0) {
-				//添加主角色
-				var nodeData = $scope.data[$scope.data.length - 1];
-				role.Sort = nodeData.Sort + (nodeData.nodes.length + 1) * 10;
-				$scope.data.push(role);
-			} else {
+			if (role.ParentId) {
 				//添加子角色
 				$scope.subrole.nodes.push(role);
+			} else {
+				//添加主角色
+				$scope.data.push(role);
 			}
 			$scope.request("/role/save", role, function (data) {
 				window.notie.alert({
@@ -310,7 +308,7 @@
 				$scope.findNodes();
 				$scope.role = {};
 				$scope.closeAll();
-				$scope.init();
+				//$scope.init();
 			});
 		}
 	}

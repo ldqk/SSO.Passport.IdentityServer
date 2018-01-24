@@ -32,6 +32,22 @@
                     </button>
                 </div>
             </td>
+            <td title="'首选项'">
+                <div class="btn-group">
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/role/user/{{row.Id}}">
+                        管理用户
+                    </a>
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-href="#/role/group/{{row.Id}}">
+                        指派用户组
+                    </a>
+                    <a class="pull-right btn btn-success waves-effect" data-nodrag ng-href="#/role/permission/{{row.Id}}">
+                        配置权限
+                    </a>
+                    <a class="pull-right btn btn-primary waves-effect" data-nodrag ng-href="#/role/apps/{{row.Id}}">
+                        应用管理
+                    </a>
+                </div>
+            </td>
         </tr>
     </table>
 </div>
@@ -61,6 +77,22 @@
                     <button class="btn btn-danger btn-sm waves-effect" ng-click="list.removeRole(row)">
                         移除
                     </button>
+                </div>
+            </td>
+            <td title="'首选项'">
+                <div class="btn-group">
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/role/user/{{row.Id}}">
+                        管理用户
+                    </a>
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-href="#/role/group/{{row.Id}}">
+                        指派用户组
+                    </a>
+                    <a class="pull-right btn btn-success waves-effect" data-nodrag ng-href="#/role/permission/{{row.Id}}">
+                        配置权限
+                    </a>
+                    <a class="pull-right btn btn-primary waves-effect" data-nodrag ng-href="#/role/apps/{{row.Id}}">
+                        应用管理
+                    </a>
                 </div>
             </td>
         </tr>

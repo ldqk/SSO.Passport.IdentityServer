@@ -39,6 +39,16 @@
                     </button>
                 </div>
             </td>
+            <td title="'首选项'">
+                <div class="btn-group">
+                    <a class="btn btn-success btn-sm waves-effect" ng-href="#/access/permission/{{row.Id}}">
+                        配置权限
+                    </a>
+                    <a class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)">
+                        更改应用
+                    </a>
+                </div>
+            </td>
         </tr>
     </table>
 </div>
@@ -69,6 +79,16 @@
                     <button class="btn btn-danger btn-sm waves-effect" ng-click="list.removeAccess(row)">
                         移除
                     </button>
+                </div>
+            </td>
+            <td title="'首选项'">
+                <div class="btn-group">
+                    <a class="btn btn-success btn-sm waves-effect" ng-href="#/access/permission/{{row.Id}}">
+                        配置权限
+                    </a>
+                    <a class="btn btn-danger btn-sm waves-effect" ng-click="list.del(row)">
+                        更改应用
+                    </a>
                 </div>
             </td>
         </tr>

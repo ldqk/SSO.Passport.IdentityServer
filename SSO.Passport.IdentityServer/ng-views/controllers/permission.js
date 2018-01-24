@@ -292,14 +292,12 @@
 		}else {
 			//添加
 			permission.appid=$scope.appid;
-			if (permission.ParentId == 0) {
-				//添加主权限
-				var nodeData = $scope.data[$scope.data.length - 1];
-				permission.Sort = nodeData.Sort + (nodeData.nodes.length + 1) * 10;
-				$scope.data.push(permission);
-			} else {
+			if (permission.ParentId) {
 				//添加子权限
 				$scope.subpermission.nodes.push(permission);
+			} else {
+				//添加主权限
+				$scope.data.push(permission);
 			}
 			$scope.request("/permission/save", permission, function (data) {
 				window.notie.alert({
@@ -310,7 +308,7 @@
 				$scope.findNodes();
 				$scope.permission = {};
 				$scope.closeAll();
-				$scope.init();
+				//$scope.init();
 			});
 		}
 	}

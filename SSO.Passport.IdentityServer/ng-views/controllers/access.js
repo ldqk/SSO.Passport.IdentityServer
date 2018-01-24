@@ -11,11 +11,7 @@
 			$('.ui.dropdown.apps').dropdown({
 				onChange: function (value) {
 					$scope.appid=value;
-					$scope.request("/menu/GetAll", {
-						appid:value
-					}, function(data) {
-						$scope.data = transData(data.Data, "Id", "ParentId", "nodes");
-					});	
+					self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
 				},
 				message: {
 					maxSelections: '最多选择 {maxCount} 项',
@@ -40,6 +36,7 @@
 		this.GetPageData = function(page, size) {
 			$scope.loading();
 			$http.post("/access/pagedata", {
+				appid:$scope.appid,
 				page,
 				size,
 				kw: $scope.kw

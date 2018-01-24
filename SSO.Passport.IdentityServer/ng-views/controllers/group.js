@@ -292,14 +292,12 @@
 		}else {
 			//添加
 			group.appid=$scope.appid;
-			if (group.ParentId == 0) {
-				//添加主用户组
-				var nodeData = $scope.data[$scope.data.length - 1];
-				group.Sort = nodeData.Sort + (nodeData.nodes.length + 1) * 10;
-				$scope.data.push(group);
-			} else {
+			if (group.ParentId) {
 				//添加子用户组
 				$scope.subgroup.nodes.push(group);
+			} else {
+				//添加主用户组
+				$scope.data.push(group);
 			}
 			$scope.request("/group/save", group, function (data) {
 				window.notie.alert({
@@ -310,7 +308,7 @@
 				$scope.findNodes();
 				$scope.group = {};
 				$scope.closeAll();
-				$scope.init();
+				//$scope.init();
 			});
 		}
 	}

@@ -17,6 +17,7 @@
             <col width="10%" />
             <col width="20%" />
             <col width="10%" />
+            <col width="30%" />
         </colgroup>
         <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-info':row.ParentId!=null}">
             <td title="'权限名'" sortable="'PermissionName'">
@@ -32,6 +33,25 @@
                     </button>
                 </div>
             </td>
+            <td title="'首选项'">
+                <div class="btn-group">
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/permission/user/{{row.Id}}">
+                        临时分配给用户
+                    </a>
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-href="#/permission/role/{{row.Id}}">
+                        指派角色
+                    </a>
+                    <a class="pull-right btn btn-success waves-effect" data-nodrag ng-href="#/permission/menu/{{row.Id}}">
+                        配置菜单
+                    </a>
+                    <a class="pull-right btn btn-primary waves-effect" data-nodrag ng-href="#/permission/access/{{row.Id}}">
+                        配置访问控制
+                    </a>
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/permission/apps/{{row.Id}}">
+                        配置客户端应用
+                    </a>
+                </div>
+            </td>
         </tr>
     </table>
 </div>
@@ -42,6 +62,7 @@
             <col width="10%" />
             <col width="20%" />
             <col width="10%" />
+            <col width="30%" />
         </colgroup>
         <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-info':row.ParentId!=null}">
             <td title="'权限名'" sortable="'PermissionName'">
@@ -55,6 +76,25 @@
                     <button class="btn btn-danger btn-sm waves-effect" ng-click="list.removePermissions(row)">
                         移除
                     </button>
+                </div>
+            </td>
+            <td title="'首选项'">
+                <div class="btn-group">
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/permission/user/{{node.Id}}">
+                        临时分配给用户
+                    </a>
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-href="#/permission/role/{{node.Id}}">
+                        指派角色
+                    </a>
+                    <a class="pull-right btn btn-success waves-effect" data-nodrag ng-href="#/permission/menu/{{node.Id}}">
+                        配置菜单
+                    </a>
+                    <a class="pull-right btn btn-primary waves-effect" data-nodrag ng-href="#/permission/access/{{node.Id}}">
+                        配置访问控制
+                    </a>
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/permission/apps/{{node.Id}}">
+                        配置客户端应用
+                    </a>
                 </div>
             </td>
         </tr>

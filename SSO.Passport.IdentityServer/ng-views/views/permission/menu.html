@@ -36,6 +36,16 @@
                     </button>
                 </div>
             </td>
+            <td title="'首选项'">
+                <div class="btn-group">
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/menu/permission/{{row.Id}}">
+                        权限
+                    </a>
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-click="edit(node)">
+                        更改应用
+                    </a>
+                </div>
+            </td>
         </tr>
     </table>
 </div>
@@ -63,6 +73,16 @@
                     <button class="btn btn-danger btn-sm waves-effect" ng-click="list.removeMenu(row)">
                         移除
                     </button>
+                </div>
+            </td>
+            <td title="'首选项'">
+                <div class="btn-group">
+                    <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/menu/permission/{{row.Id}}">
+                        权限
+                    </a>
+                    <a class="pull-right btn btn-info waves-effect" data-nodrag ng-click="edit(node)">
+                        更改应用
+                    </a>
                 </div>
             </td>
         </tr>

@@ -48,6 +48,22 @@
                     </button>
                 </div>
             </td>
+            <td title="'首选项'">
+                <div class="btn-group">
+                    <a class="btn btn-danger btn-sm waves-effect" ng-href="#/user/apps/{{row.Id}}">
+                        配置应用
+                    </a>
+                    <a class="btn btn-info btn-sm waves-effect" ng-href="#/user/groups/{{row.Id}}">
+                        用户组
+                    </a>
+                    <a class="btn btn-primary btn-sm waves-effect" ng-href="#/user/roles/{{row.Id}}">
+                        角色
+                    </a>
+                    <a class="btn btn-success btn-sm waves-effect" ng-href="#/user/permissions/{{row.Id}}">
+                        临时权限
+                    </a>
+                </div>
+            </td>
         </tr>
     </table>
 </div>
@@ -87,6 +103,22 @@
                     <button class="btn btn-danger btn-sm waves-effect" ng-click="list.removeUser(row)">
                         移除
                     </button>
+                </div>
+            </td>
+            <td title="'首选项'">
+                <div class="btn-group">
+                    <a class="btn btn-danger btn-sm waves-effect" ng-href="#/user/apps/{{row.Id}}">
+                        配置应用
+                    </a>
+                    <a class="btn btn-info btn-sm waves-effect" ng-href="#/user/groups/{{row.Id}}">
+                        用户组
+                    </a>
+                    <a class="btn btn-primary btn-sm waves-effect" ng-href="#/user/roles/{{row.Id}}">
+                        角色
+                    </a>
+                    <a class="btn btn-success btn-sm waves-effect" ng-href="#/user/permissions/{{row.Id}}">
+                        临时权限
+                    </a>
                 </div>
             </td>
         </tr>

@@ -298,14 +298,14 @@
 		}else {
 			//添加
 			menu.appid=$scope.appid;
-			if (menu.ParentId == 0) {
-				//添加主菜单
-				var nodeData = $scope.data[$scope.data.length - 1];
-				menu.Sort = nodeData.Sort + (nodeData.nodes.length + 1) * 10;
-				$scope.data.push(menu);
-			} else {
+			if (menu.ParentId) {
 				//添加子菜单
 				$scope.submenu.nodes.push(menu);
+			} else {
+				//添加主菜单
+				var nodeData = $scope.data[$scope.data.length - 1] || {Sort:10,nodes:[]};
+				menu.Sort = nodeData.Sort + (nodeData.nodes.length + 1) * 10;
+				$scope.data.push(menu);
 			}
 			$scope.request("/menu/save", menu, function (data) {
 				window.notie.alert({
