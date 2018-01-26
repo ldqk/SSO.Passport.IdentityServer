@@ -133,6 +133,30 @@ namespace SSO.Passport.IdentityServer.Controllers
         }
 
         /// <summary>
+        /// 用户详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Details(Guid id)
+        {
+            UserInfo user = UserInfoBll.GetById(id);
+            if (user != null)
+            {
+                (List<ClientApp>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = UserInfoBll.Details(user);
+                return ResultData(new
+                {
+                    apps = details.Item1.Mapper<List<ClientAppInputDto>>(),
+                    groups = details.Item2.Mapper<List<UserGroupInputDto>>(),
+                    roles = details.Item3.Mapper<List<RoleInputDto>>(),
+                    permissions = details.Item4.Mapper<List<PermissionInputDto>>(),
+                    controls = details.Item5.Mapper<List<ControlOutputDto>>(),
+                    menus = details.Item6.Mapper<List<MenuOutputDto>>()
+                });
+            }
+            return ResultData(null, false, "用户不存在");
+        }
+
+        /// <summary>
         /// 修改用户头像
         /// </summary>
         /// <param name="id"></param>

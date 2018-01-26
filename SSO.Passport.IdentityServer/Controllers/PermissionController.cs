@@ -126,6 +126,32 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(permission);
         }
 
+        /// <summary>
+        /// 获取权限详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Details(int id)
+        {
+            Permission permission = PermissionBll.GetById(id);
+            if (permission != null)
+            {
+                (List<ClientApp>, List<UserPermission>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = PermissionBll.Details(permission);
+                return ResultData(new
+                {
+                    result = permission.Mapper<PermissionOutputDto>(),
+                    apps = details.Item1.Mapper<List<ClientAppInputDto>>(),
+                    users_allow = details.Item2.Where(u => u.HasPermission).Select(u => u.UserInfo).Mapper<List<UserInfoDto>>(),
+                    users_forbid = details.Item2.Where(u => !u.HasPermission).Select(u => u.UserInfo).Mapper<List<UserInfoDto>>(),
+                    roles = details.Item3.Mapper<List<RoleInputDto>>(),
+                    permissions = details.Item4.Mapper<List<PermissionInputDto>>(),
+                    controls = details.Item5.Mapper<List<ControlOutputDto>>(),
+                    menus = details.Item6.Mapper<List<MenuOutputDto>>()
+                });
+            }
+            return ResultData(null, false, "权限不存在");
+        }
+
         #endregion
 
         #region 权限配置

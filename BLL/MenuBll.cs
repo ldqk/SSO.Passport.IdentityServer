@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.Infrastructure;
+﻿using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Masuit.Tools.Net;
 using Models.Application;
@@ -23,14 +24,9 @@ namespace BLL
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int GetParentIdById(int id)
+        public List<int> GetParentIdById(int id)
         {
-            DbRawSqlQuery<int> raw = WebExtension.GetDbContext<DataContext>().Database.SqlQuery<int>("exec sp_getParentMenuIdByChildId " + id);
-            if (raw.Any())
-            {
-                return raw.FirstOrDefault();
-            }
-            return 0;
+            return WebExtension.GetDbContext<DataContext>().Database.SqlQuery<int>("exec sp_getParentMenuIdByChildId " + id).ToList();
         }
 
     }

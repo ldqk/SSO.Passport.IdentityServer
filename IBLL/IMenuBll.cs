@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using Models.Dto;
 
@@ -17,6 +18,6 @@ namespace IBLL
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        int GetParentIdById(int id);
+        List<int> GetParentIdById(int id);
     }
 }

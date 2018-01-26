@@ -102,5 +102,12 @@ namespace IBLL
         /// <param name="id"></param>
         /// <returns></returns>
         (List<MenuOutputDto>, List<ControlOutputDto>) GetAllAccess(Guid id);
+
+        /// <summary>
+        /// 获取用户权限详情
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        (List<ClientApp>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(UserInfo user);
     }
 }

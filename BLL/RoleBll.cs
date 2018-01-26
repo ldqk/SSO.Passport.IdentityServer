@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using Masuit.Tools.Net;
+using Masuit.Tools;
 using Models.Application;
 using Models.Dto;
 using Models.Entity;
@@ -60,7 +60,7 @@ namespace BLL
         /// <returns></returns>
         public DbRawSqlQuery<RoleOutputDto> GetSelfAndChildrenByParentId(int id)
         {
-            return WebExtension.GetDbContext<DataContext>().Database.SqlQuery<RoleOutputDto>("exec sp_getChildrenRoleByParentId " + id);
+            return BaseDal.GetDataContext().Database.SqlQuery<RoleOutputDto>("exec sp_getChildrenRoleByParentId " + id);
         }
 
         /// <summary>
@@ -68,14 +68,49 @@ namespace BLL
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int GetParentIdById(int id)
+        public List<int> GetParentIdById(int id)
         {
-            DbRawSqlQuery<int> raw = WebExtension.GetDbContext<DataContext>().Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + id);
-            if (raw.Any())
-            {
-                return raw.FirstOrDefault();
-            }
-            return 0;
+            return BaseDal.GetDataContext().Database.SqlQuery<int>("exec sp_getParentRoleIdByChildId " + id).ToList();
         }
+
+        /// <summary>
+        /// 获取角色所有的访问控制详情
+        /// </summary>
+        /// <returns></returns>
+        public (List<ClientApp>, List<UserInfo>, List<UserGroupRole>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Role role)
+        {
+            DataContext context = BaseDal.GetDataContext();
+            List<ClientApp> apps = role.ClientApp.Distinct().ToList();
+            List<UserInfo> users = role.UserInfo.Distinct().ToList();
+            List<UserGroupRole> groups = role.UserGroupPermission.Distinct().ToList();
+            List<Control> controls = new List<Control>();
+            List<Menu> menus = new List<Menu>();
+            List<Permission> permissions = new List<Permission>();
+            List<Role> roles = new List<Role>();
+
+            var rids = GetParentIdById(role.Id); //拿到所有上级角色，并排除掉角色不可用的角色id
+            foreach (int rid in rids)
+            {
+                Role r = context.Role.FirstOrDefault(o => o.Id == rid);
+                if (r?.Id != role.Id)
+                {
+                    roles.Add(r);
+                }
+                r?.Permission.ForEach(p =>
+                {
+                    //2.3 拿到所有上级权限
+                    int[] pids = context.Database.SqlQuery<int>("exec sp_getParentPermissionIdByChildId " + p.Id).ToArray(); //拿到所有上级权限
+                    foreach (int s in pids)
+                    {
+                        Permission permission = context.Permission.FirstOrDefault(x => x.Id == s);
+                        permissions.Add(permission);
+                        controls.AddRange(permission.Controls.Where(c => c.IsAvailable));
+                        menus.AddRange(permission.Menu.Where(c => c.IsAvailable));
+                    }
+                });
+            }
+            return (apps, users, groups, roles, permissions.Distinct().ToList(), controls.Distinct().ToList(), menus.Distinct().ToList());
+        }
+
     }
 }

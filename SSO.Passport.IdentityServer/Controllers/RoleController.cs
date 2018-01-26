@@ -128,6 +128,32 @@ namespace SSO.Passport.IdentityServer.Controllers
             RoleOutputDto role = RoleBll.GetById(id).Mapper<RoleOutputDto>();
             return ResultData(role);
         }
+        /// <summary>
+        /// 获取角色详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Details(int id)
+        {
+            Role role = RoleBll.GetById(id);
+            if (role != null)
+            {
+                (List<ClientApp>, List<UserInfo>, List<UserGroupRole>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = RoleBll.Details(role);
+                return ResultData(new
+                {
+                    result = role.Mapper<RoleInputDto>(),
+                    apps = details.Item1.Mapper<List<ClientAppInputDto>>(),
+                    users = details.Item2.Mapper<List<UserInfoDto>>(),
+                    groups_allow = details.Item3.Where(g => g.HasRole).Select(g => g.UserGroup).ToList().Mapper<List<UserGroupInputDto>>(),
+                    groups_forbid = details.Item3.Where(g => !g.HasRole).Select(g => g.UserGroup).ToList().Mapper<List<UserGroupInputDto>>(),
+                    roles = details.Item4.Mapper<List<RoleInputDto>>(),
+                    permissions = details.Item5.Mapper<List<PermissionInputDto>>(),
+                    controls = details.Item6.Mapper<List<ControlOutputDto>>(),
+                    menus = details.Item7.Mapper<List<MenuOutputDto>>()
+                });
+            }
+            return ResultData(null, false, "用角色不存在");
+        }
 
         #endregion
 

@@ -32,8 +32,8 @@ namespace Models.Migrations
 
                 //初始化功能控制
                 IList<Control> controls = new List<Control>();
-                Regex regex = new Regex(@"(\w+)Controller\.(\w+)\S+"">\r\n\s*<summary>\r\n\s*(\w+)\r\n\s*</summary>");
-                var docpath = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory).Any(s => s.Equals("Web.config")) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "SSO.Passport.IdentityServer.xml") : Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "SSO.Passport.IdentityServer", "bin", "SSO.Passport.IdentityServer.xml");
+                Regex regex = new Regex(@"(\w+)Controller\.(\w+)\S*"">\r\n\s*<summary>\r\n\s*(\w+)\r\n\s*</summary>");
+                var docpath = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory).Any(s => s.Contains("Web.config")) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "bin", "SSO.Passport.IdentityServer.xml") : Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName, "SSO.Passport.IdentityServer", "bin", "SSO.Passport.IdentityServer.xml");
 
                 string text = File.ReadAllText(docpath);
                 MatchCollection mc = regex.Matches(text);
@@ -88,9 +88,10 @@ namespace Models.Migrations
                 //初始化角色
                 IList<Role> roles = new List<Role>()
                 {
-                    new Role() { RoleName = "Everyone", Permission = ps, UserInfo = userInfos, ClientApp = apps },
                     new Role() { RoleName = "Administrator", Permission = ps, UserInfo = userInfos, ClientApp = apps },
-                    new Role() { RoleName = "System", Permission = ps, UserInfo = userInfos, ClientApp = apps }
+                    new Role() { RoleName = "System", Permission = ps, UserInfo = userInfos, ClientApp = apps },
+                    new Role() { RoleName = "Test"},
+                    new Role() { RoleName = "Demo"},
                 };
 
                 //初始化用户组
@@ -99,7 +100,8 @@ namespace Models.Migrations
                     new UserGroup() { GroupName = "管理组", UserInfo = userInfos, ClientApp = apps },
                     new UserGroup() { GroupName = "管理员", UserInfo = userInfos, ClientApp = apps },
                     new UserGroup() { GroupName = "超级管理员", UserInfo = userInfos, ClientApp = apps },
-                    new UserGroup() { GroupName = "系统用户", UserInfo = userInfos, ClientApp = apps }
+                    new UserGroup() { GroupName = "系统用户", UserInfo = userInfos, ClientApp = apps },
+                    new UserGroup() { GroupName = "Test"},
                 };
                 IList<UserPermission> ups = new List<UserPermission>() { new UserPermission() { Permission = ps.FirstOrDefault(), UserInfo = userInfos.FirstOrDefault(), HasPermission = true } };
                 IList<UserGroupRole> ugps = new List<UserGroupRole>() { new UserGroupRole() { Role = roles.FirstOrDefault(), UserGroup = groups.FirstOrDefault(), HasRole = true } };
@@ -128,7 +130,7 @@ namespace Models.Migrations
                                                                              UNION ALL
                                                                              SELECT Menu.*    --第二个查询作为递归成员， 下属成员的结果为空时，此递归结束。
                                                                                FROM Tree INNER JOIN Menu ON Tree.ParentId = Menu.Id) 
-                                                                         SELECT top 1 Id FROM Tree  ORDER BY Id
+                                                                         SELECT Id FROM Tree  ORDER BY Id
                                                                         END
                                                                     ");
                 context.Database.ExecuteSqlCommand(@"Create PROC [dbo].[sp_getChildrenGroupByParentId](@ParentId int)
@@ -151,7 +153,7 @@ namespace Models.Migrations
                                                                              UNION ALL
                                                                              SELECT UserGroup.*    --第二个查询作为递归成员， 下属成员的结果为空时，此递归结束。
                                                                                FROM Tree INNER JOIN UserGroup ON Tree.ParentId = UserGroup.Id) 
-                                                                         SELECT top 1 Id FROM Tree  ORDER BY Id
+                                                                         SELECT Id FROM Tree  ORDER BY Id
                                                                         END
                                                                     ");
                 context.Database.ExecuteSqlCommand(@"Create PROC [dbo].[sp_getChildrenRoleByParentId](@ParentId int)
@@ -174,7 +176,7 @@ namespace Models.Migrations
                                                                              UNION ALL
                                                                              SELECT Role.*    --第二个查询作为递归成员， 下属成员的结果为空时，此递归结束。
                                                                                FROM Tree INNER JOIN Role ON Tree.ParentId = Role.Id) 
-                                                                         SELECT top 1 Id FROM Tree  ORDER BY Id
+                                                                         SELECT Id FROM Tree  ORDER BY Id
                                                                         END
                                                                     ");
                 context.Database.ExecuteSqlCommand(@"Create PROC [dbo].[sp_getChildrenPermissionByParentId](@ParentId int)
@@ -197,7 +199,7 @@ namespace Models.Migrations
                                                                              UNION ALL
                                                                              SELECT Permission.*    --第二个查询作为递归成员， 下属成员的结果为空时，此递归结束。
                                                                                FROM Tree INNER JOIN Permission ON Tree.ParentId = Permission.Id) 
-                                                                         SELECT top 1 Id FROM Tree  ORDER BY Id
+                                                                         SELECT Id FROM Tree  ORDER BY Id
                                                                         END
                                                                     ");
             }

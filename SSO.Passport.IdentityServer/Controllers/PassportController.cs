@@ -156,7 +156,9 @@ namespace SSO.Passport.IdentityServer.Controllers
                     Response.Cookies.Add(passCookie);
                 }
 
-                HangfireHelper.CreateJob(typeof(IHangfireBackJob), "LoginRecord", "default", userInfo, Request.UserHostAddress);
+#if !DEBUG
+                HangfireHelper.CreateJob(typeof(IHangfireBackJob), "LoginRecord", "default", userInfo, Request.UserHostAddress); 
+#endif
                 string refer = CookieHelper.GetCookieValue("refer");
                 if (string.IsNullOrEmpty(refer))
                 {

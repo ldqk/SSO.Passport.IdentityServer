@@ -126,6 +126,32 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(group);
         }
 
+        /// <summary>
+        /// 获取用户组详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Details(int id)
+        {
+            UserGroup @group = UserGroupBll.GetById(id);
+            if (@group != null)
+            {
+                (List<ClientApp>, List<UserInfo>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = UserGroupBll.Details(@group);
+                return ResultData(new
+                {
+                    result = group.Mapper<UserGroupOutputDto>(),
+                    apps = details.Item1.Mapper<List<ClientAppInputDto>>(),
+                    users = details.Item2.Mapper<List<UserInfoDto>>(),
+                    groups = details.Item3.Mapper<List<UserGroupInputDto>>(),
+                    roles = details.Item4.Mapper<List<RoleInputDto>>(),
+                    permissions = details.Item5.Mapper<List<PermissionInputDto>>(),
+                    controls = details.Item6.Mapper<List<ControlOutputDto>>(),
+                    menus = details.Item7.Mapper<List<MenuOutputDto>>()
+                });
+            }
+            return ResultData(null, false, "用户组不存在");
+        }
+
         #endregion
 
         #region 权限配置

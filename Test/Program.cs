@@ -13,9 +13,24 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            DataContext db = new DataContext();
-            List<ClientApp> apps = db.ClientApp.ToList();
+            //DataContext db = new DataContext();
+            //List<ClientApp> apps = db.ClientApp.ToList();
             
+        }
+    }
+
+    public class MyClass
+    {
+        public MyClass(string name)
+        {
+            Console.WriteLine(name);
+        }
+    }
+
+    public class MyClass2:MyClass
+    {
+        public MyClass2(string name) : base(name)
+        {
         }
     }
 }

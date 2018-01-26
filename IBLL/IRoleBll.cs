@@ -46,6 +46,12 @@ namespace IBLL
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        int GetParentIdById(int id);
+        List<int> GetParentIdById(int id);
+
+        /// <summary>
+        /// 获取角色所有的访问控制详情
+        /// </summary>
+        /// <returns></returns>
+        (List<ClientApp>, List<UserInfo>, List<UserGroupRole>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Role role);
     }
 }
