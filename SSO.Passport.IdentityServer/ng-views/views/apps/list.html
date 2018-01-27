@@ -66,7 +66,10 @@
                 </div>
             </td>
             <td title="'操作管理'">
-                <div class="btn-group">
+                <a class="btn btn-info btn-sm waves-effect" ng-href="#/apps/details/{{row.Id}}">
+                    详情
+                </a>
+                <div class="btn-group" ng-if="!row.Preset">
                     <button class="btn btn-info btn-sm waves-effect" ng-click="list.edit(row)" ng-if="!row.Preset">
                         <i class="icon-pencil"></i>
                     </button>
@@ -74,7 +77,6 @@
                         <i class="icon-cross"></i>
                     </button>
                 </div>
-                <span ng-if="row.Preset">预置应用不可更改</span>
             </td>
         </tr>
     </table>

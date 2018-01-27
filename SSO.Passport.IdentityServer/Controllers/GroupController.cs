@@ -136,7 +136,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserGroup @group = UserGroupBll.GetById(id);
             if (@group != null)
             {
-                (List<ClientApp>, List<UserInfo>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = UserGroupBll.Details(@group);
+                (IQueryable<ClientApp>, IQueryable<UserInfo>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = UserGroupBll.Details(@group);
                 return ResultData(new
                 {
                     result = group.Mapper<UserGroupOutputDto>(),

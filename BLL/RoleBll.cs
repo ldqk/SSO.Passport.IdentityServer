@@ -77,12 +77,12 @@ namespace BLL
         /// 获取角色所有的访问控制详情
         /// </summary>
         /// <returns></returns>
-        public (List<ClientApp>, List<UserInfo>, List<UserGroupRole>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Role role)
+        public (IQueryable<ClientApp>, IQueryable<UserInfo>, IQueryable<UserGroupRole>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Role role)
         {
             DataContext context = BaseDal.GetDataContext();
-            List<ClientApp> apps = role.ClientApp.Distinct().ToList();
-            List<UserInfo> users = role.UserInfo.Distinct().ToList();
-            List<UserGroupRole> groups = role.UserGroupPermission.Distinct().ToList();
+            IQueryable<ClientApp> apps = new ClientAppBll().LoadEntities(a => a.Roles.Any(r => r.Id == role.Id));
+            IQueryable<UserInfo> users = new UserInfoBll().LoadEntities(u => u.Role.Any(r => r.Id == role.Id));
+            IQueryable<UserGroupRole> groups = new UserGroupRoleBll().LoadEntities(g => g.RoleId == role.Id);
             List<Control> controls = new List<Control>();
             List<Menu> menus = new List<Menu>();
             List<Permission> permissions = new List<Permission>();

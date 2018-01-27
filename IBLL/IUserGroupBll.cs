@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using Models.Dto;
 using Models.Entity;
 
@@ -45,8 +46,8 @@ namespace IBLL
         /// <summary>
         /// 获取用户组所有的访问控制详情
         /// </summary>
-        /// <param name="g"></param>
+        /// <param name="group"></param>
         /// <returns></returns>
-        (List<ClientApp>, List<UserInfo>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(UserGroup g);
+        (IQueryable<ClientApp>, IQueryable<UserInfo>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(UserGroup @group);
     }
 }

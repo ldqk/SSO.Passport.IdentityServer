@@ -2,6 +2,7 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using EFSecondLevelCache;
+using Masuit.Tools.Logging;
 using Models.Entity;
 using Models.Migrations;
 using static System.Data.Entity.Core.Objects.ObjectContext;
@@ -15,7 +16,8 @@ namespace Models.Application
             Database.CreateIfNotExists();
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
 #if DEBUG
-            Database.Log = Console.WriteLine;
+            Database.Log=Console.WriteLine;
+            ;
 #endif
         }
 

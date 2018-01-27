@@ -78,11 +78,11 @@ namespace BLL
         /// 获取权限所有的访问控制详情，包括父级继承
         /// </summary>
         /// <returns></returns>
-        public (List<ClientApp>, List<UserPermission>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Permission permission)
+        public (IQueryable<ClientApp>, IQueryable<UserPermission>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Permission permission)
         {
             DataContext context = BaseDal.GetDataContext();
-            List<ClientApp> apps = permission.ClientApp.Distinct().ToList();
-            List<UserPermission> users = permission.UserPermission.Distinct().ToList();
+            IQueryable<ClientApp> apps = new ClientAppBll().LoadEntities(a => a.Permissions.Any(p => p.Id == permission.Id));//permission.ClientApp.AsQueryable();
+            IQueryable<UserPermission> users = new UserPermissionBll().LoadEntities(a => a.PermissionId == permission.Id);
             List<Role> roles = new List<Role>();
             List<Control> controls = new List<Control>();
             List<Menu> menus = new List<Menu>();

@@ -138,7 +138,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             Role role = RoleBll.GetById(id);
             if (role != null)
             {
-                (List<ClientApp>, List<UserInfo>, List<UserGroupRole>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = RoleBll.Details(role);
+                (IQueryable<ClientApp>, IQueryable<UserInfo>, IQueryable<UserGroupRole>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = RoleBll.Details(role);
                 return ResultData(new
                 {
                     result = role.Mapper<RoleInputDto>(),

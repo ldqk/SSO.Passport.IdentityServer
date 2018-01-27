@@ -448,16 +448,6 @@ myApp.controller('appPermission', ["$timeout", "$state", "$scope", "$http","$sta
 				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
 			}
 		};
-		$scope.paginationConf2 = {
-			currentPage: 1,
-			itemsPerPage: 10,
-			pagesLength: 25,
-			perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
-			rememberPerPage: 'perPageItems',
-			onChange: function() {
-				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
-			}
-		};
 		this.GetPageData = function(page, size) {
 			$http.post("/app/mypermissions", {
 				id:$scope.id,
@@ -512,5 +502,164 @@ myApp.controller('appPermission', ["$timeout", "$state", "$scope", "$http","$sta
 				self.GetPageData($scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
 			}
 		});
+	}
+}]);
+myApp.controller('appDetails', ["$timeout", "$state", "$scope", "$http","$stateParams","NgTableParams", function($timeout, $state, $scope, $http,$stateParams,NgTableParams) {
+	window.hub.disconnect();
+	$scope.id=$stateParams.id;
+	$scope.loading();
+	var pending=false;
+	var self = this;
+	$scope.request("/app/get/"+$scope.id,null, function(data) {
+		$scope.app=data.Data;
+			self.GetUserPageData($scope.paginationConf_user.currentPage, $scope.paginationConf_user.itemsPerPage);
+			self.GetGroupPageData($scope.paginationConf_group.currentPage, $scope.paginationConf_group.itemsPerPage);
+			self.GetRolePageData($scope.paginationConf_role.currentPage, $scope.paginationConf_role.itemsPerPage);
+			self.GetPermissionPageData($scope.paginationConf_permission.currentPage, $scope.paginationConf_permission.itemsPerPage);
+	});
+	self.stats = [];
+	self.data = {};
+	$scope.kw = "";
+	$scope.paginationConf_user = {
+		currentPage: 1,
+		itemsPerPage: 10,
+		pagesLength: 25,
+		perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+		//rememberPerPage: 'perPageItems',
+		onChange: function() {
+			if(pending)return;
+			self.GetUserPageData($scope.paginationConf_user.currentPage, $scope.paginationConf_user.itemsPerPage);
+		}
+	};
+	this.GetUserPageData = function(page, size) {
+		pending=true;
+		$http.post("/user/page", {
+			appid:$scope.app.AppId,
+			page,
+			size,
+			kw: $scope.kw
+		}).then(function(res) {
+			$scope.paginationConf_user.totalItems = res.data.TotalCount;
+			$("div[ng-table-pagination]").remove();
+			self.users = new NgTableParams({
+				count: 50000
+			}, {
+				filterDelay: 0,
+				dataset: res.data.Data
+			});
+			$scope.loadingDone();
+			pending=false;
+		});
+	}
+
+	$scope.paginationConf_group = {
+		currentPage: 1,
+		itemsPerPage: 10,
+		pagesLength: 25,
+		perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+		//rememberPerPage: 'perPageItems',
+		onChange: function() {
+			if(pending)return;
+			self.GetGroupPageData($scope.paginationConf_group.currentPage, $scope.paginationConf_group.itemsPerPage);
+		}
+	};
+	this.GetGroupPageData = function(page, size) {
+		pending=true;
+		$http.post("/group/pagedata", {
+			appid:$scope.app.AppId,
+			page,
+			size,
+			kw: $scope.kw
+		}).then(function(res) {
+			$scope.paginationConf_group.totalItems = res.data.TotalCount;
+			$("div[ng-table-pagination]").remove();
+			self.groups = new NgTableParams({
+				count: 50000
+			}, {
+				filterDelay: 0,
+				dataset: res.data.Data
+			});
+			$scope.loadingDone();
+			pending=false;
+		});
+	}
+
+	$scope.paginationConf_role = {
+		currentPage: 1,
+		itemsPerPage: 10,
+		pagesLength: 25,
+		perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+		//rememberPerPage: 'perPageItems',
+		onChange: function() {
+			if(pending)return;
+			self.GetRolePageData($scope.paginationConf_role.currentPage, $scope.paginationConf_role.itemsPerPage);
+		}
+	};
+	this.GetRolePageData = function(page, size) {
+		pending=true;
+		$http.post("/role/pagedata", {
+			appid:$scope.app.AppId,
+			page,
+			size,
+			kw: $scope.kw
+		}).then(function(res) {
+			$scope.paginationConf_role.totalItems = res.data.TotalCount;
+			$("div[ng-table-pagination]").remove();
+			self.roles = new NgTableParams({
+				count: 50000
+			}, {
+				filterDelay: 0,
+				dataset: res.data.Data
+			});
+			$scope.loadingDone();
+			pending=false;
+		});
+	}
+
+	$scope.paginationConf_permission = {
+		currentPage: 1,
+		itemsPerPage: 10,
+		pagesLength: 25,
+		perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+		//rememberPerPage: 'perPageItems',
+		onChange: function() {
+			if(pending)return;
+			self.GetPermissionPageData($scope.paginationConf_permission.currentPage, $scope.paginationConf_permission.itemsPerPage);
+		}
+	};
+	this.GetPermissionPageData = function(page, size) {
+		pending=true;
+		$http.post("/permission/pagedata", {
+			appid:$scope.app.AppId,
+			page,
+			size,
+			kw: $scope.kw
+		}).then(function(res) {
+			$scope.paginationConf_permission.totalItems = res.data.TotalCount;
+			$("div[ng-table-pagination]").remove();
+			self.permissions = new NgTableParams({
+				count: 50000
+			}, {
+				filterDelay: 0,
+				dataset: res.data.Data
+			});
+			$scope.loadingDone();
+			pending=false;
+		});
+	}
+
+	var _timeout;
+	$scope.search = function(kw) {
+		if (_timeout) {
+			$timeout.cancel(_timeout);
+		}
+		_timeout = $timeout(function() {
+			$scope.kw = kw;
+			self.GetUserPageData($scope.paginationConf_user.currentPage, $scope.paginationConf_user.itemsPerPage);
+			self.GetGroupPageData($scope.paginationConf_group.currentPage, $scope.paginationConf_group.itemsPerPage);
+			self.GetRolePageData($scope.paginationConf_role.currentPage, $scope.paginationConf_role.itemsPerPage);
+			self.GetPermissionPageData($scope.paginationConf_permission.currentPage, $scope.paginationConf_permission.itemsPerPage);
+			_timeout = null;
+		}, 500);
 	}
 }]);

@@ -65,27 +65,27 @@ namespace BLL
         /// </summary>
         /// <param name="g"></param>
         /// <returns></returns>
-        public (List<ClientApp>, List<UserInfo>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(UserGroup g)
+        public (IQueryable<ClientApp>, IQueryable<UserInfo>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(UserGroup group)
         {
             DataContext context = BaseDal.GetDataContext();
-            List<ClientApp> apps = g.ClientApp.Distinct().ToList();
-            List<UserInfo> users = g.UserInfo.Distinct().ToList();
+            IQueryable<ClientApp> apps = new ClientAppBll().LoadEntities(a => a.UserGroup.Any(p => p.Id == group.Id));
+            IQueryable<UserInfo> users = new UserInfoBll().LoadEntities(u => u.UserGroup.Any(g => g.Id == group.Id));
             List<UserGroup> groups = new List<UserGroup>();
             List<Control> controls = new List<Control>();
             List<Menu> menus = new List<Menu>();
             List<Role> roles = new List<Role>();
             List<Permission> permissions = new List<Permission>();
             //2.1 拿到所有上级用户组
-            int[] gids = context.Database.SqlQuery<int>("exec sp_getParentGroupIdByChildId " + g.Id).ToArray(); //拿到所有上级用户组
+            int[] gids = context.Database.SqlQuery<int>("exec sp_getParentGroupIdByChildId " + group.Id).ToArray(); //拿到所有上级用户组
             foreach (int i in gids)
             {
-                UserGroup group = context.UserGroup.FirstOrDefault(u => u.Id == i);
-                if (i != g.Id)
+                UserGroup gg = context.UserGroup.FirstOrDefault(u => u.Id == i);
+                if (i != group.Id)
                 {
-                    groups.Add(group);
+                    groups.Add(gg);
                 }
-                List<int> noRoleIds = @group?.UserGroupPermission.Where(x => !x.HasRole).Select(x => x.Id).ToList(); //没有角色的id集合
-                @group?.UserGroupPermission.ForEach(ugp =>
+                List<int> noRoleIds = gg?.UserGroupPermission.Where(x => !x.HasRole).Select(x => x.Id).ToList(); //没有角色的id集合
+                gg?.UserGroupPermission.ForEach(ugp =>
                 {
                     if (ugp.HasRole)
                     {

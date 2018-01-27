@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using Models.Dto;
 using Models.Entity;
 
@@ -52,6 +53,6 @@ namespace IBLL
         /// 获取权限所有的访问控制详情，包括父级继承
         /// </summary>
         /// <returns></returns>
-        (List<ClientApp>, List<UserPermission>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Permission permission);
+        (IQueryable<ClientApp>, IQueryable<UserPermission>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Permission permission);
     }
 }

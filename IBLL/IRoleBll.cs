@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using Models.Dto;
 using Models.Entity;
 
@@ -52,6 +53,6 @@ namespace IBLL
         /// 获取角色所有的访问控制详情
         /// </summary>
         /// <returns></returns>
-        (List<ClientApp>, List<UserInfo>, List<UserGroupRole>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Role role);
+        (IQueryable<ClientApp>, IQueryable<UserInfo>, IQueryable<UserGroupRole>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Role role);
     }
 }

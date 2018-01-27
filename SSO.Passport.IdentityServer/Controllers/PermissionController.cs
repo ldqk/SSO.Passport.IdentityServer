@@ -136,7 +136,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             Permission permission = PermissionBll.GetById(id);
             if (permission != null)
             {
-                (List<ClientApp>, List<UserPermission>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = PermissionBll.Details(permission);
+                (IQueryable<ClientApp>, IQueryable<UserPermission>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = PermissionBll.Details(permission);
                 return ResultData(new
                 {
                     result = permission.Mapper<PermissionOutputDto>(),

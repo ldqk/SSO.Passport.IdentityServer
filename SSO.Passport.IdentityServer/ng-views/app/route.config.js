@@ -139,6 +139,15 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 					return $ocLazyLoad.load([cpath + "/clientApps.js"]);
 				}]
 			}
+		}).state("app-details", {
+			url: "/apps/details/:id",
+			templateUrl: vpath + "/apps/details.html",
+			controller: "appDetails as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/clientApps.js"]);
+				}]
+			}
 		}).state("app-group", {
 			url: "/apps/group/:id",
 			templateUrl: vpath + "/apps/group.html",

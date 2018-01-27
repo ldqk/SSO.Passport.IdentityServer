@@ -1,0 +1,173 @@
+﻿<h2 class="text-center">【{{app.AppName}}】详情</h2>
+<table class="table table-inner table-bordered">
+    <tbody>
+        <tr>
+            <td>应用名</td>
+            <th>{{app.AppName}}</th>
+            <td>AppId</td>
+            <th>{{app.AppId}}</th>
+            <td>AppSecret</td>
+            <th>{{app.AppSecret}}</th>
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-info" ng-href="#/access?appid={{app.AppId}}">访问控制</a>
+                    <a class="btn btn-success" ng-href="#/menu?appid={{app.AppId}}">菜单</a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-inline pull-right">
+            <button class="btn btn-info waves-effect" ng-click="list.GetPageData(paginationConf.currentPage, paginationConf.itemsPerPage);">
+                <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+            <div class="input-group">
+                <span class="input-group-addon">全局搜索：</span>
+                <div class="fg-line">
+                    <input type="text" class="form-control" ng-change="search(kw)" ng-model="kw" placeholder="全局搜索" />
+                </div>
+            </div>
+        </div>
+        <h3 class="text-success">【{{app.AppName}}】包含的用户</h3>
+        <table ng-table="list.users" class="table table-bordered table-hover table-condensed editable-table listTable" ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+            <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-danger':row.IsMaster}">
+                <td title="'用户名'" filter="{Username: 'text'}" sortable="'Username'">
+                    {{row.Username}}
+                </td>
+                <td title="'手机号码'" filter="{PhoneNumber: 'text'}">
+                    {{row.PhoneNumber}}
+                </td>
+                <td title="'邮箱'" filter="{Email: 'text'}">
+                    {{row.Email}}
+                </td>
+                <td title="'锁定状态'">
+                    <label class="el-switch el-switch-red">
+                        <input type="checkbox" name="switch" ng-model="row.Locked">
+                        <span class="el-switch-style"></span>
+                    </label>
+                </td>
+                <td title="'管理员'">
+                    <label class="el-checkbox">
+                        <input type="checkbox" name="check" ng-model="row.IsMaster">
+                        <span class="el-checkbox-style"></span>
+                    </label>
+                </td>
+                <td title="'注册时间'" filter="{RegisterTime: 'text'}" sortable="'RegisterTime'">
+                    {{row.RegisterTime|date:'yyyy-MM-dd HH:mm'}}
+                </td>
+                <td title="'最后登录时间'" filter="{LastLoginTime: 'text'}" sortable="'LastLoginTime'">
+                    {{row.LastLoginTime|date:'yyyy-MM-dd HH:mm'}}
+                </td>
+                <td title="'权限配置'">
+                    <div class="btn-group">
+                        <a class="btn btn-info btn-sm waves-effect" ng-href="#/user/authority/{{row.Id}}?appid={{app.AppId}}">
+                            最终配置
+                        </a>
+                    </div>
+                </td>
+                <td title="'首选项'">
+                    <div class="btn-group">
+                        <a class="btn btn-info btn-sm waves-effect" ng-href="#/user/groups/{{row.Id}}">
+                            用户组
+                        </a>
+                        <a class="btn btn-primary btn-sm waves-effect" ng-href="#/user/roles/{{row.Id}}">
+                            角色
+                        </a>
+                        <a class="btn btn-success btn-sm waves-effect" ng-href="#/user/permissions/{{row.Id}}">
+                            临时权限
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <tm-pagination conf="paginationConf_user"></tm-pagination>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-info">【{{app.AppName}}】包含的用户组</h3>
+        <table ng-table="list.groups" class="table table-bordered table-hover table-condensed " ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+            <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row">
+                <td title="'用户组名'" sortable="'GroupName'">
+                    {{row.GroupName}}
+                </td>
+                <td title="'首选项'">
+                    <div class="btn-group">
+                        <div class="btn-group">
+                            <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/group/user/{{row.Id}}">
+                                管理用户
+                            </a>
+                            <a class="pull-right btn btn-info waves-effect" data-nodrag ng-href="#/group/role/{{row.Id}}">
+                                角色
+                            </a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <tm-pagination conf="paginationConf_group"></tm-pagination>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-danger">【{{app.AppName}}】包含的角色</h3>
+        <table ng-table="list.roles" class="table table-bordered table-hover table-condensed " ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+            <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row">
+                <td title="'角色名'" sortable="'RoleName'">
+                    {{row.RoleName}}
+                </td>
+                <td title="'角色描述'" sortable="'Description'">
+                    {{row.Description}}
+                </td>
+                <td title="'首选项'">
+                    <div class="btn-group">
+                        <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/role/user/{{row.Id}}">
+                            管理用户
+                        </a>
+                        <a class="pull-right btn btn-info waves-effect" data-nodrag ng-href="#/role/group/{{row.Id}}">
+                            指派用户组
+                        </a>
+                        <a class="pull-right btn btn-success waves-effect" data-nodrag ng-href="#/role/permission/{{row.Id}}">
+                            配置权限
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <tm-pagination conf="paginationConf_role"></tm-pagination>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-primary">【{{app.AppName}}】包含的权限</h3>
+        <table ng-table="list.permissions" class="table table-bordered table-hover table-condensed " ng-form="list.tableForm" disable-filter="list.isAdding" tracked-table="list.tableTracker">
+            <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row">
+                <td title="'权限名'" sortable="'PermissionName'">
+                    {{row.PermissionName}}
+                </td>
+                <td title="'权限描述'" sortable="'Description'">
+                    {{row.Description}}
+                </td>
+                <td title="'首选项'">
+                    <div class="btn-group">
+                        <a class="pull-right btn btn-danger waves-effect" data-nodrag ng-href="#/permission/user/{{row.Id}}">
+                            临时分配给用户
+                        </a>
+                        <a class="pull-right btn btn-info waves-effect" data-nodrag ng-href="#/permission/role/{{row.Id}}">
+                            指派角色
+                        </a>
+                        <a class="pull-right btn btn-success waves-effect" data-nodrag ng-href="#/permission/menu/{{row.Id}}">
+                            配置菜单
+                        </a>
+                        <a class="pull-right btn btn-primary waves-effect" data-nodrag ng-href="#/permission/access/{{row.Id}}">
+                            配置访问控制
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <tm-pagination conf="paginationConf_permission"></tm-pagination>
+    </div>
+</div>
