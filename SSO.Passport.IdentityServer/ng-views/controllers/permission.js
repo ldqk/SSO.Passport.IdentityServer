@@ -881,10 +881,7 @@ myApp.controller('permissionDetails', ["$timeout", "$state", "$scope", "$http","
 		}
 		_timeout = $timeout(function() {
 			$scope.kw = kw;
-			self.GetUserPageData($scope.paginationConf_user.currentPage, $scope.paginationConf_user.itemsPerPage);
-			self.GetGroupPageData($scope.paginationConf_permission.currentPage, $scope.paginationConf_permission.itemsPerPage);
-			self.GetRolePageData($scope.paginationConf_permission.currentPage, $scope.paginationConf_permission.itemsPerPage);
-			self.GetPermissionPageData($scope.paginationConf_permission.currentPage, $scope.paginationConf_permission.itemsPerPage);
+			self.GetUserPageData($scope.paginationConf_user1.currentPage, $scope.paginationConf_user1.itemsPerPage);
 			_timeout = null;
 		}, 500);
 	}

@@ -9,6 +9,7 @@ using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
 using Masuit.Tools.Net;
 using Masuit.Tools.Security;
+using SSO.Core.Model;
 
 namespace SSO.Core.Client
 {

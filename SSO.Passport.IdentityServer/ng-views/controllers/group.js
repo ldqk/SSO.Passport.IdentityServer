@@ -681,9 +681,6 @@ myApp.controller('groupDetails', ["$timeout", "$state", "$scope", "$http","$stat
 		_timeout = $timeout(function() {
 			$scope.kw = kw;
 			self.GetUserPageData($scope.paginationConf_user.currentPage, $scope.paginationConf_user.itemsPerPage);
-			self.GetGroupPageData($scope.paginationConf_group.currentPage, $scope.paginationConf_group.itemsPerPage);
-			self.GetRolePageData($scope.paginationConf_role.currentPage, $scope.paginationConf_role.itemsPerPage);
-			self.GetPermissionPageData($scope.paginationConf_permission.currentPage, $scope.paginationConf_permission.itemsPerPage);
 			_timeout = null;
 		}, 500);
 	}

@@ -777,9 +777,6 @@ myApp.controller('roleDetails', ["$timeout", "$state", "$scope", "$http","$state
 		_timeout = $timeout(function() {
 			$scope.kw = kw;
 			self.GetUserPageData($scope.paginationConf_user.currentPage, $scope.paginationConf_user.itemsPerPage);
-			self.GetGroupPageData($scope.paginationConf_role.currentPage, $scope.paginationConf_role.itemsPerPage);
-			self.GetRolePageData($scope.paginationConf_role.currentPage, $scope.paginationConf_role.itemsPerPage);
-			self.GetPermissionPageData($scope.paginationConf_permission.currentPage, $scope.paginationConf_permission.itemsPerPage);
 			_timeout = null;
 		}, 500);
 	}
