@@ -54,7 +54,7 @@ namespace BLL
         public UserInfoDto Register(UserInfo userInfo)
         {
             UserInfo exist = GetFirstEntity(u => u.Username.Equals(userInfo.Username) || u.Email.Equals(userInfo.Email) || u.PhoneNumber.Equals(userInfo.PhoneNumber));
-            if (exist == null) return null;
+            if (exist != null) return null;
             userInfo.Id = Guid.NewGuid();
             var salt = $"{new Random().StrictNext()}{DateTime.Now.GetTotalMilliseconds()}".MDString2(Guid.NewGuid().ToString()).Base64Encrypt();
             userInfo.Password = userInfo.Password.MDString2(salt);
@@ -103,7 +103,7 @@ namespace BLL
                 user.Role.ForEach(r => r.Permission.ForEach(p => list.AddRange(p.Controls.Where(c => c.IsAvailable))));
 
                 //2.0 用户-用户组-角色-权限，权限的优先级其次
-                user.UserGroup?.ForEach(g => g.UserGroupPermission.ForEach(ugp =>
+                user.UserGroup?.ForEach(g => g.UserGroupRole.ForEach(ugp =>
                 {
                     if (ugp.HasRole)
                     {
@@ -260,8 +260,8 @@ namespace BLL
                 {
                     UserGroup group = context.UserGroup.FirstOrDefault(u => u.Id == i);
                     groups.Add(g);
-                    List<int> noRoleIds = @group?.UserGroupPermission.Where(x => !x.HasRole).Select(x => x.Id).ToList(); //没有角色的id集合
-                    @group?.UserGroupPermission.ForEach(ugp =>
+                    List<int> noRoleIds = @group?.UserGroupRole.Where(x => !x.HasRole).Select(x => x.Id).ToList(); //没有角色的id集合
+                    @group?.UserGroupRole.ForEach(ugp =>
                     {
                         if (ugp.HasRole)
                         {

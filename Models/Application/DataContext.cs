@@ -47,7 +47,7 @@ namespace Models.Application
             modelBuilder.Entity<Role>().HasMany(e => e.Children).WithOptional(e => e.Parent).HasForeignKey(e => e.ParentId);
             modelBuilder.Entity<Role>().HasMany(e => e.UserGroupPermission).WithRequired(e => e.Role).WillCascadeOnDelete(true);
             modelBuilder.Entity<Role>().HasMany(e => e.UserInfo).WithMany(e => e.Role).Map(m => m.ToTable("UserInfoRole"));
-            modelBuilder.Entity<UserGroup>().HasMany(e => e.UserGroupPermission).WithRequired(e => e.UserGroup).WillCascadeOnDelete(true);
+            modelBuilder.Entity<UserGroup>().HasMany(e => e.UserGroupRole).WithRequired(e => e.UserGroup).WillCascadeOnDelete(true);
             modelBuilder.Entity<UserGroup>().HasMany(e => e.Children).WithOptional(e => e.Parent).HasForeignKey(e => e.ParentId);
             modelBuilder.Entity<UserGroup>().HasMany(e => e.UserInfo).WithMany(e => e.UserGroup).Map(m => m.ToTable("UserInfoUserGroup"));
             modelBuilder.Entity<UserInfo>().HasMany(e => e.UserPermission).WithRequired(e => e.UserInfo).WillCascadeOnDelete(true);

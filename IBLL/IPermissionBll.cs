@@ -53,6 +53,6 @@ namespace IBLL
         /// 获取权限所有的访问控制详情，包括父级继承
         /// </summary>
         /// <returns></returns>
-        (IQueryable<ClientApp>, IQueryable<UserPermission>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Permission permission);
+        (IQueryable<ClientApp>, List<Role>, List<Permission>) Details(Permission permission);
     }
 }

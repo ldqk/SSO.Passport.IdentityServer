@@ -48,6 +48,6 @@ namespace IBLL
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        (IQueryable<ClientApp>, IQueryable<UserInfo>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(UserGroup @group);
+        (IQueryable<ClientApp>, IQueryable<UserInfo>, List<UserGroup>, List<UserGroupRole>, List<Permission>, List<Control>, List<Menu>) Details(UserGroup @group);
     }
 }

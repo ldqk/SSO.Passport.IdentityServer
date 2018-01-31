@@ -693,3 +693,94 @@ myApp.controller('roleUsers', ["$timeout", "$state", "$scope", "$http","$statePa
 		});
 	}
 }]);
+
+myApp.controller('roleDetails', ["$timeout", "$state", "$scope", "$http","$stateParams","NgTableParams", function($timeout, $state, $scope, $http,$stateParams,NgTableParams) {
+	window.hub.disconnect();
+	$scope.id=$stateParams.id;
+	$scope.loading();
+	var pending=false;
+	var self = this;
+	$scope.request("/role/Details/"+$scope.id,null, function(data) {
+		$scope.role=data.Data.result;
+		self.apps = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.apps
+		});
+		self.groups_allow = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.groups_allow
+		});
+		self.groups_forbid = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.groups_forbid
+		});
+		self.permissions = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.permissions
+		});
+		self.roles = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.roles
+		});
+	});
+	self.stats = [];
+	self.data = {};
+	$scope.kw = "";
+	$scope.paginationConf_user = {
+		currentPage: 1,
+		itemsPerPage: 10,
+		pagesLength: 25,
+		perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+		//rememberPerPage: 'perPageItems',
+		onChange: function() {
+			if(pending)return;
+			self.GetUserPageData($scope.paginationConf_user.currentPage, $scope.paginationConf_user.itemsPerPage);
+		}
+	};
+	this.GetUserPageData = function(page, size) {
+		pending=true;
+		$http.post("/role/users", {
+			id:$scope.id,
+			appid:$scope.appid,
+			page,
+			size,
+			kw: $scope.kw
+		}).then(function(res) {
+			$scope.paginationConf_user.totalItems = res.data.TotalCount;
+			$("div[ng-table-pagination]").remove();
+			self.users = new NgTableParams({
+				count: 50000
+			}, {
+				filterDelay: 0,
+				dataset: res.data.Data
+			});
+			$scope.loadingDone();
+			pending=false;
+		});
+	}
+	
+	var _timeout;
+	$scope.search = function(kw) {
+		if (_timeout) {
+			$timeout.cancel(_timeout);
+		}
+		_timeout = $timeout(function() {
+			$scope.kw = kw;
+			self.GetUserPageData($scope.paginationConf_user.currentPage, $scope.paginationConf_user.itemsPerPage);
+			self.GetGroupPageData($scope.paginationConf_role.currentPage, $scope.paginationConf_role.itemsPerPage);
+			self.GetRolePageData($scope.paginationConf_role.currentPage, $scope.paginationConf_role.itemsPerPage);
+			self.GetPermissionPageData($scope.paginationConf_permission.currentPage, $scope.paginationConf_permission.itemsPerPage);
+			_timeout = null;
+		}, 500);
+	}
+}]);
