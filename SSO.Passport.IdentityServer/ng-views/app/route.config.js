@@ -73,6 +73,15 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 					},cpath + "/user.js"]);
 				}]
 			}
+		}).state("user-details", {
+			url: "/user/details/:id",
+			templateUrl: vpath + "/user/details.html",
+			controller: "userDetails as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/user.js"]);
+				}]
+			}
 		}).state("user-apps", {
 			url: "/user/apps/:id",
 			templateUrl: vpath + "/user/apps.html",
@@ -187,6 +196,15 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 					},cpath + "/group.js"]);
 				}]
 			}
+		}).state("group-details", {
+			url: "/group/details/:id",
+			templateUrl: vpath + "/group/details.html",
+			controller: "groupDetails as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/group.js"]);
+				}]
+			}
 		}).state("group-apps", {
 			url: "/group/apps/:id",
 			templateUrl: vpath + "/group/apps.html",
@@ -238,6 +256,15 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 					return $ocLazyLoad.load([cpath + "/role.js"]);
 				}]
 			}
+		}).state("role-details", {
+			url: "/role/details/:id",
+			templateUrl: vpath + "/role/details.html",
+			controller: "roleDetails as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/role.js"]);
+				}]
+			}
 		}).state("role-group", {
 			url: "/role/group/:id",
 			templateUrl: vpath + "/role/group.html",
@@ -284,6 +311,15 @@ myApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider",functi
 			url: "/permission/access/:id",
 			templateUrl: vpath + "/permission/access.html",
 			controller: "permissionAccess as list",
+			resolve: {
+				deps: ["$ocLazyLoad", function($ocLazyLoad) {
+					return $ocLazyLoad.load([cpath + "/permission.js"]);
+				}]
+			}
+		}).state("permission-details", {
+			url: "/permission/details/:id",
+			templateUrl: vpath + "/permission/details.html",
+			controller: "permissionDetails as list",
 			resolve: {
 				deps: ["$ocLazyLoad", function($ocLazyLoad) {
 					return $ocLazyLoad.load([cpath + "/permission.js"]);

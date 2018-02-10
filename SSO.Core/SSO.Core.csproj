@@ -81,10 +81,13 @@
     <Compile Include="Client\AuthorityAttribute.cs" />
     <Compile Include="Client\AuthernUtil.cs" />
     <Compile Include="Client\LoginService.cs" />
+    <Compile Include="Model\Menu.cs" />
+    <Compile Include="Model\AccessControl.cs" />
+    <Compile Include="Model\UserModel.cs" />
     <Compile Include="Server\PassportService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Client\TokenModel.cs" />
-    <Compile Include="Client\UserInfoLoginModel.cs" />
+    <Compile Include="Model\TokenModel.cs" />
+    <Compile Include="Model\UserInfoLoginModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

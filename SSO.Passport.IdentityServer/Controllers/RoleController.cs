@@ -143,7 +143,6 @@ namespace SSO.Passport.IdentityServer.Controllers
                 {
                     result = role.Mapper<RoleInputDto>(),
                     apps = details.Item1.Mapper<List<ClientAppInputDto>>(),
-                    users = details.Item2.Mapper<List<UserInfoDto>>(),
                     groups_allow = details.Item3.Where(g => g.HasRole).Select(g => g.UserGroup).ToList().Mapper<List<UserGroupInputDto>>(),
                     groups_forbid = details.Item3.Where(g => !g.HasRole).Select(g => g.UserGroup).ToList().Mapper<List<UserGroupInputDto>>(),
                     roles = details.Item4.Mapper<List<RoleInputDto>>(),
@@ -155,6 +154,43 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, false, "用角色不存在");
         }
 
+        /// <summary>
+        /// 获取角色的用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="kw"></param>
+        /// <param name="appid"></param>
+        /// <returns></returns>
+        public ActionResult Users(int id, int page = 1, int size = 10, string kw = "", string appid = "")
+        {
+            Expression<Func<UserInfo, bool>> where;
+            if (!string.IsNullOrEmpty(kw))
+            {
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.Role.Any(c => c.Id == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(c => c.AppId.Equals(appid)) && u.Role.Any(c => c.Id == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.Role.Any(c => c.Id == id);
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(c => c.AppId.Equals(appid)) && u.Role.Any(c => c.Id == id);
+                }
+            }
+            List<UserInfoDto> my = UserInfoBll.LoadPageEntities<DateTime, UserInfoDto>(page, size, out int total, where, u => u.LastLoginTime, false).ToList();//属于该应用
+            return PageResult(my, size, total);
+        }
         #endregion
 
         #region 角色配置
@@ -247,13 +283,13 @@ namespace SSO.Passport.IdentityServer.Controllers
             Expression<Func<UserGroup, bool>> where2;
             if (!string.IsNullOrEmpty(kw))
             {
-                where = u => u.UserGroupPermission.All(c => c.RoleId != id) && u.GroupName.Contains(kw);
-                where2 = u => u.UserGroupPermission.Any(c => c.RoleId == id) && u.GroupName.Contains(kw);
+                where = u => u.UserGroupRole.All(c => c.RoleId != id) && u.GroupName.Contains(kw);
+                where2 = u => u.UserGroupRole.Any(c => c.RoleId == id) && u.GroupName.Contains(kw);
             }
             else
             {
-                where = u => u.UserGroupPermission.All(c => c.RoleId != id);
-                where2 = u => u.UserGroupPermission.Any(c => c.RoleId == id);
+                where = u => u.UserGroupRole.All(c => c.RoleId != id);
+                where2 = u => u.UserGroupRole.Any(c => c.RoleId == id);
             }
 
             List<UserGroupOutputDto> not = UserGroupBll.LoadPageEntities<int, UserGroupOutputDto>(page, size, out int total1, where, u => u.Id, false).ToList(); //不属于该角色
@@ -263,7 +299,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             {
                 //判断有没有临时权限
                 UserGroupOutputDto per = p.Mapper<UserGroupOutputDto>();
-                per.HasRole = p.UserGroupPermission.Any(u => u.RoleId.Equals(id) && u.UserGroupId == p.Id && u.HasRole);
+                per.HasRole = p.UserGroupRole.Any(u => u.RoleId.Equals(id) && u.UserGroupId == p.Id && u.HasRole);
                 my.Add(per);
             }
 

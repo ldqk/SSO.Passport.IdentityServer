@@ -78,14 +78,11 @@ namespace BLL
         /// 获取权限所有的访问控制详情，包括父级继承
         /// </summary>
         /// <returns></returns>
-        public (IQueryable<ClientApp>, IQueryable<UserPermission>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(Permission permission)
+        public (IQueryable<ClientApp>, List<Role>, List<Permission>) Details(Permission permission)
         {
             DataContext context = BaseDal.GetDataContext();
             IQueryable<ClientApp> apps = new ClientAppBll().LoadEntities(a => a.Permissions.Any(p => p.Id == permission.Id));//permission.ClientApp.AsQueryable();
-            IQueryable<UserPermission> users = new UserPermissionBll().LoadEntities(a => a.PermissionId == permission.Id);
             List<Role> roles = new List<Role>();
-            List<Control> controls = new List<Control>();
-            List<Menu> menus = new List<Menu>();
             List<Permission> permissions = new List<Permission>();
 
             var pids = GetParentIdById(permission.Id); //拿到所有上级权限
@@ -96,8 +93,6 @@ namespace BLL
                 {
                     permissions.Add(p);
                 }
-                controls.AddRange(p.Controls.Where(c => c.IsAvailable));
-                menus.AddRange(p.Menu.Where(c => c.IsAvailable));
             }
 
             permission.Role.Distinct().ForEach(r =>
@@ -106,7 +101,7 @@ namespace BLL
                 List<Role> list = context.Role.Where(role => rids.Contains(role.Id)).ToList();
                 roles.AddRange(list);
             });
-            return (apps, users, roles.Distinct().ToList(), permissions, controls.Distinct().ToList(), menus.Distinct().ToList());
+            return (apps, roles.Distinct().ToList(), permissions);
         }
     }
 }

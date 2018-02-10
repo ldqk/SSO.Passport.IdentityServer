@@ -136,14 +136,14 @@ namespace SSO.Passport.IdentityServer.Controllers
             UserGroup @group = UserGroupBll.GetById(id);
             if (@group != null)
             {
-                (IQueryable<ClientApp>, IQueryable<UserInfo>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) details = UserGroupBll.Details(@group);
+                (IQueryable<ClientApp>, IQueryable<UserInfo>, List<UserGroup>, List<UserGroupRole>, List<Permission>, List<Control>, List<Menu>) details = UserGroupBll.Details(@group);
                 return ResultData(new
                 {
                     result = group.Mapper<UserGroupOutputDto>(),
-                    apps = details.Item1.Mapper<List<ClientAppInputDto>>(),
-                    users = details.Item2.Mapper<List<UserInfoDto>>(),
+                    apps = details.Item1.ToList().Mapper<List<ClientAppInputDto>>(),
                     groups = details.Item3.Mapper<List<UserGroupInputDto>>(),
-                    roles = details.Item4.Mapper<List<RoleInputDto>>(),
+                    roles_allow = details.Item4.Where(g => g.HasRole).Select(g => g.Role).Mapper<List<RoleInputDto>>(),
+                    roles_forbid = details.Item4.Where(g => !g.HasRole).Select(g => g.Role).Mapper<List<RoleInputDto>>(),
                     permissions = details.Item5.Mapper<List<PermissionInputDto>>(),
                     controls = details.Item6.Mapper<List<ControlOutputDto>>(),
                     menus = details.Item7.Mapper<List<MenuOutputDto>>()
@@ -152,6 +152,43 @@ namespace SSO.Passport.IdentityServer.Controllers
             return ResultData(null, false, "用户组不存在");
         }
 
+        /// <summary>
+        /// 获取该用户组的用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="kw"></param>
+        /// <param name="appid">子系统appid</param>
+        /// <returns></returns>
+        public ActionResult Users(int id, int page = 1, int size = 10, string kw = "", string appid = "")
+        {
+            Expression<Func<UserInfo, bool>> where;
+            if (!string.IsNullOrEmpty(kw))
+            {
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.UserGroup.Any(c => c.Id == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(c => c.AppId.Equals(appid)) && u.UserGroup.Any(c => c.Id == id) && (u.Username.Contains(kw) || u.Email.Contains(kw) || u.PhoneNumber.Contains(kw));
+                }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(appid))
+                {
+                    where = u => u.UserGroup.Any(c => c.Id == id);
+                }
+                else
+                {
+                    where = u => u.ClientApp.Any(c => c.AppId.Equals(appid)) && u.UserGroup.Any(c => c.Id == id);
+                }
+            }
+            List<UserInfoDto> my = UserInfoBll.LoadPageEntities<DateTime, UserInfoDto>(page, size, out int total, where, u => u.LastLoginTime, false).ToList();//属于该应用
+            return PageResult(my, size, total);
+        }
         #endregion
 
         #region 权限配置

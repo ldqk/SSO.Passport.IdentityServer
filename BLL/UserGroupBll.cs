@@ -63,9 +63,10 @@ namespace BLL
         /// <summary>
         /// 获取用户组所有的访问控制详情
         /// </summary>
+        /// <param name="group"></param>
         /// <param name="g"></param>
         /// <returns></returns>
-        public (IQueryable<ClientApp>, IQueryable<UserInfo>, List<UserGroup>, List<Role>, List<Permission>, List<Control>, List<Menu>) Details(UserGroup group)
+        public (IQueryable<ClientApp>, IQueryable<UserInfo>, List<UserGroup>, List<UserGroupRole>, List<Permission>, List<Control>, List<Menu>) Details(UserGroup @group)
         {
             DataContext context = BaseDal.GetDataContext();
             IQueryable<ClientApp> apps = new ClientAppBll().LoadEntities(a => a.UserGroup.Any(p => p.Id == group.Id));
@@ -73,8 +74,9 @@ namespace BLL
             List<UserGroup> groups = new List<UserGroup>();
             List<Control> controls = new List<Control>();
             List<Menu> menus = new List<Menu>();
-            List<Role> roles = new List<Role>();
             List<Permission> permissions = new List<Permission>();
+            List<UserGroupRole> groupRoles = new List<UserGroupRole>();
+
             //2.1 拿到所有上级用户组
             int[] gids = context.Database.SqlQuery<int>("exec sp_getParentGroupIdByChildId " + group.Id).ToArray(); //拿到所有上级用户组
             foreach (int i in gids)
@@ -84,9 +86,10 @@ namespace BLL
                 {
                     groups.Add(gg);
                 }
-                List<int> noRoleIds = gg?.UserGroupPermission.Where(x => !x.HasRole).Select(x => x.Id).ToList(); //没有角色的id集合
-                gg?.UserGroupPermission.ForEach(ugp =>
+                List<int> noRoleIds = gg?.UserGroupRole.Where(x => !x.HasRole).Select(x => x.Id).ToList(); //没有角色的id集合
+                gg?.UserGroupRole.ForEach(ugp =>
                 {
+                    groupRoles.Add(ugp);
                     if (ugp.HasRole)
                     {
                         //角色可用，取并集
@@ -95,7 +98,6 @@ namespace BLL
                         foreach (int r in rids)
                         {
                             Role role = context.Role.FirstOrDefault(o => o.Id == r);
-                            roles.Add(role);
                             role?.Permission.ForEach(p =>
                             {
                                 //2.3 拿到所有上级权限
@@ -118,7 +120,7 @@ namespace BLL
                     }
                 });
             }
-            return (apps, users, groups, roles.Distinct().ToList(), permissions.Distinct().ToList(), controls.Distinct().ToList(), menus.Distinct().ToList());
+            return (apps, users, groups, groupRoles.Distinct().ToList(), permissions.Distinct().ToList(), controls.Distinct().ToList(), menus.Distinct().ToList());
         }
 
     }

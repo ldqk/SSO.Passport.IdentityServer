@@ -8,6 +8,7 @@ using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
 using Masuit.Tools.Net;
 using Masuit.Tools.Security;
+using SSO.Core.Model;
 
 namespace SSO.Core.Client
 {
@@ -52,7 +53,7 @@ namespace SSO.Core.Client
                 if (AuthernUtil.CurrentUser == null)
                 {
                     string reqToken = request["token"];
-                    string ticket = request["ticket"];
+                    string ticket = request["ticket"] ?? request.Headers["Authorization"];
                     Cache cache = HttpContext.Current.Cache;
                     //每次刷新页面的时候首先删除Token
                     if (string.IsNullOrEmpty(reqToken) || string.IsNullOrEmpty(ticket))

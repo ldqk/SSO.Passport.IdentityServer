@@ -780,3 +780,109 @@ myApp.controller('permissionMenus', ["$timeout", "$state", "$scope", "$http","$s
 		});
 	}
 }]);
+myApp.controller('permissionDetails', ["$timeout", "$state", "$scope", "$http","$stateParams","NgTableParams", function($timeout, $state, $scope, $http,$stateParams,NgTableParams) {
+	window.hub.disconnect();
+	$scope.id=$stateParams.id;
+	$scope.loading();
+	var pending=false;
+	var self = this;
+	$scope.request("/permission/Details/"+$scope.id,null, function(data) {
+		$scope.permission=data.Data.result;
+		self.apps = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.apps
+		});
+		self.roles = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.roles
+		});
+		self.permissions = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.permissions
+		});
+	});
+	self.stats = [];
+	self.data = {};
+	$scope.kw = "";
+	$scope.paginationConf_user1 = {
+		currentPage: 1,
+		itemsPerPage: 10,
+		pagesLength: 25,
+		perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+		//rememberPerPage: 'perPageItems',
+		onChange: function() {
+			if(pending)return;
+			self.GetUserPageData($scope.paginationConf_user1.currentPage, $scope.paginationConf_user1.itemsPerPage);
+		}
+	};
+	$scope.paginationConf_user2 = {
+		currentPage: 1,
+		itemsPerPage: 10,
+		pagesLength: 25,
+		perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+		//rememberPerPage: 'perPageItems',
+		onChange: function() {
+			if(pending)return;
+			self.GetUserPageData($scope.paginationConf_user2.currentPage, $scope.paginationConf_user2.itemsPerPage);
+		}
+	};
+	this.GetUserPageData = function(page, size) {
+		pending=true;
+		$http.post("/permission/users", {
+			id:$scope.id,
+			appid:$scope.appid,
+			page,
+			size,
+			kw: $scope.kw,
+			has:true
+		}).then(function(res) {
+			$scope.paginationConf_user1.totalItems = res.data.TotalCount;
+			$("div[ng-table-pagination]").remove();
+			self.users_true = new NgTableParams({
+				count: 50000
+			}, {
+				filterDelay: 0,
+				dataset: res.data.Data
+			});
+			$scope.loadingDone();
+			pending=false;
+		});
+		$http.post("/permission/users", {
+			id:$scope.id,
+			appid:$scope.appid,
+			page,
+			size,
+			kw: $scope.kw,
+			has:false
+		}).then(function(res) {
+			$scope.paginationConf_user2.totalItems = res.data.TotalCount;
+			$("div[ng-table-pagination]").remove();
+			self.users_not = new NgTableParams({
+				count: 50000
+			}, {
+				filterDelay: 0,
+				dataset: res.data.Data
+			});
+			$scope.loadingDone();
+			pending=false;
+		});
+	}
+	
+	var _timeout;
+	$scope.search = function(kw) {
+		if (_timeout) {
+			$timeout.cancel(_timeout);
+		}
+		_timeout = $timeout(function() {
+			$scope.kw = kw;
+			self.GetUserPageData($scope.paginationConf_user1.currentPage, $scope.paginationConf_user1.itemsPerPage);
+			_timeout = null;
+		}, 500);
+	}
+}]);

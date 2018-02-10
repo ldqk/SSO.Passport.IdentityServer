@@ -604,3 +604,84 @@ myApp.controller('groupApps', ["$timeout", "$state", "$scope", "$http","$statePa
 		});
 	}
 }]);
+myApp.controller('groupDetails', ["$timeout", "$state", "$scope", "$http","$stateParams","NgTableParams", function($timeout, $state, $scope, $http,$stateParams,NgTableParams) {
+	window.hub.disconnect();
+	$scope.id=$stateParams.id;
+	$scope.loading();
+	var pending=false;
+	var self = this;
+	$scope.request("/group/Details/"+$scope.id,null, function(data) {
+		$scope.group=data.Data.result;
+		self.apps = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.apps
+		});
+		self.roles_allow = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.roles_allow
+		});
+		self.roles_forbid = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.roles_forbid
+		});
+		self.permissions = new NgTableParams({
+			count: 10
+		}, {
+			filterDelay: 0,
+			dataset: data.Data.permissions
+		});
+	});
+	self.stats = [];
+	self.data = {};
+	$scope.kw = "";
+	$scope.paginationConf_user = {
+		currentPage: 1,
+		itemsPerPage: 10,
+		pagesLength: 25,
+		perPageOptions: [1, 5, 10, 15, 20, 30, 40, 50, 100, 200],
+		//rememberPerPage: 'perPageItems',
+		onChange: function() {
+			if(pending)return;
+			self.GetUserPageData($scope.paginationConf_user.currentPage, $scope.paginationConf_user.itemsPerPage);
+		}
+	};
+	this.GetUserPageData = function(page, size) {
+		pending=true;
+		$http.post("/group/users", {
+			id:$scope.id,
+			appid:$scope.appid,
+			page,
+			size,
+			kw: $scope.kw
+		}).then(function(res) {
+			$scope.paginationConf_user.totalItems = res.data.TotalCount;
+			$("div[ng-table-pagination]").remove();
+			self.users = new NgTableParams({
+				count: 50000
+			}, {
+				filterDelay: 0,
+				dataset: res.data.Data
+			});
+			$scope.loadingDone();
+			pending=false;
+		});
+	}
+	
+	var _timeout;
+	$scope.search = function(kw) {
+		if (_timeout) {
+			$timeout.cancel(_timeout);
+		}
+		_timeout = $timeout(function() {
+			$scope.kw = kw;
+			self.GetUserPageData($scope.paginationConf_user.currentPage, $scope.paginationConf_user.itemsPerPage);
+			_timeout = null;
+		}, 500);
+	}
+}]);

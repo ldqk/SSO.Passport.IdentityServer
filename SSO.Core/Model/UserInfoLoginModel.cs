@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SSO.Core.Client
+namespace SSO.Core.Model
 {
     public class UserInfoLoginModel
     {
