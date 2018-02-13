@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
@@ -58,14 +57,16 @@ namespace SSO.Core.Client
         /// <returns></returns>
         public static string CallServerApi(string path, IDictionary<string, string> param = null)
         {
-            HttpClient client = new HttpClient() { BaseAddress = new Uri(ConfigurationManager.AppSettings["PassportUrl"] ?? $"{HttpContext.Current.Request.Url.Scheme}://{HttpContext.Current.Request.Url.Authority}") };
-            int time = DateTime.Now.GetTotalSeconds().ToInt32();
-            string salt = ConfigurationManager.AppSettings["encryptSalt"] ?? "masuit".DesEncrypt();
-            string hash = (time + salt).MDString();
-            StringBuilder sb = new StringBuilder();
-            param?.ForEach(kv => sb.Append(kv.Key + "=" + kv.Value + "&"));
-            Task<string> task = client.GetStringAsync($"{path}?{sb}time={time}&hash={hash}");
-            return task.Result;
+            using (var client = new HttpClient() { BaseAddress = new Uri(ConfigurationManager.AppSettings["PassportUrl"] ?? $"{HttpContext.Current.Request.Url.Scheme}://{HttpContext.Current.Request.Url.Authority}") })
+            {
+                int time = DateTime.Now.GetTotalSeconds().ToInt32();
+                string salt = ConfigurationManager.AppSettings["encryptSalt"] ?? "masuit".DesEncrypt();
+                string hash = (time + salt).MDString();
+                StringBuilder sb = new StringBuilder();
+                param?.ForEach(kv => sb.Append(kv.Key + "=" + kv.Value + "&"));
+                var task = client.GetStringAsync($"{path}?{sb}time={time}&hash={hash}");
+                return task.Result;
+            }
         }
 
         /// <summary>
