@@ -657,6 +657,7 @@
     <Content Include="Assets\semantic\themes\default\assets\fonts\icons.woff" />
     <Content Include="Assets\semantic\themes\default\assets\fonts\icons.woff2" />
     <None Include="bundleconfig.json" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.4.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />

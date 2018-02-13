@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Text;
+using System.Web.Mvc;
+using Masuit.Tools.Logging;
 
 namespace SSO.Passport.IdentityServer.Models
 {
