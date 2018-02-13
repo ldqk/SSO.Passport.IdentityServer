@@ -11,7 +11,7 @@ namespace WebAppClient2.Controllers
         {
             return View();
         }
-
+        [PermissionFilter(Granularity = PermissionGranularity.Action)]
         public ActionResult Acl()
         {
             UserModel userModel = LoginService.GetAccessControls(AuthernUtil.CurrentUser.Id);

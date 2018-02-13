@@ -35,7 +35,7 @@ namespace SSO.Core.Client
         /// <summary>
         /// 权限粒度
         /// </summary>
-        public PermissionGranularity Granularity { get; set; }
+        public PermissionGranularity Granularity { get; set; } = PermissionGranularity.Action;
 
         /// <summary>在执行操作方法之前由 ASP.NET MVC 框架调用。</summary>
         /// <param name="filterContext">筛选器上下文。</param>
@@ -59,7 +59,7 @@ namespace SSO.Core.Client
                 {
                     return;
                 }
-                string token = filterContext.HttpContext.Request.Headers["Authorization"] ?? filterContext.HttpContext.Request["token"];
+                string token = filterContext.HttpContext.Request.Headers["Authorization"] ?? filterContext.HttpContext.Request["token"] ?? userInfo.Id;
                 UserModel userModel = LoginService.GetAccessControls(token);
 
                 switch (Granularity)

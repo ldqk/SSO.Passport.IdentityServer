@@ -2,9 +2,7 @@
 using System.Text;
 using System.Web.Mvc;
 using Autofac;
-using Common;
 using IBLL;
-using Masuit.Tools.Net;
 using Masuit.Tools.NoSQL;
 using Models.Dto;
 using Models.ViewModel;
@@ -13,7 +11,7 @@ using SSO.Core.Client;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {
-    [Authority(Code = AuthCodeEnum.Login)]
+    [Authority(Code = AuthCodeEnum.Login), PermissionFilter(Granularity = PermissionGranularity.Action)]
     public class BaseController : Controller
     {
         protected IUserInfoBll UserInfoBll { get; set; } = AutofacConfig.Container.Resolve<IUserInfoBll>();
