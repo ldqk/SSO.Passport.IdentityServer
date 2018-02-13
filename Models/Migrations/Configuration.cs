@@ -81,7 +81,7 @@ namespace Models.Migrations
 
                 //初始化用户
                 var salt = $"{new Random().StrictNext()}{DateTime.Now.GetTotalMilliseconds()}".MDString2(Guid.NewGuid().ToString()).Base64Encrypt();
-                IList<UserInfo> userInfos = new List<UserInfo>()
+                IList<UserInfo> userInfos = new List<UserInfo>
                 {
                     new UserInfo() { Username = "admin", Password = "admin".MDString2(salt), SaltKey = salt, Email = "admin@masuit.com", PhoneNumber = "15205201520", ClientApp = apps,AccessKey = Guid.NewGuid().ToString().MDString(),IsMaster = true,IsPreset = true,Avatar = "/Assets/logo.png"}
                 };
