@@ -62,11 +62,12 @@ namespace SSO.Core.Client
             }
             if (RedisHelper.KeyExists(appid + token))
             {
+                RedisHelper.Expire(appid + token, TimeSpan.FromMinutes(20));
                 return RedisHelper.GetString<UserModel>(appid + token);
             }
             string data = AuthernUtil.CallServerApi($"/Api/User/{appid}/{token}");
             UserModel userModel = JsonConvert.DeserializeObject<UserModel>(data);
-            RedisHelper.SetString(appid + token, userModel);
+            RedisHelper.SetString(appid + token, userModel, TimeSpan.FromMinutes(20));
             return userModel;
         }
 
