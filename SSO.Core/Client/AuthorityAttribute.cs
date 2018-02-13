@@ -15,10 +15,6 @@ namespace SSO.Core.Client
     public enum AuthCodeEnum
     {
         /// <summary>
-        /// 开放
-        /// </summary>
-        Public,
-        /// <summary>
         /// 登录校验
         /// </summary>
         Login,
@@ -45,6 +41,11 @@ namespace SSO.Core.Client
         /// <param name="filterContext"></param> 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            if (filterContext.ActionDescriptor.GetCustomAttributes(typeof(AllowAnonymousAttribute), true).Length > 0)
+            {
+                filterContext.HttpContext.SkipAuthorization = true;
+                return;
+            }
             if (Code is AuthCodeEnum.Login)
             {
                 var request = filterContext.HttpContext.Request;

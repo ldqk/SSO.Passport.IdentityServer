@@ -8,6 +8,7 @@ using System.Web;
 using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
 using Masuit.Tools.Net;
+using Masuit.Tools.NoSQL;
 using Masuit.Tools.Security;
 using SSO.Core.Model;
 
@@ -22,10 +23,27 @@ namespace SSO.Core.Client
         /// <returns></returns>
         public static string CreateToken(DateTime timestamp) => timestamp.GetTotalMilliseconds().ToString().MDString2();
 
+        public static RedisHelper RedisHelper { get; set; } = new RedisHelper();
         /// <summary>
         /// 获取当前客户端登录用户
         /// </summary>
-        public static UserInfoLoginModel CurrentUser => HttpContext.Current.Session?.GetByCookieRedis<UserInfoLoginModel>(Constants.USER_SESSION_KEY);
+        public static UserInfoLoginModel CurrentUser
+        {
+            get
+            {
+                UserInfoLoginModel user = HttpContext.Current.Session?.GetByCookieRedis<UserInfoLoginModel>(Constants.USER_SESSION_KEY);
+                if (user is null)
+                {
+                    string token = HttpContext.Current.Request.Headers["Authorization"] ?? HttpContext.Current.Request["token"];
+                    if (RedisHelper.KeyExists(token))
+                    {
+                        user = RedisHelper.GetString<UserInfoLoginModel>(token);
+                        RedisHelper.Expire(token, TimeSpan.FromMinutes(20));
+                    }
+                }
+                return user;
+            }
+        }
 
         /// <summary>
         /// 注销客户端当前用户

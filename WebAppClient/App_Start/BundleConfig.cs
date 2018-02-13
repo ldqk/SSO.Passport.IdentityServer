@@ -6,14 +6,14 @@ namespace WebAppClient
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
-            //常用的javascript脚本
-            bundles.Add(new ScriptBundle("~/scripts").Include(
-                "~/Scripts/modernizr-*"));
+            ////常用的javascript脚本
+            //bundles.Add(new ScriptBundle("~/scripts").Include(
+            //    "~/Scripts/modernizr-*"));
 
-            //css样式
-            bundles.Add(new StyleBundle("~/styles").Include(
+            ////css样式
+            //bundles.Add(new StyleBundle("~/styles").Include(
 
-                ));
+            //    ));
         }
     }
 }

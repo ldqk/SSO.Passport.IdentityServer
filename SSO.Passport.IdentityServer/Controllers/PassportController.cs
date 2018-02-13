@@ -10,6 +10,7 @@ using Common;
 using IBLL;
 using Masuit.Tools;
 using Masuit.Tools.Net;
+using Masuit.Tools.NoSQL;
 using Masuit.Tools.Security;
 using Masuit.Tools.Strings;
 using Models.Dto;
@@ -23,6 +24,7 @@ namespace SSO.Passport.IdentityServer.Controllers
 {
     public class PassportController : Controller
     {
+        public static RedisHelper RedisHelper { get; set; } = new RedisHelper();
         public IUserInfoBll UserInfoBll { get; set; }
         public ILoginRecordBll LoginRecordBll { get; set; }
 
@@ -80,7 +82,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         public ActionResult Login()
         {
-            string from = Request["from"];
+            string from = Request["ReturnUrl"];
             if (!string.IsNullOrEmpty(from))
             {
                 from = Server.UrlDecode(from);
@@ -155,7 +157,6 @@ namespace SSO.Passport.IdentityServer.Controllers
                     HttpCookie passCookie = new HttpCookie("password", password.Trim().DesEncrypt(ConfigurationManager.AppSettings["BaiduAK"])) { Expires = DateTime.Now.AddDays(7) };
                     Response.Cookies.Add(passCookie);
                 }
-
 #if !DEBUG
                 HangfireHelper.CreateJob(typeof(IHangfireBackJob), "LoginRecord", "default", userInfo, Request.UserHostAddress); 
 #endif

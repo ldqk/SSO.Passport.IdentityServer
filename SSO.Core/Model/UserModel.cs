@@ -7,13 +7,13 @@ namespace SSO.Core.Model
     public class UserModel
     {
         [JsonProperty("user")]
-        public User User { get; set; }
+        public UserInfoLoginModel User { get; set; }
         [JsonProperty("acl")]
         public List<AccessControl> Acl { get; set; }
         [JsonProperty("menus")]
         public List<Menu> Menus { get; set; }
     }
-    public class User
+    public class UserInfoLoginModel
     {
         [JsonProperty("Id")]
         public string Id { get; set; }

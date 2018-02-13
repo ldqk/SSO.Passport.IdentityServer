@@ -54,14 +54,22 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// 获取用户信息、访问控制权限、菜单
         /// </summary>
         /// <param name="appid">appid</param>
-        /// <param name="token"></param>
+        /// <param name="token">token或用户id</param>
         /// <returns></returns>
         [HttpPost, HttpGet, Route("api/user/{appid}/{token}")]
         public object User(string appid, string token)
         {
-            if (!RedisHelper.KeyExists(token)) return null;
-            RedisHelper.Expire(token, TimeSpan.FromMinutes(20));
-            UserInfoDto user = RedisHelper.GetString<UserInfoDto>(token);
+            UserInfoDto user;
+            if (Guid.TryParse(token, out Guid userid))
+            {
+                user = UserInfoBll.GetById(userid).Mapper<UserInfoDto>();
+            }
+            else
+            {
+                if (!RedisHelper.KeyExists(token)) return null;
+                RedisHelper.Expire(token, TimeSpan.FromMinutes(20));
+                user = RedisHelper.GetString<UserInfoDto>(token);
+            }
             List<ControlOutputDto> acl = UserInfoBll.GetAccessControls(appid, user.Id);
             List<MenuOutputDto> menus = UserInfoBll.GetMenus(appid, user.Id);
             return new { user, acl, menus };
@@ -86,7 +94,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <summary>
         /// 检查登录状态
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">token或用户id</param>
         /// <returns></returns>
         [HttpGet, HttpPost, Route("api/check/{token}")]
         public bool CheckLogin(string token)
@@ -99,7 +107,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <summary>
         /// api注销登陆
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">token或用户id</param>
         /// <returns></returns>
         [HttpGet, HttpPost, Route("api/logout/{token}")]
         public bool Logout(string token) => RedisHelper.DeleteKey(token);
@@ -107,7 +115,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <summary>
         /// api修改密码
         /// </summary>
-        /// <param name="token">登录token</param>
+        /// <param name="token">登录token或用户id</param>
         /// <param name="old">旧密码</param>
         /// <param name="password">新密码</param>
         /// <param name="confirm">确认新密码</param>
@@ -115,7 +123,18 @@ namespace SSO.Passport.IdentityServer.Controllers
         [HttpPost]
         public IHttpActionResult ChangePasspord(string token, string old, string password, string confirm)
         {
-            if (!RedisHelper.KeyExists(token)) return ResultData(null, false, "用户未登录系统！");
+            UserInfoDto user;
+            if (Guid.TryParse(token, out var userid))
+            {
+                //session登录
+                user = UserInfoBll.GetById(userid).Mapper<UserInfoDto>();
+            }
+            else
+            {
+                //api登录
+                if (!RedisHelper.KeyExists(token)) return ResultData(null, false, "用户未登录系统！");
+                user = RedisHelper.GetString<UserInfoDto>(token);
+            }
             if (password.Length <= 6)
             {
                 return ResultData(null, false, "密码过短，至少需要6个字符！");
@@ -132,7 +151,6 @@ namespace SSO.Passport.IdentityServer.Controllers
                                             .{6,30}                         #至少6个字符，最多30个字符
                                             ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace);
             if (!regex.Match(password).Success) return ResultData(null, false, "密码强度值不够，密码必须包含数字，必须包含小写或大写字母，必须包含至少一个特殊符号，至少6个字符，最多30个字符！");
-            UserInfoDto user = RedisHelper.GetString<UserInfoDto>(token);
             bool b = UserInfoBll.ChangePassword(user.Id, old, password);
             return ResultData(null, b, b ? $"密码修改成功，新密码为：{password}！" : "密码修改失败，可能是原密码不正确！");
         }
@@ -140,13 +158,23 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <summary>
         /// 修改用户名
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">token或用户id</param>
         /// <param name="username"></param>
         /// <returns></returns>
         public IHttpActionResult ChangeUsername(string token, string username)
         {
-            if (!RedisHelper.KeyExists(token)) return ResultData(null, false, "用户未登录系统！");
-            var user = RedisHelper.GetString<UserInfoDto>(token);
+            UserInfoDto user;
+            if (Guid.TryParse(token, out var userid))
+            {
+                //session登录
+                user = UserInfoBll.GetById(userid).Mapper<UserInfoDto>();
+            }
+            else
+            {
+                //api登录
+                if (!RedisHelper.KeyExists(token)) return ResultData(null, false, "用户未登录系统！");
+                user = RedisHelper.GetString<UserInfoDto>(token);
+            }
             var userInfo = UserInfoBll.GetById(user.Id);
             if (!username.Equals(userInfo.Username) && UserInfoBll.UsernameExist(username))
             {
@@ -160,14 +188,24 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <summary>
         /// 获取登陆记录
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">token或用户id</param>
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <returns></returns>
         public IHttpActionResult LoginRecord(string token, int page = 1, int size = 10)
         {
-            if (!RedisHelper.KeyExists(token)) return ResultData(null, false, "用户未登录系统！");
-            UserInfoDto user = RedisHelper.GetString<UserInfoDto>(token);
+            UserInfoDto user;
+            if (Guid.TryParse(token, out var userid))
+            {
+                //session登录
+                user = UserInfoBll.GetById(userid).Mapper<UserInfoDto>();
+            }
+            else
+            {
+                //api登录
+                if (!RedisHelper.KeyExists(token)) return ResultData(null, false, "用户未登录系统！");
+                user = RedisHelper.GetString<UserInfoDto>(token);
+            }
             List<LoginRecordDto> list = LoginRecordBll.LoadPageEntitiesNoTracking<DateTime, LoginRecordDto>(page, size, out int total, r => r.UserInfoId.Equals(user.Id), r => r.LoginTime, false).ToList();
             int pages = (int)Math.Ceiling(total * 1.0 / size);
             return ResultData(new { list, pages });
