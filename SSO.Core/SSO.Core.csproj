@@ -78,10 +78,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\AuthorityAttribute.cs" />
+    <Compile Include="Filter\AuthorityAttribute.cs" />
     <Compile Include="Client\AuthernUtil.cs" />
     <Compile Include="Client\LoginService.cs" />
-    <Compile Include="Client\PermissionFilterAttribute.cs" />
+    <Compile Include="Filter\PermissionFilterAttribute.cs" />
     <Compile Include="Model\Menu.cs" />
     <Compile Include="Model\AccessControl.cs" />
     <Compile Include="Model\ResponseModel.cs" />

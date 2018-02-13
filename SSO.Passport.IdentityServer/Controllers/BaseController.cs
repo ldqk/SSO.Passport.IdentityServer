@@ -7,7 +7,7 @@ using Masuit.Tools.NoSQL;
 using Models.Dto;
 using Models.ViewModel;
 using Newtonsoft.Json;
-using SSO.Core.Client;
+using SSO.Core.Filter;
 
 namespace SSO.Passport.IdentityServer.Controllers
 {

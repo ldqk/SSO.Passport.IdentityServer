@@ -8,9 +8,10 @@ using Masuit.Tools;
 using Masuit.Tools.DateTimeExt;
 using Masuit.Tools.Net;
 using Masuit.Tools.Security;
+using SSO.Core.Client;
 using SSO.Core.Model;
 
-namespace SSO.Core.Client
+namespace SSO.Core.Filter
 {
     public enum AuthCodeEnum
     {

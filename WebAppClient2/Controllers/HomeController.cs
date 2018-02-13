@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using SSO.Core.Client;
+using SSO.Core.Filter;
 using SSO.Core.Model;
 
 namespace WebAppClient2.Controllers

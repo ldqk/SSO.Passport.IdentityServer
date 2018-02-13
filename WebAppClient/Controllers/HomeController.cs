@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using SSO.Core;
 using SSO.Core.Client;
+using SSO.Core.Filter;
 
 namespace WebAppClient.Controllers
 {

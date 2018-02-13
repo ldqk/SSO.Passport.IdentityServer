@@ -3,9 +3,10 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Masuit.Tools;
+using SSO.Core.Client;
 using SSO.Core.Model;
 
-namespace SSO.Core.Client
+namespace SSO.Core.Filter
 {
     public enum PermissionGranularity
     {
