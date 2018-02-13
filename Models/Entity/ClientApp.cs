@@ -25,6 +25,11 @@ namespace Models.Entity
         [Required]
         public string AppName { get; set; }
 
+        /// <summary>
+        /// ÓòÃû
+        /// </summary>
+        public string Domain { get; set; }
+
         public string Description { get; set; }
 
         /// <summary>

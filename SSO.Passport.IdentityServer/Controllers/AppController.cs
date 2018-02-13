@@ -20,7 +20,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// </summary>
         /// <param name="name">子系统名字</param>
         /// <returns></returns>
-        public ActionResult Add(string name)
+        public ActionResult Add(string name, string domain)
         {
             if (ClientAppBll.Any(a => a.AppName.Equals(name)))
             {
@@ -28,7 +28,7 @@ namespace SSO.Passport.IdentityServer.Controllers
             }
 
             string appid = Guid.NewGuid().ToString().MDString();
-            ClientApp app = new ClientApp() { AppName = name, AppId = appid, AppSecret = appid.MDString(ConfigurationManager.AppSettings["BaiduAK"]) };
+            ClientApp app = new ClientApp() { AppName = name, Domain = domain, AppId = appid, AppSecret = appid.MDString(ConfigurationManager.AppSettings["BaiduAK"]) };
             app = ClientAppBll.AddEntitySaved(app);
             if (app != null)
             {

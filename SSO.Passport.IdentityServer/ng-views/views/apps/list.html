@@ -16,14 +16,18 @@
             <col width="10%" />
             <col width="15%" />
             <col width="15%" />
-            <col width="5%" />
-            <col width="5%" />
-            <col width="35%" />
             <col width="15%" />
+            <col width="5%" />
+            <col width="5%" />
+            <col width="25%" />
+            <col width="10%" />
         </colgroup>
         <tr ng-repeat="row in $data" ng-form="rowForm" tracked-table-row="row" ng-class="{'text-danger':row.Preset}">
             <td title="'子系统名字'" filter="{AppName: 'text'}" sortable="'AppName'">
                 {{row.AppName}}
+            </td>
+            <td title="'域名'" filter="{Domain: 'text'}">
+                {{row.Domain}}
             </td>
             <td title="'AppId'" filter="{AppId: 'text'}">
                 {{row.AppId}}

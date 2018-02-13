@@ -10,5 +10,11 @@ namespace Models.Dto
         /// </summary>
         [Required]
         public string AppName { get; set; }
+
+        /// <summary>
+        /// 域名
+        /// </summary>
+        public string Domain { get; set; }
+
     }
 }

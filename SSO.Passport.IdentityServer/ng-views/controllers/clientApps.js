@@ -57,8 +57,8 @@
 		$scope.add = function() {
 			swal({
 				title: "添加应用",
-				text: "请输入应用名:",
-				input: "text",
+				html:'<div class="input-group"><span class="input-group-addon">子系统应用名</span><input id="name" class="form-control" autofocus placeholder="子系统应用名"></div>' +
+						'<div class="input-group"><span class="input-group-addon">子系统域名</span><input id="domain" class="form-control" placeholder="子系统域名"></div>',
 				showCancelButton: true,
 				closeOnConfirm: false,
 				animation: "slide-from-top",
@@ -67,17 +67,17 @@
 				inputPlaceholder: "请输入应用名",
 				preConfirm: function(inputValue) {
 					return new Promise(function(resolve, reject) {
-						if (inputValue === false) {
-							return false;
+						if ($("#name").val().length<=0) {
+							reject("应用程序名称不能为空！");
 						}
-						if (inputValue === "") {
-							swal("应用名不能为空!", "", "error");
-							return false;
+						if ($("#domain").val().length<=0) {
+							reject("应用程序域名不能为空！");
 						}
 						$scope.request("/app/Add", {
-							name: inputValue
+							name: $("#name").val(),
+							domain:$("#domain").val()
 						}, function(data) {
-							data.inputValue = inputValue;
+							data.inputValue = $("#name").val();
 							if (data.Success) {
 								resolve(data);
 							} else {
