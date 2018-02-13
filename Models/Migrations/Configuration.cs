@@ -76,6 +76,7 @@ namespace Models.Migrations
                     new Permission() {PermissionName = "主系统角色管理",Controls = controls.Where(c => c.Controller.Equals("Role")).ToList(),Menu = menus.Where(m => m.Name.Equals("角色管理")).ToList(), ClientApp = apps,Description = "主系统角色管理"},
                     new Permission() {PermissionName = "主系统系统设置",Controls = controls.Where(c => c.Controller.Equals("System")).ToList(),Menu = settingsMenu, ClientApp = apps,Description = "主系统系统设置"},
                     new Permission() {PermissionName = "主系统用户管理",Controls = controls.Where(c => c.Controller.Equals("User")).ToList(),Menu = menus.Where(m => m.Name.Equals("用户管理")).ToList(), ClientApp = apps,Description = "主系统用户管理"},
+                    new Permission() {PermissionName = "只读权限",Controls = controls.Where(c => c.Name.Equals("获")).ToList(), ClientApp = apps,Description = "主系统用户管理"},
                 };
 
                 //初始化用户
