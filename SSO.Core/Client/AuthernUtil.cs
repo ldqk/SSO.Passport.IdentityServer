@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web;
@@ -64,8 +65,12 @@ namespace SSO.Core.Client
                 string hash = (time + salt).MDString();
                 StringBuilder sb = new StringBuilder();
                 param?.ForEach(kv => sb.Append(kv.Key + "=" + kv.Value + "&"));
-                var task = client.GetStringAsync($"{path}?{sb}time={time}&hash={hash}");
-                return task.Result;
+                var res = client.GetAsync($"{path}?{sb}time={time}&hash={hash}").Result;
+                if (res.StatusCode == HttpStatusCode.OK)
+                {
+                    return res.Content.ReadAsStringAsync().Result;
+                }
+                return $"请求授权中心路径{path}时服务器响应异常！";
             }
         }
 

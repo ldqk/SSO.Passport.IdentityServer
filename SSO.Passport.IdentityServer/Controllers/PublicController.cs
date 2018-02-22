@@ -60,7 +60,7 @@ namespace SSO.Passport.IdentityServer.Controllers
         public object User(string appid, string token)
         {
             UserInfoDto user;
-            if (Guid.TryParse(token, out Guid userid))
+            if (token.Contains("-") && Guid.TryParse(token, out var userid))
             {
                 user = UserInfoBll.GetById(userid).Mapper<UserInfoDto>();
             }
@@ -110,7 +110,10 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <param name="token">token或用户id</param>
         /// <returns></returns>
         [HttpGet, HttpPost, Route("api/logout/{token}")]
-        public bool Logout(string token) => RedisHelper.DeleteKey(token);
+        public bool Logout(string token)
+        {
+            return RedisHelper.DeleteKey(token);
+        }
 
         /// <summary>
         /// api修改密码
@@ -247,6 +250,15 @@ namespace SSO.Passport.IdentityServer.Controllers
                 return ResultData(null, false, "两次输入的密码不一致！");
             }
 
+            if (UserInfoBll.UsernameExist(name))
+            {
+                return ResultData(null, message: $"用户名【{name}】已经存在！");
+            }
+
+            if (UserInfoBll.EmailExist(email))
+            {
+                return ResultData(null, message: $"邮箱【{email}】已经存在！");
+            }
             var regex = new Regex(@"(?=.*[0-9])                     #必须包含数字
                                             (?=.*[a-zA-Z])                  #必须包含小写或大写字母
                                             (?=([\x21-\x7e]+)[^a-zA-Z0-9])  #必须包含特殊符号
@@ -280,5 +292,21 @@ namespace SSO.Passport.IdentityServer.Controllers
         /// <returns></returns>
         [HttpGet, Route("api/user/{id}")]
         public UserInfoDto GetUser(Guid id) => UserInfoBll.GetById(id).Mapper<UserInfoDto>();
+
+        /// <summary>
+        /// 根据token获取用户id
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public Guid UserId(string token)
+        {
+            if (RedisHelper.KeyExists(token))
+            {
+                Guid userid = Guid.Parse(RedisHelper.GetString(token));
+                return userid;
+            }
+            return Guid.Empty;
+        }
     }
 }

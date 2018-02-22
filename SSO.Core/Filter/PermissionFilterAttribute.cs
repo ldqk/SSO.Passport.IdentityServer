@@ -60,8 +60,7 @@ namespace SSO.Core.Filter
                 {
                     return;
                 }
-                string token = filterContext.HttpContext.Request.Headers["Authorization"] ?? filterContext.HttpContext.Request["token"] ?? userInfo.Id;
-                UserModel userModel = LoginService.GetAccessControls(token);
+                UserModel userModel = LoginService.GetAccessControls(userInfo.Id);
 
                 switch (Granularity)
                 {

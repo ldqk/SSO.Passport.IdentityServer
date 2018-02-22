@@ -222,8 +222,9 @@ namespace SSO.Passport.IdentityServer.Controllers
         public ActionResult Logout()
         {
             Session.RemoveByCookieRedis();
-            CookieHelper.SetCookie("username", String.Empty, DateTime.Now.AddDays(-1));
-            CookieHelper.SetCookie("password", String.Empty, DateTime.Now.AddDays(-1));
+            CookieHelper.SetCookie("username", string.Empty, DateTime.Now.AddDays(-1));
+            CookieHelper.SetCookie("password", string.Empty, DateTime.Now.AddDays(-1));
+            CookieHelper.SetCookie(Constants.USER_SESSION_KEY, string.Empty, DateTime.Now.AddDays(-1));
             if (Request.HttpMethod.ToLower().Equals("get"))
             {
                 return RedirectToAction("Index", "Home");

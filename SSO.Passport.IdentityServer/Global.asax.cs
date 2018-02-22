@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Masuit.Tools.Logging;
 using Z.BulkOperations;
 
 namespace SSO.Passport.IdentityServer
@@ -43,11 +45,20 @@ namespace SSO.Passport.IdentityServer
 
         protected void Application_Error(object sender, EventArgs e)
         {
-#if DEBUG
-            throw (Exception)sender;
-#else
-            Response.Redirect("/Error");
-#endif
+            HttpException exception = ((HttpApplication)sender).Context.Error as HttpException;
+            int? errorCode = exception?.GetHttpCode() ?? 503;
+            switch (errorCode)
+            {
+                case 404:
+                    Response.Redirect("/error");
+                    break;
+                case 503:
+                    LogManager.Error(exception);
+                    Response.Redirect("/ServiceUnavailable");
+                    break;
+                default:
+                    return;
+            }
         }
 
         protected void Session_End(object sender, EventArgs e)

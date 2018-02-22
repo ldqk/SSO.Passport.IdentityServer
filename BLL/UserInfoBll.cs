@@ -53,7 +53,7 @@ namespace BLL
         /// <returns></returns>
         public UserInfoDto Register(UserInfo userInfo)
         {
-            UserInfo exist = GetFirstEntity(u => u.Username.Equals(userInfo.Username) || u.Email.Equals(userInfo.Email) || u.PhoneNumber.Equals(userInfo.PhoneNumber));
+            UserInfo exist = GetFirstEntity(u => u.Username.Equals(userInfo.Username) || (userInfo.Email != null && u.Email.Equals(userInfo.Email)) || (userInfo.PhoneNumber != null && u.PhoneNumber.Equals(userInfo.PhoneNumber)));
             if (exist != null) return null;
             userInfo.Id = Guid.NewGuid();
             var salt = $"{new Random().StrictNext()}{DateTime.Now.GetTotalMilliseconds()}".MDString2(Guid.NewGuid().ToString()).Base64Encrypt();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Text;
 using System.Web;
@@ -18,20 +19,29 @@ namespace SSO.Core.Client
         /// <returns></returns>
         public static UserInfoLoginModel GetUserInfo(string token)
         {
+            string userid;
             if (RedisHelper.KeyExists(token))
             {
-                string userid = RedisHelper.GetString(token);
-                string data = AuthernUtil.CallServerApi($"/Api/User/{userid}");
-                try
-                {
-                    return JsonConvert.DeserializeObject<UserInfoLoginModel>(data);
-                }
-                catch
-                {
-                    return null;
-                }
+                userid = RedisHelper.GetString(token);
             }
-            return null;
+            else
+            {
+                userid = AuthernUtil.CallServerApi("/Api/UserId", new Dictionary<string, string>()
+                {
+                    { "token", token }
+                });
+                userid = userid.Trim('"');
+            }
+
+            string data = AuthernUtil.CallServerApi($"/Api/User/{userid}");
+            try
+            {
+                return JsonConvert.DeserializeObject<UserInfoLoginModel>(data);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -60,14 +70,14 @@ namespace SSO.Core.Client
             {
                 throw new ArgumentException("appid未配置，请先在web.config中AppSettings节点下添加AppId配置信息");
             }
-            if (RedisHelper.KeyExists(appid + token))
-            {
-                RedisHelper.Expire(appid + token, TimeSpan.FromMinutes(20));
-                return RedisHelper.GetString<UserModel>(appid + token);
-            }
+            //if (RedisHelper.KeyExists(appid + token))
+            //{
+            //    RedisHelper.Expire(appid + token, TimeSpan.FromMinutes(20));
+            //    return RedisHelper.GetString<UserModel>(appid + token);
+            //}
             string data = AuthernUtil.CallServerApi($"/Api/User/{appid}/{token}");
             UserModel userModel = JsonConvert.DeserializeObject<UserModel>(data);
-            RedisHelper.SetString(appid + token, userModel, TimeSpan.FromMinutes(20));
+            //RedisHelper.SetString(appid + token, userModel, TimeSpan.FromMinutes(20));
             return userModel;
         }
 

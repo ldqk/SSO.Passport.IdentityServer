@@ -5,14 +5,14 @@ using SSO.Core.Model;
 
 namespace WebAppClient2.Controllers
 {
+    [Authority(Code = AuthCodeEnum.Login)]
+    [PermissionFilter(Granularity = PermissionGranularity.Action)]
     public class HomeController : Controller
     {
-        [Authority(Code = AuthCodeEnum.Login)]
         public ActionResult Index()
         {
             return View();
         }
-        [PermissionFilter(Granularity = PermissionGranularity.Action)]
         public ActionResult Acl()
         {
             UserModel userModel = LoginService.GetAccessControls(AuthernUtil.CurrentUser.Id);
