@@ -73,6 +73,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IDAL\IDAL.csproj">
+      <Project>{7997FB01-C9C1-4793-A430-9CA3C3852B37}</Project>
+      <Name>IDAL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
       <Project>{5400CA01-CBCF-4531-A388-3057393D5B4F}</Project>
       <Name>Models</Name>

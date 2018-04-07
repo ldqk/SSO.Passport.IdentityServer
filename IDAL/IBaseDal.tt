@@ -22,6 +22,8 @@ namespace IDAL
 {   
 	public interface IBaseDal<T> where T : class, new()
     {
+        DataContext DataContext { get; set; }
+
         /// <summary>
         /// 获取数据上下文实例
         /// </summary>

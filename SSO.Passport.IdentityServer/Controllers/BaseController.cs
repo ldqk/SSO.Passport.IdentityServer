@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Web.Mvc;
-using Autofac;
 using IBLL;
 using Masuit.Tools.NoSQL;
 using Models.Dto;
@@ -14,14 +13,14 @@ namespace SSO.Passport.IdentityServer.Controllers
     [Authority(Code = AuthCodeEnum.Login), PermissionFilter(Granularity = PermissionGranularity.Action)]
     public class BaseController : Controller
     {
-        protected IUserInfoBll UserInfoBll { get; set; } = AutofacConfig.Container.Resolve<IUserInfoBll>();
-        protected IClientAppBll ClientAppBll { get; set; } = AutofacConfig.Container.Resolve<IClientAppBll>();
-        protected IRoleBll RoleBll { get; set; } = AutofacConfig.Container.Resolve<IRoleBll>();
-        protected IPermissionBll PermissionBll { get; set; } = AutofacConfig.Container.Resolve<IPermissionBll>();
-        protected IMenuBll MenuBll { get; set; } = AutofacConfig.Container.Resolve<IMenuBll>();
-        protected IUserGroupBll UserGroupBll { get; set; } = AutofacConfig.Container.Resolve<IUserGroupBll>();
-        protected IControlBll ControlBll { get; set; } = AutofacConfig.Container.Resolve<IControlBll>();
-        protected static RedisHelper RedisHelper { get; set; } = new RedisHelper();
+        protected IUserInfoBll UserInfoBll { get; set; } //= AutofacConfig.Container.Resolve<IUserInfoBll>();
+        protected IClientAppBll ClientAppBll { get; set; }// = AutofacConfig.Container.Resolve<IClientAppBll>();
+        protected IRoleBll RoleBll { get; set; }// = AutofacConfig.Container.Resolve<IRoleBll>();
+        protected IPermissionBll PermissionBll { get; set; }// = AutofacConfig.Container.Resolve<IPermissionBll>();
+        protected IMenuBll MenuBll { get; set; }// = AutofacConfig.Container.Resolve<IMenuBll>();
+        protected IUserGroupBll UserGroupBll { get; set; }// = AutofacConfig.Container.Resolve<IUserGroupBll>();
+        protected IControlBll ControlBll { get; set; }// = AutofacConfig.Container.Resolve<IControlBll>();
+        protected static RedisHelper RedisHelper { get; set; }// = new RedisHelper();
         public UserInfoDto CurrentUser { get; set; }
 
         protected ActionResult ResultData(object data, bool isTrue = true, string message = "", bool isLogin = true)

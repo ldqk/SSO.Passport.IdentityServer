@@ -7,6 +7,7 @@ namespace Common
 {
     public static class Assemblies
     {
-        public static Assembly BllAssembly { get; set; } = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", ConfigurationManager.AppSettings["BllPath"] ?? "BLL.dll"));
+        public static Assembly ServiceAssembly { get; set; } = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", ConfigurationManager.AppSettings["BllPath"] ?? "BLL.dll"));
+        public static Assembly RepositoryAssembly { get; set; } = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", ConfigurationManager.AppSettings["DalPath"] ?? "DAL.dll"));
     }
 }

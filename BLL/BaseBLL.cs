@@ -13,7 +13,7 @@ namespace BLL
 {
     public class BaseBll<T> : IBaseBll<T> where T : class, new()
     {
-        public IBaseDal<T> BaseDal { get; set; } = Factory.CreateInstance<IBaseDal<T>>("DAL." + typeof(T).Name + "Dal");
+        public IBaseDal<T> BaseDal { get; set; }// = Factory.CreateInstance<IBaseDal<T>>("DAL." + typeof(T).Name + "Dal");
 
         /// <summary>
         /// 获取所有实体

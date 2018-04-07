@@ -1,16 +1,19 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Data.Entity.Infrastructure;
 using System.Threading.Tasks;
 using EFSecondLevelCache;
+using IDAL;
 using Models.Entity;
 namespace IBLL
 {
-    public interface IBaseBll<T>
+    public interface IBaseBll<T> where T : class, new()
     {
+        IBaseDal<T> BaseDal { get; set; }
+
         /// <summary>
         /// 获取所有实体
         /// </summary>

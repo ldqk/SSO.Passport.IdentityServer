@@ -19,7 +19,7 @@ namespace DAL
 {
     public class BaseDal<T> : IBaseDal<T> where T : class, new()
     {
-        private DataContext db = WebExtension.GetDbContext<DataContext>();
+        public DataContext DataContext { get; set; }// = WebExtension.GetDbContext<DataContext>();
         /// <summary>
         /// 获取数据上下文实例
         /// </summary>
@@ -34,7 +34,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<T> GetAll()
         {
-            return db.Set<T>();
+            return DataContext.Set<T>();
         }
         /// <summary>
         /// 获取所有实体（不跟踪）
@@ -42,7 +42,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<T> GetAllNoTracking()
         {
-            return db.Set<T>().AsNoTracking();
+            return DataContext.Set<T>().AsNoTracking();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> GetAllFromCache(int timespan = 20)
         {
-            return db.Set<T>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return DataContext.Set<T>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> GetAllFromCacheNoTracking(int timespan = 20)
         {
-            return db.Set<T>().AsNoTracking().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return DataContext.Set<T>().AsNoTracking().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
         /// <summary>
         /// 获取所有实体（不跟踪）
@@ -71,7 +71,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<T>> GetAllFromCacheNoTrackingAsync(int timespan = 20)
         {
-            return await db.Set<T>().AsNoTracking().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return await DataContext.Set<T>().AsNoTracking().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<T>> GetAllFromCacheAsync(int timespan = 20)
         {
-            return await db.Set<T>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return await DataContext.Set<T>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public EFCachedQueryable<T> GetAllFromL2Cache()
         {
-            return db.Set<T>().Cacheable();
+            return DataContext.Set<T>().Cacheable();
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public EFCachedQueryable<T> GetAllFromL2CacheNoTracking()
         {
-            return db.Set<T>().AsNoTracking().Cacheable();
+            return DataContext.Set<T>().AsNoTracking().Cacheable();
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<TDto> GetAll<TDto>()
         {
-            return db.Set<T>().ProjectToQueryable<TDto>();
+            return DataContext.Set<T>().ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<TDto> GetAllNoTracking<TDto>()
         {
-            return db.Set<T>().AsNoTracking().ProjectToQueryable<TDto>();
+            return DataContext.Set<T>().AsNoTracking().ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> GetAllFromCache<TDto>(int timespan = 20) where TDto : class
         {
-            return db.Set<T>().ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return DataContext.Set<T>().ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<TDto>> GetAllFromCacheAsync<TDto>(int timespan = 20) where TDto : class
         {
-            return await db.Set<T>().ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return await DataContext.Set<T>().ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> GetAllFromCacheNoTracking<TDto>(int timespan = 20) where TDto : class
         {
-            return db.Set<T>().AsNoTracking().ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return DataContext.Set<T>().AsNoTracking().ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<TDto>> GetAllFromCacheNoTrackingAsync<TDto>(int timespan = 20) where TDto : class
         {
-            return await db.Set<T>().AsNoTracking().ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return await DataContext.Set<T>().AsNoTracking().ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
 
@@ -172,7 +172,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> GetAllFromL2Cache<TDto>()
         {
-            return db.Set<T>().ProjectToQueryable<TDto>().Cacheable();
+            return DataContext.Set<T>().ProjectToQueryable<TDto>().Cacheable();
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> GetAllFromL2CacheNoTracking<TDto>()
         {
-            return db.Set<T>().AsNoTracking().ProjectToQueryable<TDto>().Cacheable();
+            return DataContext.Set<T>().AsNoTracking().ProjectToQueryable<TDto>().Cacheable();
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<T> GetAll<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().OrderBy(orderby) : db.Set<T>().OrderByDescending(orderby);
+            return isAsc ? DataContext.Set<T>().OrderBy(orderby) : DataContext.Set<T>().OrderByDescending(orderby);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IOrderedQueryable<T> GetAllNoTracking<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().AsNoTracking().OrderBy(orderby) : db.Set<T>().AsNoTracking().OrderByDescending(orderby);
+            return isAsc ? DataContext.Set<T>().AsNoTracking().OrderBy(orderby) : DataContext.Set<T>().AsNoTracking().OrderByDescending(orderby);
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> GetAllFromCache<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20)
         {
-            return isAsc ? db.Set<T>().OrderBy(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : db.Set<T>().OrderByDescending(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return isAsc ? DataContext.Set<T>().OrderBy(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : DataContext.Set<T>().OrderByDescending(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<T>> GetAllFromCacheAsync<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20)
         {
-            return isAsc ? await db.Set<T>().OrderBy(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await db.Set<T>().OrderByDescending(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().OrderBy(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await DataContext.Set<T>().OrderByDescending(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> GetAllFromCacheNoTracking<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20)
         {
-            return isAsc ? db.Set<T>().AsNoTracking().OrderBy(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : db.Set<T>().AsNoTracking().OrderByDescending(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return isAsc ? DataContext.Set<T>().AsNoTracking().OrderBy(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : DataContext.Set<T>().AsNoTracking().OrderByDescending(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<T>> GetAllFromCacheNoTrackingAsync<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20)
         {
-            return isAsc ? await db.Set<T>().AsNoTracking().OrderBy(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await db.Set<T>().AsNoTracking().OrderByDescending(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().AsNoTracking().OrderBy(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await DataContext.Set<T>().AsNoTracking().OrderByDescending(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> GetAllFromL2Cache<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().OrderBy(orderby).Cacheable() : db.Set<T>().OrderByDescending(orderby).Cacheable();
+            return isAsc ? DataContext.Set<T>().OrderBy(orderby).Cacheable() : DataContext.Set<T>().OrderByDescending(orderby).Cacheable();
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> GetAllFromL2CacheNoTracking<TS>(Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().AsNoTracking().OrderBy(orderby).Cacheable() : db.Set<T>().AsNoTracking().OrderByDescending(orderby).Cacheable();
+            return isAsc ? DataContext.Set<T>().AsNoTracking().OrderBy(orderby).Cacheable() : DataContext.Set<T>().AsNoTracking().OrderByDescending(orderby).Cacheable();
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<TDto> GetAll<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().OrderBy(orderby).ProjectToQueryable<TDto>() : db.Set<T>().OrderByDescending(orderby).ProjectToQueryable<TDto>();
+            return isAsc ? DataContext.Set<T>().OrderBy(orderby).ProjectToQueryable<TDto>() : DataContext.Set<T>().OrderByDescending(orderby).ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<TDto> GetAllNoTracking<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().AsNoTracking().OrderBy(orderby).ProjectToQueryable<TDto>() : db.Set<T>().AsNoTracking().OrderByDescending(orderby).ProjectToQueryable<TDto>();
+            return isAsc ? DataContext.Set<T>().AsNoTracking().OrderBy(orderby).ProjectToQueryable<TDto>() : DataContext.Set<T>().AsNoTracking().OrderByDescending(orderby).ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> GetAllFromCache<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20) where TDto : class
         {
-            return isAsc ? db.Set<T>().OrderBy(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : db.Set<T>().OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return isAsc ? DataContext.Set<T>().OrderBy(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : DataContext.Set<T>().OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -336,7 +336,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<TDto>> GetAllFromCacheAsync<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20) where TDto : class
         {
-            return isAsc ? await db.Set<T>().OrderBy(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await db.Set<T>().OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().OrderBy(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await DataContext.Set<T>().OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> GetAllFromCacheNoTracking<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20) where TDto : class
         {
-            return isAsc ? db.Set<T>().AsNoTracking().OrderBy(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : db.Set<T>().AsNoTracking().OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return isAsc ? DataContext.Set<T>().AsNoTracking().OrderBy(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : DataContext.Set<T>().AsNoTracking().OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<TDto>> GetAllFromCacheNoTrackingAsync<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 20) where TDto : class
         {
-            return isAsc ? await db.Set<T>().AsNoTracking().OrderBy(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await db.Set<T>().AsNoTracking().OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().AsNoTracking().OrderBy(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await DataContext.Set<T>().AsNoTracking().OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> GetAllFromL2Cache<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true) where TDto : class
         {
-            return isAsc ? db.Set<T>().OrderBy(orderby).ProjectToQueryable<TDto>().Cacheable() : db.Set<T>().OrderByDescending(orderby).ProjectToQueryable<TDto>().Cacheable();
+            return isAsc ? DataContext.Set<T>().OrderBy(orderby).ProjectToQueryable<TDto>().Cacheable() : DataContext.Set<T>().OrderByDescending(orderby).ProjectToQueryable<TDto>().Cacheable();
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> GetAllFromL2CacheNoTracking<TS, TDto>(Expression<Func<T, TS>> @orderby, bool isAsc = true) where TDto : class
         {
-            return isAsc ? db.Set<T>().AsNoTracking().OrderBy(orderby).ProjectToQueryable<TDto>().Cacheable() : db.Set<T>().AsNoTracking().OrderByDescending(orderby).ProjectToQueryable<TDto>().Cacheable();
+            return isAsc ? DataContext.Set<T>().AsNoTracking().OrderBy(orderby).ProjectToQueryable<TDto>().Cacheable() : DataContext.Set<T>().AsNoTracking().OrderByDescending(orderby).ProjectToQueryable<TDto>().Cacheable();
         }
 
         /// <summary>
@@ -400,7 +400,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<T> LoadEntities(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(@where);
+            return DataContext.Set<T>().Where(@where);
         }
 
         /// <summary>
@@ -413,7 +413,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IOrderedQueryable<T> LoadEntities<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby) : db.Set<T>().Where(@where).OrderByDescending(orderby);
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby) : DataContext.Set<T>().Where(@where).OrderByDescending(orderby);
         }
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<TDto> LoadEntities<TDto>(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(@where).ProjectToQueryable<TDto>();
+            return DataContext.Set<T>().Where(@where).ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -438,7 +438,7 @@ namespace DAL
         /// <returns></returns>
         public IQueryable<TDto> LoadEntities<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby).ProjectToQueryable<TDto>() : db.Set<T>().Where(@where).OrderByDescending(orderby).ProjectToQueryable<TDto>();
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby).ProjectToQueryable<TDto>() : DataContext.Set<T>().Where(@where).OrderByDescending(orderby).ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -449,7 +449,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> LoadEntitiesFromCache(Expression<Func<T, bool>> @where, int timespan = 30)
         {
-            return db.Set<T>().Where(@where).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return DataContext.Set<T>().Where(@where).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace DAL
         /// <returns></returns>
         public IEnumerable<T> LoadEntitiesFromCache<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : db.Set<T>().Where(@where).OrderByDescending(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : DataContext.Set<T>().Where(@where).OrderByDescending(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -474,7 +474,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> LoadEntitiesFromCache<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
         {
-            return db.Set<T>().Where(@where).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return DataContext.Set<T>().Where(@where).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -489,7 +489,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> LoadEntitiesFromCache<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : db.Set<T>().Where(@where).OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : DataContext.Set<T>().Where(@where).OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -499,7 +499,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> LoadEntitiesFromL2Cache(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(@where).Cacheable();
+            return DataContext.Set<T>().Where(@where).Cacheable();
         }
 
         /// <summary>
@@ -512,7 +512,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> LoadEntitiesFromL2Cache<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby).Cacheable() : db.Set<T>().Where(@where).OrderByDescending(orderby).Cacheable();
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby).Cacheable() : DataContext.Set<T>().Where(@where).OrderByDescending(orderby).Cacheable();
         }
 
         /// <summary>
@@ -522,7 +522,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> LoadEntitiesFromL2Cache<TDto>(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(@where).Cacheable().ProjectToQueryable<TDto>();
+            return DataContext.Set<T>().Where(@where).Cacheable().ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -536,7 +536,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> LoadEntitiesFromL2Cache<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby).Cacheable().ProjectToQueryable<TDto>() : db.Set<T>().Where(@where).OrderByDescending(orderby).Cacheable().ProjectToQueryable<TDto>();
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby).Cacheable().ProjectToQueryable<TDto>() : DataContext.Set<T>().Where(@where).OrderByDescending(orderby).Cacheable().ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -608,7 +608,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<T>> LoadEntitiesFromCacheAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
         {
-            return isAsc ? await db.Set<T>().Where(where).OrderBy(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await db.Set<T>().Where(where).OrderByDescending(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().Where(where).OrderBy(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await DataContext.Set<T>().Where(where).OrderByDescending(orderby).FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -619,7 +619,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<TDto>> LoadEntitiesFromCacheAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
         {
-            return await db.Set<T>().Where(@where).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return await DataContext.Set<T>().Where(@where).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -634,7 +634,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<TDto>> LoadEntitiesFromCacheAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
         {
-            return isAsc ? await db.Set<T>().Where(@where).OrderBy(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await db.Set<T>().Where(@where).OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().Where(@where).OrderBy(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await DataContext.Set<T>().Where(@where).OrderByDescending(orderby).ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -691,7 +691,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<T> LoadEntitiesNoTracking(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(@where).AsNoTracking();
+            return DataContext.Set<T>().Where(@where).AsNoTracking();
         }
 
         /// <summary>
@@ -704,7 +704,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IOrderedQueryable<T> LoadEntitiesNoTracking<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().Where(@where).AsNoTracking().OrderBy(orderby) : db.Set<T>().Where(@where).AsNoTracking().OrderByDescending(orderby);
+            return isAsc ? DataContext.Set<T>().Where(@where).AsNoTracking().OrderBy(orderby) : DataContext.Set<T>().Where(@where).AsNoTracking().OrderByDescending(orderby);
         }
 
         /// <summary>
@@ -714,7 +714,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<TDto> LoadEntitiesNoTracking<TDto>(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(@where).AsNoTracking().ProjectToQueryable<TDto>();
+            return DataContext.Set<T>().Where(@where).AsNoTracking().ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -728,7 +728,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<TDto> LoadEntitiesNoTracking<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().ProjectToQueryable<TDto>() : db.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().ProjectToQueryable<TDto>();
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().ProjectToQueryable<TDto>() : DataContext.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -739,7 +739,7 @@ namespace DAL
         /// <returns>实体集合</returns>
         public IEnumerable<T> LoadEntitiesFromCacheNoTracking(Expression<Func<T, bool>> @where, int timespan = 30)
         {
-            return db.Set<T>().Where(@where).AsNoTracking().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return DataContext.Set<T>().Where(@where).AsNoTracking().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -753,7 +753,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> LoadEntitiesFromCacheNoTracking<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : db.Set<T>().Where(@where).AsNoTracking().OrderByDescending(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : DataContext.Set<T>().Where(@where).AsNoTracking().OrderByDescending(orderby).FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -764,7 +764,7 @@ namespace DAL
         /// <returns>实体集合</returns>
         public IEnumerable<TDto> LoadEntitiesFromCacheNoTracking<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
         {
-            return db.Set<T>().Where(@where).AsNoTracking().ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return DataContext.Set<T>().Where(@where).AsNoTracking().ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -779,7 +779,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> LoadEntitiesFromCacheNoTracking<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : db.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))) : DataContext.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().ProjectToQueryable<TDto>().FromCache(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan)));
         }
 
         /// <summary>
@@ -789,7 +789,7 @@ namespace DAL
         /// <returns>实体集合</returns>
         public IEnumerable<T> LoadEntitiesFromL2CacheNoTracking(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(@where).AsNoTracking().Cacheable();
+            return DataContext.Set<T>().Where(@where).AsNoTracking().Cacheable();
         }
 
         /// <summary>
@@ -802,7 +802,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> LoadEntitiesFromL2CacheNoTracking<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().Cacheable() : db.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().Cacheable();
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().Cacheable() : DataContext.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().Cacheable();
         }
 
         /// <summary>
@@ -812,7 +812,7 @@ namespace DAL
         /// <returns>实体集合</returns>
         public IEnumerable<TDto> LoadEntitiesFromL2CacheNoTracking<TDto>(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(@where).AsNoTracking().Cacheable().ProjectToQueryable<TDto>();
+            return DataContext.Set<T>().Where(@where).AsNoTracking().Cacheable().ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -826,7 +826,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> LoadEntitiesFromL2CacheNoTracking<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().Cacheable().ProjectToQueryable<TDto>() : db.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().Cacheable().ProjectToQueryable<TDto>();
+            return isAsc ? DataContext.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().Cacheable().ProjectToQueryable<TDto>() : DataContext.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().Cacheable().ProjectToQueryable<TDto>();
         }
 
         /// <summary>
@@ -884,7 +884,7 @@ namespace DAL
         /// <returns>实体集合</returns>
         public async Task<IEnumerable<T>> LoadEntitiesFromCacheNoTrackingAsync(Expression<Func<T, bool>> @where, int timespan = 30)
         {
-            return await db.Set<T>().Where(@where).AsNoTracking().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return await DataContext.Set<T>().Where(@where).AsNoTracking().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -898,7 +898,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<T>> LoadEntitiesFromCacheNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
         {
-            return isAsc ? await db.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await db.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await DataContext.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -909,7 +909,7 @@ namespace DAL
         /// <returns>实体集合</returns>
         public async Task<IEnumerable<TDto>> LoadEntitiesFromCacheNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where, int timespan = 30) where TDto : class
         {
-            return await db.Set<T>().Where(@where).AsNoTracking().ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return await DataContext.Set<T>().Where(@where).AsNoTracking().ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -924,7 +924,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public async Task<IEnumerable<TDto>> LoadEntitiesFromCacheNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
         {
-            return isAsc ? await db.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await db.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().Where(@where).OrderBy(orderby).AsNoTracking().ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true) : await DataContext.Set<T>().Where(@where).OrderByDescending(orderby).AsNoTracking().ProjectToQueryable<TDto>().FromCacheAsync(CachePolicy.WithDurationExpiration(TimeSpan.FromSeconds(timespan))).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -981,7 +981,7 @@ namespace DAL
         /// <returns>实体</returns>
         public T GetFirstEntity(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().FirstOrDefault(where);
+            return DataContext.Set<T>().FirstOrDefault(where);
         }
 
         /// <summary>
@@ -994,7 +994,7 @@ namespace DAL
         /// <returns>实体</returns>
         public T GetFirstEntity<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().OrderBy(orderby).FirstOrDefault(where) : db.Set<T>().OrderByDescending(orderby).FirstOrDefault(where);
+            return isAsc ? DataContext.Set<T>().OrderBy(orderby).FirstOrDefault(where) : DataContext.Set<T>().OrderByDescending(orderby).FirstOrDefault(where);
         }
 
         /// <summary>
@@ -1004,7 +1004,7 @@ namespace DAL
         /// <returns>实体</returns>
         public TDto GetFirstEntity<TDto>(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(where).ProjectToFirstOrDefault<TDto>();
+            return DataContext.Set<T>().Where(where).ProjectToFirstOrDefault<TDto>();
         }
 
         /// <summary>
@@ -1018,7 +1018,7 @@ namespace DAL
         /// <returns>映射实体</returns>
         public TDto GetFirstEntity<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().Where(where).OrderBy(orderby).ProjectToFirstOrDefault<TDto>() : db.Set<T>().Where(where).OrderByDescending(orderby).ProjectToFirstOrDefault<TDto>();
+            return isAsc ? DataContext.Set<T>().Where(where).OrderBy(orderby).ProjectToFirstOrDefault<TDto>() : DataContext.Set<T>().Where(where).OrderByDescending(orderby).ProjectToFirstOrDefault<TDto>();
         }
 
         /// <summary>
@@ -1126,7 +1126,7 @@ namespace DAL
         /// <returns>实体</returns>
         public async Task<T> GetFirstEntityAsync(Expression<Func<T, bool>> @where)
         {
-            return await db.Set<T>().FirstOrDefaultAsync(where).ConfigureAwait(true);
+            return await DataContext.Set<T>().FirstOrDefaultAsync(where).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1139,7 +1139,7 @@ namespace DAL
         /// <returns>实体</returns>
         public async Task<T> GetFirstEntityAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? await db.Set<T>().OrderBy(orderby).FirstOrDefaultAsync(where).ConfigureAwait(true) : await db.Set<T>().OrderByDescending(orderby).FirstOrDefaultAsync(where).ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().OrderBy(orderby).FirstOrDefaultAsync(where).ConfigureAwait(true) : await DataContext.Set<T>().OrderByDescending(orderby).FirstOrDefaultAsync(where).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1149,7 +1149,7 @@ namespace DAL
         /// <returns>实体</returns>
         public async Task<TDto> GetFirstEntityAsync<TDto>(Expression<Func<T, bool>> @where)
         {
-            return await db.Set<T>().Where(where).ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true);
+            return await DataContext.Set<T>().Where(where).ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1163,7 +1163,7 @@ namespace DAL
         /// <returns>映射实体</returns>
         public async Task<TDto> GetFirstEntityAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? await db.Set<T>().Where(where).OrderBy(orderby).ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true) : await db.Set<T>().Where(where).OrderByDescending(orderby).ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().Where(where).OrderBy(orderby).ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true) : await DataContext.Set<T>().Where(where).OrderByDescending(orderby).ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1272,7 +1272,7 @@ namespace DAL
         /// <returns>实体</returns>
         public T GetFirstEntityNoTracking(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().AsNoTracking().FirstOrDefault(where);
+            return DataContext.Set<T>().AsNoTracking().FirstOrDefault(where);
         }
 
         /// <summary>
@@ -1285,7 +1285,7 @@ namespace DAL
         /// <returns>实体</returns>
         public T GetFirstEntityNoTracking<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().OrderBy(orderby).AsNoTracking().FirstOrDefault(where) : db.Set<T>().OrderByDescending(orderby).AsNoTracking().FirstOrDefault(where);
+            return isAsc ? DataContext.Set<T>().OrderBy(orderby).AsNoTracking().FirstOrDefault(where) : DataContext.Set<T>().OrderByDescending(orderby).AsNoTracking().FirstOrDefault(where);
         }
 
         /// <summary>
@@ -1295,7 +1295,7 @@ namespace DAL
         /// <returns>实体</returns>
         public TDto GetFirstEntityNoTracking<TDto>(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(where).AsNoTracking().ProjectToFirstOrDefault<TDto>();
+            return DataContext.Set<T>().Where(where).AsNoTracking().ProjectToFirstOrDefault<TDto>();
         }
 
         /// <summary>
@@ -1309,7 +1309,7 @@ namespace DAL
         /// <returns>实体</returns>
         public TDto GetFirstEntityNoTracking<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? db.Set<T>().Where(where).OrderBy(orderby).AsNoTracking().ProjectToFirstOrDefault<TDto>() : db.Set<T>().Where(where).OrderByDescending(orderby).AsNoTracking().ProjectToFirstOrDefault<TDto>();
+            return isAsc ? DataContext.Set<T>().Where(where).OrderBy(orderby).AsNoTracking().ProjectToFirstOrDefault<TDto>() : DataContext.Set<T>().Where(where).OrderByDescending(orderby).AsNoTracking().ProjectToFirstOrDefault<TDto>();
         }
 
         /// <summary>
@@ -1418,7 +1418,7 @@ namespace DAL
         /// <returns>实体</returns>
         public async Task<T> GetFirstEntityNoTrackingAsync(Expression<Func<T, bool>> @where)
         {
-            return await db.Set<T>().AsNoTracking().FirstOrDefaultAsync(where).ConfigureAwait(true);
+            return await DataContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(where).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1431,7 +1431,7 @@ namespace DAL
         /// <returns>实体</returns>
         public async Task<T> GetFirstEntityNoTrackingAsync<TS>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? await db.Set<T>().OrderBy(orderby).AsNoTracking().FirstOrDefaultAsync(where).ConfigureAwait(true) : await db.Set<T>().OrderByDescending(orderby).AsNoTracking().FirstOrDefaultAsync(where).ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().OrderBy(orderby).AsNoTracking().FirstOrDefaultAsync(where).ConfigureAwait(true) : await DataContext.Set<T>().OrderByDescending(orderby).AsNoTracking().FirstOrDefaultAsync(where).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1441,7 +1441,7 @@ namespace DAL
         /// <returns>实体</returns>
         public async Task<TDto> GetFirstEntityNoTrackingAsync<TDto>(Expression<Func<T, bool>> @where)
         {
-            return await db.Set<T>().Where(where).AsNoTracking().ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true);
+            return await DataContext.Set<T>().Where(where).AsNoTracking().ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1455,7 +1455,7 @@ namespace DAL
         /// <returns>映射实体</returns>
         public async Task<TDto> GetFirstEntityNoTrackingAsync<TS, TDto>(Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            return isAsc ? await db.Set<T>().Where(where).OrderBy(orderby).AsNoTracking().ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true) : await db.Set<T>().Where(where).OrderByDescending(orderby).AsNoTracking().ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true);
+            return isAsc ? await DataContext.Set<T>().Where(where).OrderBy(orderby).AsNoTracking().ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true) : await DataContext.Set<T>().Where(where).OrderByDescending(orderby).AsNoTracking().ProjectToFirstOrDefaultAsync<TDto>().ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1563,7 +1563,7 @@ namespace DAL
         /// <returns>实体</returns>
         public T GetById(object id)
         {
-            return db.Set<T>().Find(id);
+            return DataContext.Set<T>().Find(id);
         }
 
         /// <summary>
@@ -1573,7 +1573,7 @@ namespace DAL
         /// <returns>实体</returns>
         public async Task<T> GetByIdAsync(object id)
         {
-            return await db.Set<T>().FindAsync(id).ConfigureAwait(true);
+            return await DataContext.Set<T>().FindAsync(id).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1589,7 +1589,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<T> LoadPageEntities<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> where, Expression<Func<T, TS>> orderby, bool isAsc)
         {
-            var temp = db.Set<T>().Where(where);
+            var temp = DataContext.Set<T>().Where(where);
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1617,7 +1617,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<TDto> LoadPageEntities<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> where, Expression<Func<T, TS>> orderby, bool isAsc)
         {
-            var temp = db.Set<T>().Where(where);
+            var temp = DataContext.Set<T>().Where(where);
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1644,7 +1644,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> LoadPageEntitiesFromCache<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> where, Expression<Func<T, TS>> orderby, bool isAsc, int timespan = 30)
         {
-            var temp = db.Set<T>().Where(where);
+            var temp = DataContext.Set<T>().Where(where);
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1673,7 +1673,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> LoadPageEntitiesFromCache<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> where, Expression<Func<T, TS>> orderby, bool isAsc, int timespan = 30) where TDto : class
         {
-            var temp = db.Set<T>().Where(where);
+            var temp = DataContext.Set<T>().Where(where);
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1699,7 +1699,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> LoadPageEntitiesFromL2Cache<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc)
         {
-            var temp = db.Set<T>().Where(where);
+            var temp = DataContext.Set<T>().Where(where);
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1726,7 +1726,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> LoadPageEntitiesFromL2Cache<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc)
         {
-            var temp = db.Set<T>().Where(where);
+            var temp = DataContext.Set<T>().Where(where);
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1752,7 +1752,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<T> LoadPageEntitiesNoTracking<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            var temp = db.Set<T>().Where(where).AsNoTracking();
+            var temp = DataContext.Set<T>().Where(where).AsNoTracking();
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1779,7 +1779,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IQueryable<TDto> LoadPageEntitiesNoTracking<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            var temp = db.Set<T>().Where(where).AsNoTracking();
+            var temp = DataContext.Set<T>().Where(where).AsNoTracking();
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1806,7 +1806,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> LoadPageEntitiesFromCacheNoTracking<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30)
         {
-            var temp = db.Set<T>().Where(where).AsNoTracking();
+            var temp = DataContext.Set<T>().Where(where).AsNoTracking();
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1834,7 +1834,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> LoadPageEntitiesFromCacheNoTracking<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true, int timespan = 30) where TDto : class
         {
-            var temp = db.Set<T>().Where(where).AsNoTracking();
+            var temp = DataContext.Set<T>().Where(where).AsNoTracking();
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1860,7 +1860,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<T> LoadPageEntitiesFromL2CacheNoTracking<TS>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            var temp = db.Set<T>().Where(where).AsNoTracking();
+            var temp = DataContext.Set<T>().Where(where).AsNoTracking();
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1887,7 +1887,7 @@ namespace DAL
         /// <returns>还未执行的SQL语句</returns>
         public IEnumerable<TDto> LoadPageEntitiesFromL2CacheNoTracking<TS, TDto>(int pageIndex, int pageSize, out int totalCount, Expression<Func<T, bool>> @where, Expression<Func<T, TS>> @orderby, bool isAsc = true)
         {
-            var temp = db.Set<T>().Where(where).AsNoTracking();
+            var temp = DataContext.Set<T>().Where(where).AsNoTracking();
             totalCount = temp.Count();
             if (pageIndex * pageSize > totalCount)
             {
@@ -1908,7 +1908,7 @@ namespace DAL
         public bool DeleteById(object id)
         {
             T t = GetById(id);
-            db.Entry(t).State = EntityState.Deleted;
+            DataContext.Entry(t).State = EntityState.Deleted;
             return true;
         }
 
@@ -1919,8 +1919,8 @@ namespace DAL
         /// <returns>删除成功</returns>
         public bool DeleteEntity(T t)
         {
-            db.Entry(t).State = EntityState.Unchanged;
-            db.Entry(t).State = EntityState.Deleted;
+            DataContext.Entry(t).State = EntityState.Unchanged;
+            DataContext.Entry(t).State = EntityState.Deleted;
             return true;
         }
 
@@ -1931,7 +1931,7 @@ namespace DAL
         /// <returns>删除成功</returns>
         public int DeleteEntity(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Where(@where).Delete();
+            return DataContext.Set<T>().Where(@where).Delete();
         }
 
         /// <summary>
@@ -1941,7 +1941,7 @@ namespace DAL
         /// <returns>删除成功</returns>
         public async Task<int> DeleteEntityAsync(Expression<Func<T, bool>> @where)
         {
-            return await db.Set<T>().Where(@where).DeleteAsync().ConfigureAwait(true);
+            return await DataContext.Set<T>().Where(@where).DeleteAsync().ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1951,7 +1951,7 @@ namespace DAL
         /// <returns>更新成功</returns>
         public bool UpdateEntity(T t)
         {
-            db.Entry(t).State = EntityState.Modified;
+            DataContext.Entry(t).State = EntityState.Modified;
             return true;
         }
 
@@ -1963,7 +1963,7 @@ namespace DAL
         /// <returns>更新成功</returns>
         public int UpdateEntity(Expression<Func<T, bool>> @where, T t)
         {
-            return db.Set<T>().Where(@where).Update(ts => t);
+            return DataContext.Set<T>().Where(@where).Update(ts => t);
         }
 
         /// <summary>
@@ -1974,7 +1974,7 @@ namespace DAL
         /// <returns>更新成功</returns>
         public async Task<int> UpdateEntityAsync(Expression<Func<T, bool>> @where, T t)
         {
-            return await db.Set<T>().Where(@where).UpdateAsync(ts => t).ConfigureAwait(true);
+            return await DataContext.Set<T>().Where(@where).UpdateAsync(ts => t).ConfigureAwait(true);
         }
 
         /// <summary>
@@ -1984,7 +1984,7 @@ namespace DAL
         /// <returns>添加成功</returns>
         public T AddEntity(T t)
         {
-            db.Entry(t).State = EntityState.Added;
+            DataContext.Entry(t).State = EntityState.Added;
             return t;
         }
 
@@ -1995,7 +1995,7 @@ namespace DAL
         /// <returns>添加成功</returns>
         public void BulkInsert(IEnumerable<T> list)
         {
-            db.BulkInsert(list);
+            DataContext.BulkInsert(list);
         }
 
         /// <summary>
@@ -2006,7 +2006,7 @@ namespace DAL
         /// <returns></returns>
         public void AddOrUpdate(Expression<Func<T, object>> exp, params T[] entities)
         {
-            db.Set<T>().AddOrUpdate(exp, entities);
+            DataContext.Set<T>().AddOrUpdate(exp, entities);
         }
 
         /// <summary>
@@ -2015,7 +2015,7 @@ namespace DAL
         /// <returns>受影响的行数</returns>
         public int SaveChanges()
         {
-            return db.SaveChanges();
+            return DataContext.SaveChanges();
         }
 
         /// <summary>
@@ -2024,7 +2024,7 @@ namespace DAL
         /// <returns>受影响的行数</returns>
         public void BulkSaveChanges()
         {
-            db.BulkSaveChanges();
+            DataContext.BulkSaveChanges();
         }
 
         /// <summary>
@@ -2033,7 +2033,7 @@ namespace DAL
         /// <returns>受影响的行数</returns>
         public async Task<int> SaveChangesAsync()
         {
-            return await db.SaveChangesAsync().ConfigureAwait(true);
+            return await DataContext.SaveChangesAsync().ConfigureAwait(true);
         }
 
         /// <summary>
@@ -2043,7 +2043,7 @@ namespace DAL
         /// <returns>是否存在</returns>
         public bool Any(Expression<Func<T, bool>> @where)
         {
-            return db.Set<T>().Any(where);
+            return DataContext.Set<T>().Any(where);
         }
 
         /// <summary>
@@ -2085,7 +2085,7 @@ namespace DAL
             //{
             //    yield return AddEntity(t);
             //}
-            db.BulkInsert(list);
+            DataContext.BulkInsert(list);
             return list;
         }
 
@@ -2098,7 +2098,7 @@ namespace DAL
         /// <returns>泛型集合</returns>
         public DbRawSqlQuery<TS> SqlQuery<TS>(string sql, params object[] parameters)
         {
-            return db.Database.SqlQuery<TS>(sql, parameters);
+            return DataContext.Database.SqlQuery<TS>(sql, parameters);
         }
 
         /// <summary>
@@ -2109,7 +2109,7 @@ namespace DAL
         /// <param name="parameters">参数</param>
         public DbRawSqlQuery SqlQuery(Type t, string sql, params object[] parameters)
         {
-            return db.Database.SqlQuery(t, sql, parameters);
+            return DataContext.Database.SqlQuery(t, sql, parameters);
         }
 
         /// <summary>
@@ -2119,7 +2119,7 @@ namespace DAL
         /// <param name="parameters"></param>
         public void ExecuteSql(string sql, params object[] parameters)
         {
-            db.Database.ExecuteSqlCommand(TransactionalBehavior.EnsureTransaction, sql, parameters);
+            DataContext.Database.ExecuteSqlCommand(TransactionalBehavior.EnsureTransaction, sql, parameters);
         }
 
     }
